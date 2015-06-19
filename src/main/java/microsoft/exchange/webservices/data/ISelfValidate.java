@@ -28,13 +28,13 @@ import microsoft.exchange.webservices.data.core.exception.service.local.ServiceV
 /**
  * The Interface ISelfValidate.
  */
-public interface ISelfValidate {
+public interface ISelfValidate
+{
 
-  /**
-   * Validate.
-   *
-   * @throws ServiceValidationException the service validation exception
-   * @throws Exception                  the exception
-   */
-  void validate() throws ServiceValidationException, Exception;
+    /**
+     * Validate.
+     *
+     * @throws ServiceValidationException the service validation exception
+     */
+    void validate() throws ServiceValidationException, Exception;
 }

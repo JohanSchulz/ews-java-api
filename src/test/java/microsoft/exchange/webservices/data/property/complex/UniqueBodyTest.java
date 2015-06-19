@@ -23,11 +23,6 @@
 
 package microsoft.exchange.webservices.data.property.complex;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
 import microsoft.exchange.webservices.data.core.EwsServiceXmlReader;
 import microsoft.exchange.webservices.data.core.EwsServiceXmlWriter;
 import microsoft.exchange.webservices.data.core.XmlAttributeNames;
@@ -38,56 +33,75 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class UniqueBodyTest {
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
-  UniqueBody impl;
+public class UniqueBodyTest
+{
 
-  final String text = "test";
+    UniqueBody impl;
 
-  final BodyType bodyType = BodyType.HTML;
+    final String text = "test";
 
-  @Mock EwsServiceXmlReader reader;
-  @Mock EwsServiceXmlWriter writer;
+    final BodyType bodyType = BodyType.HTML;
+
+    @Mock
+    EwsServiceXmlReader reader;
+    @Mock
+    EwsServiceXmlWriter writer;
 
 
-  @Before public void setUp() throws Exception {
-    impl = new UniqueBody();
-    MockitoAnnotations.initMocks(this);
-  }
+    @Before
+    public void setUp() throws Exception
+    {
+        impl = new UniqueBody();
+        MockitoAnnotations.initMocks(this);
+    }
 
-  @Test public void testReadAttributesFromXml() throws Exception {
-    doReturn(BodyType.Text).when(reader).readAttributeValue(BodyType.class, XmlAttributeNames.BodyType);
-    impl.readAttributesFromXml(reader);
-    assertEquals(BodyType.Text, impl.getBodyType());
-  }
+    @Test
+    public void testReadAttributesFromXml() throws Exception
+    {
+        doReturn(BodyType.Text).when(reader).readAttributeValue(BodyType.class, XmlAttributeNames.BodyType);
+        impl.readAttributesFromXml(reader);
+        assertEquals(BodyType.Text, impl.getBodyType());
+    }
 
-  @Test public void testReadTextValueFromXml() throws Exception {
-    setTextToImpl(text);
-    assertEquals(text, impl.getText());
-    assertEquals(text, UniqueBody.getStringFromUniqueBody(impl));
-  }
+    @Test
+    public void testReadTextValueFromXml() throws Exception
+    {
+        setTextToImpl(text);
+        assertEquals(text, impl.getText());
+        assertEquals(text, UniqueBody.getStringFromUniqueBody(impl));
+    }
 
-  @Test public void testWriteAttributesToXml() throws Exception {
-    impl.writeAttributesToXml(writer);
-    verify(writer).writeAttributeValue(XmlAttributeNames.BodyType, impl.getBodyType());
-  }
+    @Test
+    public void testWriteAttributesToXml() throws Exception
+    {
+        impl.writeAttributesToXml(writer);
+        verify(writer).writeAttributeValue(XmlAttributeNames.BodyType, impl.getBodyType());
+    }
 
-  @Test public void testWriteElementsToXml() throws Exception {
-    impl.writeElementsToXml(writer);
-    verify(writer, never()).writeValue(this.text, XmlElementNames.UniqueBody);
-    setTextToImpl(text);
-    impl.writeElementsToXml(writer);
-    verify(writer).writeValue(text, XmlElementNames.UniqueBody);
-  }
+    @Test
+    public void testWriteElementsToXml() throws Exception
+    {
+        impl.writeElementsToXml(writer);
+        verify(writer, never()).writeValue(this.text, XmlElementNames.UniqueBody);
+        setTextToImpl(text);
+        impl.writeElementsToXml(writer);
+        verify(writer).writeValue(text, XmlElementNames.UniqueBody);
+    }
 
-  @Test public void testToString() throws Exception {
-    assertEquals("", impl.toString());
-    setTextToImpl(text);
-    assertEquals(text, impl.toString());
-  }
+    @Test
+    public void testToString() throws Exception
+    {
+        assertEquals("", impl.toString());
+        setTextToImpl(text);
+        assertEquals(text, impl.toString());
+    }
 
-  private void setTextToImpl(String myText) throws Exception {
-    doReturn(myText).when(reader).readValue();
-    impl.readTextValueFromXml(reader);
-  }
+    private void setTextToImpl(String myText) throws Exception
+    {
+        doReturn(myText).when(reader).readValue();
+        impl.readTextValueFromXml(reader);
+    }
 }

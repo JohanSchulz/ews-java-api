@@ -32,59 +32,66 @@ import java.util.EnumSet;
 /**
  * Represents byte array property definition.
  */
-public final class ByteArrayPropertyDefinition extends TypedPropertyDefinition<byte[]> {
+public final class ByteArrayPropertyDefinition extends TypedPropertyDefinition<byte[]>
+{
 
-  /**
-   * Initializes a new instance.
-   *
-   * @param xmlElementName Name of the XML element.
-   * @param uri            The URI.
-   * @param flags          The flags.
-   * @param version        The version.
-   */
-  public ByteArrayPropertyDefinition(String xmlElementName, String uri,
-      EnumSet<PropertyDefinitionFlags> flags, ExchangeVersion version) {
-    super(xmlElementName, uri, flags, version);
-  }
+    /**
+     * Initializes a new instance.
+     *
+     * @param xmlElementName Name of the XML element.
+     * @param uri            The URI.
+     * @param flags          The flags.
+     * @param version        The version.
+     */
+    public ByteArrayPropertyDefinition(String xmlElementName, String uri,
+                                       EnumSet<PropertyDefinitionFlags> flags, ExchangeVersion version)
+    {
+        super(xmlElementName, uri, flags, version);
+    }
 
-  /**
-   * Parses the specified value.
-   *
-   * @param value accepts String
-   * @return value
-   */
-  @Override
-  protected byte[] parse(String value) {
-    return Base64.decodeBase64(value);
-  }
+    /**
+     * Parses the specified value.
+     *
+     * @param value accepts String
+     * @return value
+     */
+    @Override
+    protected byte[] parse(String value)
+    {
+        return Base64.decodeBase64(value);
+    }
 
-  /**
-   * Converts byte array property to a string.
-   *
-   * @param value accepts Object
-   * @return value
-   */
-  @Override
-  protected String toString(byte[] value) {
-    return Base64.encodeBase64String(value);
-  }
+    /**
+     * Converts byte array property to a string.
+     *
+     * @param value accepts Object
+     * @return value
+     */
+    @Override
+    protected String toString(byte[] value)
+    {
+        return Base64.encodeBase64String(value);
+    }
 
-  /**
-   * Gets a value indicating whether this property definition is for a
-   * nullable type (ref, int?, bool?...).
-   *
-   * @return True
-   */
-  @Override public boolean isNullable() {
-    return true;
-  }
+    /**
+     * Gets a value indicating whether this property definition is for a
+     * nullable type (ref, int?, bool?...).
+     *
+     * @return True
+     */
+    @Override
+    public boolean isNullable()
+    {
+        return true;
+    }
 
-  /**
-   * Gets the property type.
-   */
-  @Override
-  public Class<Byte> getType() {
-    return Byte.class;
-  }
+    /**
+     * Gets the property type.
+     */
+    @Override
+    public Class<Byte> getType()
+    {
+        return Byte.class;
+    }
 
 }

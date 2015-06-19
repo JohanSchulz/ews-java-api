@@ -31,16 +31,17 @@ import microsoft.exchange.webservices.data.core.service.ServiceObject;
  *
  * @param <T> the generic type
  */
-public interface IGetObjectInstanceDelegate<T extends ServiceObject> {
+public interface IGetObjectInstanceDelegate<T extends ServiceObject>
+{
 
-  /**
-   * Gets the object instance delegate.
-   *
-   * @param service        the service
-   * @param xmlElementName the xml element name
-   * @return the object instance delegate
-   * @throws Exception the exception
-   */
-  T getObjectInstanceDelegate(ExchangeService service, String xmlElementName)
-      throws Exception;
+    /**
+     * Gets the object instance delegate.
+     *
+     * @param service        the service
+     * @param xmlElementName the xml element name
+     * @return the object instance delegate
+     * @throws Exception the exception
+     */
+    T getObjectInstanceDelegate(ExchangeService service, String xmlElementName)
+            throws Exception;
 }

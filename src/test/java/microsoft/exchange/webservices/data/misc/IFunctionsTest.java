@@ -35,70 +35,79 @@ import java.util.Date;
 import java.util.UUID;
 
 @RunWith(JUnit4.class)
-public class IFunctionsTest {
+public class IFunctionsTest
+{
 
-  @Test
-  public void testToString() {
-    final IFunctions.ToString f = IFunctions.ToString.INSTANCE;
-    Assert.assertEquals("null", f.func(null));
-    Assert.assertEquals("", f.func(""));
-    Assert.assertEquals("1", f.func(1));
-  }
-
-  @Test
-  public void testToBoolean() {
-    final IFunctions.ToBoolean f = IFunctions.ToBoolean.INSTANCE;
-    Assert.assertFalse(f.func(null));
-    Assert.assertFalse(f.func(""));
-    Assert.assertFalse(f.func("false"));
-    Assert.assertTrue(f.func("true"));
-  }
-
-  @Test
-  public void testStringToObject() {
-    final IFunctions.StringToObject f = IFunctions.StringToObject.INSTANCE;
-    Assert.assertNull(f.func(null));
-    Assert.assertEquals("", f.func(""));
-  }
-
-  @Test
-  public void testToUUID() {
-    final IFunctions.ToUUID f = IFunctions.ToUUID.INSTANCE;
-    try {
-      Assert.assertNull(f.func(null));
-    } catch (final Throwable ex) {
-      final UUID uuid = UUID.randomUUID();
-      Assert.assertEquals(uuid, f.func(uuid.toString()));
+    @Test
+    public void testToString()
+    {
+        final IFunctions.ToString f = IFunctions.ToString.INSTANCE;
+        Assert.assertEquals("null", f.func(null));
+        Assert.assertEquals("", f.func(""));
+        Assert.assertEquals("1", f.func(1));
     }
-  }
 
-  @Test
-  public void testBase64Decoder() {
-    final String value = "123";
-    final IFunctions.Base64Decoder f = IFunctions.Base64Decoder.INSTANCE;
-    Assert.assertArrayEquals(Base64.decodeBase64(value), (byte[]) f.func(value));
-  }
+    @Test
+    public void testToBoolean()
+    {
+        final IFunctions.ToBoolean f = IFunctions.ToBoolean.INSTANCE;
+        Assert.assertFalse(f.func(null));
+        Assert.assertFalse(f.func(""));
+        Assert.assertFalse(f.func("false"));
+        Assert.assertTrue(f.func("true"));
+    }
 
-  @Test
-  public void testBase64Encoder() {
-    final byte[] value = StringUtils.getBytesUtf8("123");
-    final IFunctions.Base64Encoder f = IFunctions.Base64Encoder.INSTANCE;
-    Assert.assertEquals(Base64.encodeBase64String(value), f.func(value));
-  }
+    @Test
+    public void testStringToObject()
+    {
+        final IFunctions.StringToObject f = IFunctions.StringToObject.INSTANCE;
+        Assert.assertNull(f.func(null));
+        Assert.assertEquals("", f.func(""));
+    }
 
-  @Test
-  public void testToLowerCase() {
-    final IFunctions.ToLowerCase f = IFunctions.ToLowerCase.INSTANCE;
-    Assert.assertNull(f.func(null));
-    Assert.assertEquals("", f.func(""));
-    Assert.assertEquals("abc", f.func("AbC"));
-  }
+    @Test
+    public void testToUUID()
+    {
+        final IFunctions.ToUUID f = IFunctions.ToUUID.INSTANCE;
+        try {
+            Assert.assertNull(f.func(null));
+        } catch (final Throwable ex) {
+            final UUID uuid = UUID.randomUUID();
+            Assert.assertEquals(uuid, f.func(uuid.toString()));
+        }
+    }
 
-  @Test
-  public void testDateTimeToXSDateTime() {
-    final IFunctions.DateTimeToXSDateTime f = IFunctions.DateTimeToXSDateTime.INSTANCE;
-    final Date value = new Date();
-    Assert.assertEquals(EwsUtilities.dateTimeToXSDateTime(value), f.func(value));
-  }
+    @Test
+    public void testBase64Decoder()
+    {
+        final String value = "123";
+        final IFunctions.Base64Decoder f = IFunctions.Base64Decoder.INSTANCE;
+        Assert.assertArrayEquals(Base64.decodeBase64(value), (byte[]) f.func(value));
+    }
+
+    @Test
+    public void testBase64Encoder()
+    {
+        final byte[] value = StringUtils.getBytesUtf8("123");
+        final IFunctions.Base64Encoder f = IFunctions.Base64Encoder.INSTANCE;
+        Assert.assertEquals(Base64.encodeBase64String(value), f.func(value));
+    }
+
+    @Test
+    public void testToLowerCase()
+    {
+        final IFunctions.ToLowerCase f = IFunctions.ToLowerCase.INSTANCE;
+        Assert.assertNull(f.func(null));
+        Assert.assertEquals("", f.func(""));
+        Assert.assertEquals("abc", f.func("AbC"));
+    }
+
+    @Test
+    public void testDateTimeToXSDateTime()
+    {
+        final IFunctions.DateTimeToXSDateTime f = IFunctions.DateTimeToXSDateTime.INSTANCE;
+        final Date value = new Date();
+        Assert.assertEquals(EwsUtilities.dateTimeToXSDateTime(value), f.func(value));
+    }
 
 }

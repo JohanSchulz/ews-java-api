@@ -28,11 +28,13 @@ package microsoft.exchange.webservices.data.misc;
  *
  * @param <T> the generic type
  */
-public class OutParam<T> extends Param<T> {
+public class OutParam<T> extends Param<T>
+{
 
-  /**
-   * Instantiates a new out param.
-   */
-  public OutParam() {
-  }
+    /**
+     * Instantiates a new out param.
+     */
+    public OutParam()
+    {
+    }
 }

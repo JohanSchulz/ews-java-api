@@ -28,13 +28,14 @@ import javax.xml.stream.XMLStreamWriter;
 /**
  * The Interface CustomXmlSerializationInterface.
  */
-public interface ICustomXmlSerialization {
+public interface ICustomXmlSerialization
+{
 
-  /**
-   * Custom xml serialization.
-   *
-   * @param writer the writer
-   */
-  void CustomXmlSerialization(XMLStreamWriter writer);
+    /**
+     * Custom xml serialization.
+     *
+     * @param writer the writer
+     */
+    void CustomXmlSerialization(XMLStreamWriter writer);
 
 }

@@ -29,28 +29,29 @@ import microsoft.exchange.webservices.data.property.definition.PropertyDefinitio
 /**
  * Interface defined for property that produce their own update serialization.
  */
-public interface ICustomXmlUpdateSerializer {
+public interface ICustomXmlUpdateSerializer
+{
 
-  /**
-   * Writes the update to XML.
-   *
-   * @param writer the writer
-   * @param ewsObject The ews object
-   * @param propertyDefinition property definition
-   * @return true if property generated serialization
-   * @throws Exception the exception
-   */
-  boolean writeSetUpdateToXml(EwsServiceXmlWriter writer,
-      ServiceObject ewsObject, PropertyDefinition propertyDefinition) throws Exception;
+    /**
+     * Writes the update to XML.
+     *
+     * @param writer             the writer
+     * @param ewsObject          The ews object
+     * @param propertyDefinition property definition
+     * @return true if property generated serialization
+     * @throws Exception the exception
+     */
+    boolean writeSetUpdateToXml(EwsServiceXmlWriter writer,
+                                ServiceObject ewsObject, PropertyDefinition propertyDefinition) throws Exception;
 
-  /**
-   * Writes the deletion update to XML.
-   *
-   * @param writer    The writer.
-   * @param ewsObject The ews object.
-   * @return True if property generated serialization.
-   * @throws Exception the exception
-   */
-  boolean writeDeleteUpdateToXml(EwsServiceXmlWriter writer,
-      ServiceObject ewsObject) throws Exception;
+    /**
+     * Writes the deletion update to XML.
+     *
+     * @param writer    The writer.
+     * @param ewsObject The ews object.
+     * @return True if property generated serialization.
+     * @throws Exception the exception
+     */
+    boolean writeDeleteUpdateToXml(EwsServiceXmlWriter writer,
+                                   ServiceObject ewsObject) throws Exception;
 }

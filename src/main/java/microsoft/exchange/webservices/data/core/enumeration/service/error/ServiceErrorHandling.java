@@ -26,17 +26,18 @@ package microsoft.exchange.webservices.data.core.enumeration.service.error;
 /**
  * Defines the type of error handling used for service method calls.
  */
-public enum ServiceErrorHandling {
+public enum ServiceErrorHandling
+{
 
-  // Service method should return the error(s).
-  /**
-   * The Return errors.
-   */
-  ReturnErrors,
+    // Service method should return the error(s).
+    /**
+     * The Return errors.
+     */
+    ReturnErrors,
 
-  // Service method should throw exception when error occurs.
-  /**
-   * The Throw on error.
-   */
-  ThrowOnError
+    // Service method should throw exception when error occurs.
+    /**
+     * The Throw on error.
+     */
+    ThrowOnError
 }

@@ -30,14 +30,15 @@ import java.io.OutputStream;
  * IFileAttachmentContentHandler /// to provide a stream in which the content of
  * file attachment should be written.
  */
-public interface IFileAttachmentContentHandler {
+public interface IFileAttachmentContentHandler
+{
 
-  /**
-   * Provides a stream to which the content of the attachment with the
-   * specified Id should be written.
-   *
-   * @param attachmentId The Id of the attachment that is being loaded.
-   * @return A Stream to which the content of the attachment will be written.
-   */
-  OutputStream getOutputStream(String attachmentId);
+    /**
+     * Provides a stream to which the content of the attachment with the
+     * specified Id should be written.
+     *
+     * @param attachmentId The Id of the attachment that is being loaded.
+     * @return A Stream to which the content of the attachment will be written.
+     */
+    OutputStream getOutputStream(String attachmentId);
 }

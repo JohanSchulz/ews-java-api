@@ -26,12 +26,13 @@ package microsoft.exchange.webservices.data.property.complex;
 /**
  * Indicates that a complex property changed.
  */
-public interface IComplexPropertyChanged {
-  /**
-   * Indicates that a complex property changed.
-   *
-   * @param complexProperty Complex property.
-   */
-  void complexPropertyChanged(ComplexProperty complexProperty);
+public interface IComplexPropertyChanged
+{
+    /**
+     * Indicates that a complex property changed.
+     *
+     * @param complexProperty Complex property.
+     */
+    void complexPropertyChanged(ComplexProperty complexProperty);
 
 }

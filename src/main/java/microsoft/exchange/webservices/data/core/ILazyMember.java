@@ -28,12 +28,13 @@ package microsoft.exchange.webservices.data.core;
  *
  * @param <T> the generic type
  */
-public interface ILazyMember<T> {
+public interface ILazyMember<T>
+{
 
-  /**
-   * Creates the instance.
-   *
-   * @return the t
-   */
-  T createInstance();
+    /**
+     * Creates the instance.
+     *
+     * @return the t
+     */
+    T createInstance();
 }

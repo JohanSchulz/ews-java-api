@@ -26,16 +26,17 @@ package microsoft.exchange.webservices.data.core.enumeration.misc;
 /**
  * Defines the precision for returned DateTime values
  */
-public enum DateTimePrecision {
+public enum DateTimePrecision
+{
 
-  // Default value. No SOAP header emitted.
-  Default,
+    // Default value. No SOAP header emitted.
+    Default,
 
-  // Seconds
+    // Seconds
 
-  Seconds,
+    Seconds,
 
-  // Milliseconds
+    // Milliseconds
 
-  Milliseconds
+    Milliseconds
 }

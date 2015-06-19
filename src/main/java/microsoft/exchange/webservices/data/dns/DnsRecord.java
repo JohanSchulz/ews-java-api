@@ -28,47 +28,51 @@ import microsoft.exchange.webservices.data.core.exception.dns.DnsException;
 /**
  * Represents a DnsRecord.
  */
-abstract class DnsRecord {
+abstract class DnsRecord
+{
         /*
          * Name field of this DNS Record
 	 */
-  /**
-   * The name.
-   */
-  private String name;
+    /**
+     * The name.
+     */
+    private String name;
         /*
-	 * The suggested time for this dnsRecord to be valid
+     * The suggested time for this dnsRecord to be valid
 	 */
-  /**
-   * The time to live.
-   */
-  private int timeToLive;
+    /**
+     * The time to live.
+     */
+    private int timeToLive;
 
-  /**
-   * Retrieves the value of the name property.
-   *
-   * @return name
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * Retrieves the value of the name property.
+     *
+     * @return name
+     */
+    public String getName()
+    {
+        return name;
+    }
 
-  /**
-   * Retrieves the value of the timeToLive property.
-   *
-   * @return timeToLive
-   */
-  public int getTimeToLive() {
-    return timeToLive;
-  }
+    /**
+     * Retrieves the value of the timeToLive property.
+     *
+     * @return timeToLive
+     */
+    public int getTimeToLive()
+    {
+        return timeToLive;
+    }
 
-  /**
-   * loads the DNS Record.
-   *
-   * @param value the value
-   * @throws DnsException the dns exception
-   */
-  protected void load(String value) throws DnsException {
+    /**
+     * loads the DNS Record.
+     *
+     * @param value the value
+     * @throws DnsException the dns exception
+     */
+    protected void load(String value) throws DnsException
+    {
 
-  }
+    }
 }

@@ -29,24 +29,25 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion
 /**
  * Defines the scope of FindItems operations.
  */
-public enum ItemTraversal {
+public enum ItemTraversal
+{
 
-  // All non deleted item in the specified folder are retrieved.
-  /**
-   * The Shallow.
-   */
-  Shallow,
+    // All non deleted item in the specified folder are retrieved.
+    /**
+     * The Shallow.
+     */
+    Shallow,
 
-  // Only soft-deleted item are retrieved.
-  /**
-   * The Soft deleted.
-   */
-  SoftDeleted,
+    // Only soft-deleted item are retrieved.
+    /**
+     * The Soft deleted.
+     */
+    SoftDeleted,
 
-  // Only associated item are retrieved (Exchange 2010 or later).
-  /**
-   * The Associated.
-   */
-  @RequiredServerVersion(version = ExchangeVersion.Exchange2010)
-  Associated
+    // Only associated item are retrieved (Exchange 2010 or later).
+    /**
+     * The Associated.
+     */
+    @RequiredServerVersion(version = ExchangeVersion.Exchange2010)
+    Associated
 }

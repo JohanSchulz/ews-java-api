@@ -23,9 +23,6 @@
 
 package microsoft.exchange.webservices.data.property.definition;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.property.PropertyDefinitionFlags;
 import org.apache.commons.codec.binary.Base64;
@@ -36,34 +33,40 @@ import org.junit.runners.JUnit4;
 
 import java.util.EnumSet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @RunWith(JUnit4.class)
-public class ByteArrayPropertyDefinitionTest {
+public class ByteArrayPropertyDefinitionTest
+{
 
-  private ByteArrayPropertyDefinition testObject;
+    private ByteArrayPropertyDefinition testObject;
 
-  private static final String TEST_STRING = "Lorem ipsum dolor sit amet";
-  private static final String BASE64_ENCODEDSTRING = Base64.encodeBase64String(TEST_STRING.getBytes());
+    private static final String TEST_STRING = "Lorem ipsum dolor sit amet";
+    private static final String BASE64_ENCODEDSTRING = Base64.encodeBase64String(TEST_STRING.getBytes());
 
-  /**
-   * setup
-   */
-  @Before
-  public void init(){
-    this.testObject =
-        new ByteArrayPropertyDefinition("myTestObject", "myTestUri",
-                                        EnumSet.of(PropertyDefinitionFlags.None),
-                                        ExchangeVersion.Exchange2010_SP2);
-  }
+    /**
+     * setup
+     */
+    @Before
+    public void init()
+    {
+        this.testObject =
+                new ByteArrayPropertyDefinition("myTestObject", "myTestUri",
+                        EnumSet.of(PropertyDefinitionFlags.None),
+                        ExchangeVersion.Exchange2010_SP2);
+    }
 
-  /**
-   * Test for ByteArrayPropertyDefinition.toString()
-   * This Test should guarantee that toString() byte encoding works
-   */
-  @Test
-  public void testToString(){
-    String result = testObject.toString(TEST_STRING.getBytes());
-    assertNotNull(result);
-    assertEquals(BASE64_ENCODEDSTRING, result);
-  }
+    /**
+     * Test for ByteArrayPropertyDefinition.toString()
+     * This Test should guarantee that toString() byte encoding works
+     */
+    @Test
+    public void testToString()
+    {
+        String result = testObject.toString(TEST_STRING.getBytes());
+        assertNotNull(result);
+        assertEquals(BASE64_ENCODEDSTRING, result);
+    }
 
 }

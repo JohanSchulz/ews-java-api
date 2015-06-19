@@ -29,30 +29,31 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion
 /**
  * Defines how meeting request are sent to delegates.
  */
-public enum MeetingRequestsDeliveryScope {
+public enum MeetingRequestsDeliveryScope
+{
 
-  // Meeting request are sent to delegates only.
-  /**
-   * The Delegates only.
-   */
-  DelegatesOnly,
+    // Meeting request are sent to delegates only.
+    /**
+     * The Delegates only.
+     */
+    DelegatesOnly,
 
-  // Meeting request are sent to delegates and to the owner of the mailbox.
-  /**
-   * The Delegates and me.
-   */
-  DelegatesAndMe,
+    // Meeting request are sent to delegates and to the owner of the mailbox.
+    /**
+     * The Delegates and me.
+     */
+    DelegatesAndMe,
 
-  // Meeting request are sent to delegates and informational messages are
-  // sent to the owner of the mailbox.
-  /**
-   * The Delegates and send information to me.
-   */
-  DelegatesAndSendInformationToMe,
+    // Meeting request are sent to delegates and informational messages are
+    // sent to the owner of the mailbox.
+    /**
+     * The Delegates and send information to me.
+     */
+    DelegatesAndSendInformationToMe,
 
-  //Meeting request are not sent to delegates.  This value is
-  //supported only for Exchange 2010 SP1 or later
-  //server versions.
-  @RequiredServerVersion(version = ExchangeVersion.Exchange2010_SP1)
-  NoForward
+    //Meeting request are not sent to delegates.  This value is
+    //supported only for Exchange 2010 SP1 or later
+    //server versions.
+    @RequiredServerVersion(version = ExchangeVersion.Exchange2010_SP1)
+    NoForward
 }

@@ -31,11 +31,12 @@ import microsoft.exchange.webservices.data.core.SimplePropertyBag;
  * @param <TKey> the generic type
  */
 
-public interface IPropertyBagChangedDelegate<TKey> {
-  /**
-   * Property bag changed.
-   *
-   * @param simplePropertyBag the simple property bag
-   */
-  void propertyBagChanged(SimplePropertyBag<TKey> simplePropertyBag);
+public interface IPropertyBagChangedDelegate<TKey>
+{
+    /**
+     * Property bag changed.
+     *
+     * @param simplePropertyBag the simple property bag
+     */
+    void propertyBagChanged(SimplePropertyBag<TKey> simplePropertyBag);
 }

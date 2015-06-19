@@ -27,11 +27,11 @@ import microsoft.exchange.webservices.data.core.EwsServiceXmlReader;
 import microsoft.exchange.webservices.data.core.EwsServiceXmlWriter;
 import microsoft.exchange.webservices.data.core.EwsUtilities;
 import microsoft.exchange.webservices.data.core.XmlElementNames;
-import microsoft.exchange.webservices.data.core.service.ServiceObject;
-import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
+import microsoft.exchange.webservices.data.core.service.ServiceObject;
+import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinitionBase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,215 +41,231 @@ import java.util.Arrays;
 /**
  * Represents an item attachment.
  */
-public class ItemAttachment extends Attachment implements IServiceObjectChangedDelegate {
+public class ItemAttachment extends Attachment implements IServiceObjectChangedDelegate
+{
 
-  private static final Log LOG = LogFactory.getLog(ItemAttachment.class);
+    private static final Log LOG = LogFactory.getLog(ItemAttachment.class);
 
-  /**
-   * The item.
-   */
-  private Item item;
+    /**
+     * The item.
+     */
+    private Item item;
 
-  /**
-   * Initializes a new instance of the class.
-   *
-   * @param owner The owner of the attachment
-   */
-  protected ItemAttachment(Item owner) {
-    super(owner);
-  }
-
-  /**
-   * Gets the item associated with the attachment.
-   *
-   * @return the item
-   */
-  public Item getItem() {
-    return this.item;
-  }
-
-  /**
-   * Sets the item associated with the attachment.
-   *
-   * @param item the new item
-   */
-  protected void setItem(Item item) {
-    this.throwIfThisIsNotNew();
-
-    if (this.item != null) {
-
-      this.item.removeServiceObjectChangedEvent(this);
+    /**
+     * Initializes a new instance of the class.
+     *
+     * @param owner The owner of the attachment
+     */
+    protected ItemAttachment(Item owner)
+    {
+        super(owner);
     }
-    this.item = item;
-    if (this.item != null) {
-      this.item.addServiceObjectChangedEvent(this);
+
+    /**
+     * Gets the item associated with the attachment.
+     *
+     * @return the item
+     */
+    public Item getItem()
+    {
+        return this.item;
     }
-  }
 
-  /**
-   * Implements the OnChange event handler for the item associated with the
-   * attachment.
-   *
-   * @param serviceObject ,The service object that triggered the OnChange event.
-   */
-  private void itemChanged(ServiceObject serviceObject) {
-    this.item.getPropertyBag().changed();
-  }
+    /**
+     * Sets the item associated with the attachment.
+     *
+     * @param item the new item
+     */
+    protected void setItem(Item item)
+    {
+        this.throwIfThisIsNotNew();
 
-  /**
-   * Obtains EWS XML element name for this object.
-   *
-   * @return The XML element name.
-   */
-  @Override public String getXmlElementName() {
-    return XmlElementNames.ItemAttachment;
-  }
+        if (this.item != null) {
 
-  /**
-   * Tries to read the element at the current position of the reader.
-   *
-   * @param reader the reader
-   * @return True if the element was read, false otherwise.
-   * @throws Exception the exception
-   */
-  @Override
-  public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
-      throws Exception {
-    boolean result = super.tryReadElementFromXml(reader);
+            this.item.removeServiceObjectChangedEvent(this);
+        }
+        this.item = item;
+        if (this.item != null) {
+            this.item.addServiceObjectChangedEvent(this);
+        }
+    }
 
-    if (!result) {
-      this.item = EwsUtilities.createItemFromXmlElementName(this, reader.getLocalName());
+    /**
+     * Implements the OnChange event handler for the item associated with the
+     * attachment.
+     *
+     * @param serviceObject ,The service object that triggered the OnChange event.
+     */
+    private void itemChanged(ServiceObject serviceObject)
+    {
+        this.item.getPropertyBag().changed();
+    }
 
-      if (this.item != null) {
+    /**
+     * Obtains EWS XML element name for this object.
+     *
+     * @return The XML element name.
+     */
+    @Override
+    public String getXmlElementName()
+    {
+        return XmlElementNames.ItemAttachment;
+    }
+
+    /**
+     * Tries to read the element at the current position of the reader.
+     *
+     * @param reader the reader
+     * @return True if the element was read, false otherwise.
+     * @throws Exception the exception
+     */
+    @Override
+    public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
+            throws Exception
+    {
+        boolean result = super.tryReadElementFromXml(reader);
+
+        if (!result) {
+            this.item = EwsUtilities.createItemFromXmlElementName(this, reader.getLocalName());
+
+            if (this.item != null) {
+                try {
+                    this.item.loadFromXml(reader, true /* clearPropertyBag */);
+                } catch (Exception e) {
+                    LOG.error(e);
+
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * For ItemAttachment, AttachmentId and Item should be patched.
+     *
+     * @param reader The reader.
+     *               <p/>
+     *               True if element was read.
+     */
+    public boolean tryReadElementFromXmlToPatch(EwsServiceXmlReader reader) throws Exception
+    {
+        // update the attachment id.
+        super.tryReadElementFromXml(reader);
+
+        reader.read();
+
+        String localName = reader.getLocalName();
+        Class<?> itemClass = EwsUtilities.getItemTypeFromXmlElementName(localName);
+
+        if (itemClass != null) {
+            if (item == null || item.getClass() != itemClass) {
+                throw new ServiceLocalException(
+                        "Attachment item type mismatch.");
+            }
+
+            this.item.loadFromXml(reader, false /* clearPropertyBag */);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Writes the property of this object as XML elements.
+     *
+     * @param writer ,The writer to write the elements to.
+     * @throws Exception the exception
+     */
+    @Override
+    public void writeElementsToXml(EwsServiceXmlWriter writer)
+            throws Exception
+    {
+        super.writeElementsToXml(writer);
         try {
-          this.item.loadFromXml(reader, true /* clearPropertyBag */);
+            this.item.writeToXml(writer);
         } catch (Exception e) {
-          LOG.error(e);
+            LOG.error(e);
 
         }
-      }
     }
 
-    return result;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void validate(int attachmentIndex) throws Exception
+    {
+        if (this.getName() == null || this.getName().isEmpty()) {
+            throw new ServiceValidationException(String.format(
+                    "The name of the item attachment at index %d must be set.", attachmentIndex));
+        }
 
-  /**
-   * For ItemAttachment, AttachmentId and Item should be patched.
-   *
-   * @param reader The reader.
-   *               <p/>
-   *               True if element was read.
-   */
-  public boolean tryReadElementFromXmlToPatch(EwsServiceXmlReader reader) throws Exception {
-    // update the attachment id.
-    super.tryReadElementFromXml(reader);
-
-    reader.read();
-
-    String localName = reader.getLocalName();
-    Class<?> itemClass = EwsUtilities.getItemTypeFromXmlElementName(localName);
-
-    if (itemClass != null) {
-      if (item == null || item.getClass() != itemClass) {
-        throw new ServiceLocalException(
-            "Attachment item type mismatch.");
-      }
-
-      this.item.loadFromXml(reader, false /* clearPropertyBag */);
-      return true;
+        // Recurse through any item attached to item attachment.
+        this.validate();
     }
 
-    return false;
-  }
-
-
-  /**
-   * Writes the property of this object as XML elements.
-   *
-   * @param writer ,The writer to write the elements to.
-   * @throws Exception the exception
-   */
-  @Override
-  public void writeElementsToXml(EwsServiceXmlWriter writer)
-      throws Exception {
-    super.writeElementsToXml(writer);
-    try {
-      this.item.writeToXml(writer);
-    } catch (Exception e) {
-      LOG.error(e);
-
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void validate(int attachmentIndex) throws Exception {
-    if (this.getName() == null || this.getName().isEmpty()) {
-      throw new ServiceValidationException(String.format(
-          "The name of the item attachment at index %d must be set.", attachmentIndex));
+    /**
+     * Loads this attachment.
+     *
+     * @param additionalProperties the additional property
+     * @throws Exception the exception
+     */
+    public void load(PropertyDefinitionBase... additionalProperties)
+            throws Exception
+    {
+        internalLoad(null /* bodyType */, Arrays.asList(additionalProperties));
     }
 
-    // Recurse through any item attached to item attachment.
-    this.validate();
-  }
+    /**
+     * Loads this attachment.
+     *
+     * @param additionalProperties the additional property
+     * @throws Exception the exception
+     */
+    public void load(Iterable<PropertyDefinitionBase> additionalProperties)
+            throws Exception
+    {
+        this.internalLoad(null, additionalProperties);
+    }
 
-  /**
-   * Loads this attachment.
-   *
-   * @param additionalProperties the additional property
-   * @throws Exception the exception
-   */
-  public void load(PropertyDefinitionBase... additionalProperties)
-      throws Exception {
-    internalLoad(null /* bodyType */, Arrays.asList(additionalProperties));
-  }
+    /**
+     * Loads this attachment.
+     *
+     * @param bodyType             the body type
+     * @param additionalProperties the additional property
+     * @throws Exception the exception
+     */
+    public void load(BodyType bodyType,
+                     PropertyDefinitionBase... additionalProperties) throws Exception
+    {
+        internalLoad(bodyType, Arrays.asList(additionalProperties));
+    }
 
-  /**
-   * Loads this attachment.
-   *
-   * @param additionalProperties the additional property
-   * @throws Exception the exception
-   */
-  public void load(Iterable<PropertyDefinitionBase> additionalProperties)
-      throws Exception {
-    this.internalLoad(null, additionalProperties);
-  }
+    /**
+     * Loads this attachment.
+     *
+     * @param bodyType             the body type
+     * @param additionalProperties the additional property
+     * @throws Exception the exception
+     */
+    public void load(BodyType bodyType,
+                     Iterable<PropertyDefinitionBase> additionalProperties)
+            throws Exception
+    {
+        this.internalLoad(bodyType, additionalProperties);
+    }
 
-  /**
-   * Loads this attachment.
-   *
-   * @param bodyType             the body type
-   * @param additionalProperties the additional property
-   * @throws Exception the exception
-   */
-  public void load(BodyType bodyType,
-      PropertyDefinitionBase... additionalProperties) throws Exception {
-    internalLoad(bodyType, Arrays.asList(additionalProperties));
-  }
-
-  /**
-   * Loads this attachment.
-   *
-   * @param bodyType             the body type
-   * @param additionalProperties the additional property
-   * @throws Exception the exception
-   */
-  public void load(BodyType bodyType,
-      Iterable<PropertyDefinitionBase> additionalProperties)
-      throws Exception {
-    this.internalLoad(bodyType, additionalProperties);
-  }
-
-  /**
-   * Service object changed.
-   *
-   * @param serviceObject accepts ServiceObject
-   */
-  @Override
-  public void serviceObjectChanged(ServiceObject serviceObject) {
-    this.itemChanged(serviceObject);
-  }
+    /**
+     * Service object changed.
+     *
+     * @param serviceObject accepts ServiceObject
+     */
+    @Override
+    public void serviceObjectChanged(ServiceObject serviceObject)
+    {
+        this.itemChanged(serviceObject);
+    }
 
 }

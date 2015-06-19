@@ -23,43 +23,48 @@
 
 package microsoft.exchange.webservices.data.exception;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-
 import microsoft.exchange.webservices.data.autodiscover.exception.MaximumRedirectionHopsExceededException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.junit.Assert.*;
+
 @RunWith(JUnit4.class)
-public class MaximumRedirectionHopsExceededExceptionTest {
+public class MaximumRedirectionHopsExceededExceptionTest
+{
 
-  private final String msg = "some message";
-  private final Exception rootCause = new Exception();
+    private final String msg = "some message";
+    private final Exception rootCause = new Exception();
 
 
-  @Test public void testMaximumRedirectionHopsExceededException() {
+    @Test
+    public void testMaximumRedirectionHopsExceededException()
+    {
 
-    MaximumRedirectionHopsExceededException impl = new MaximumRedirectionHopsExceededException();
-    assertNull(impl.getMessage());
-    assertNull(impl.getCause());
-  }
+        MaximumRedirectionHopsExceededException impl = new MaximumRedirectionHopsExceededException();
+        assertNull(impl.getMessage());
+        assertNull(impl.getCause());
+    }
 
-  @Test public void testMaximumRedirectionHopsExceededExceptionString() {
+    @Test
+    public void testMaximumRedirectionHopsExceededExceptionString()
+    {
 
-    MaximumRedirectionHopsExceededException impl = new MaximumRedirectionHopsExceededException(msg);
-    assertEquals(msg, impl.getMessage());
-    assertNull(impl.getCause());
-  }
+        MaximumRedirectionHopsExceededException impl = new MaximumRedirectionHopsExceededException(msg);
+        assertEquals(msg, impl.getMessage());
+        assertNull(impl.getCause());
+    }
 
-  @Test public void testMaximumRedirectionHopsExceededExceptionStringException() {
+    @Test
+    public void testMaximumRedirectionHopsExceededExceptionStringException()
+    {
 
-    MaximumRedirectionHopsExceededException
-        impl =
-        new MaximumRedirectionHopsExceededException(msg, rootCause);
-    assertEquals(msg, impl.getMessage());
-    assertSame(rootCause, impl.getCause());
-  }
+        MaximumRedirectionHopsExceededException
+                impl =
+                new MaximumRedirectionHopsExceededException(msg, rootCause);
+        assertEquals(msg, impl.getMessage());
+        assertSame(rootCause, impl.getCause());
+    }
 
 }

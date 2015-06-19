@@ -26,25 +26,26 @@ package microsoft.exchange.webservices.data.core.enumeration.service;
 /**
  * Defines the type of a ResponseMessage object.
  */
-public enum ResponseMessageType {
+public enum ResponseMessageType
+{
 
-  // The ResponseMessage is a reply to the sender of a message.
-  /**
-   * The Reply.
-   */
-  Reply,
+    // The ResponseMessage is a reply to the sender of a message.
+    /**
+     * The Reply.
+     */
+    Reply,
 
-  // The ResponseMessage is a reply to the sender and all the recipients of a
-  // message.
-  /**
-   * The Reply all.
-   */
-  ReplyAll,
+    // The ResponseMessage is a reply to the sender and all the recipients of a
+    // message.
+    /**
+     * The Reply all.
+     */
+    ReplyAll,
 
-  // The ResponseMessage is a forward.
-  /**
-   * The Forward.
-   */
-  Forward
+    // The ResponseMessage is a forward.
+    /**
+     * The Forward.
+     */
+    Forward
 
 }

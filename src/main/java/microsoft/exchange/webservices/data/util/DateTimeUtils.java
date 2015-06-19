@@ -28,90 +28,96 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Date;
 
-public final class DateTimeUtils {
+public final class DateTimeUtils
+{
 
-  private static final DateTimeFormatter[] DATE_TIME_FORMATS = createDateTimeFormats();
-  private static final DateTimeFormatter[] DATE_FORMATS = createDateFormats();
-
-
-  private DateTimeUtils() {
-    throw new UnsupportedOperationException();
-  }
+    private static final DateTimeFormatter[] DATE_TIME_FORMATS = createDateTimeFormats();
+    private static final DateTimeFormatter[] DATE_FORMATS = createDateFormats();
 
 
-  /**
-   * Converts a date time string to local date time.
-   *
-   * Note: this method also allows dates without times, in which case the time will be 00:00:00 in the
-   * supplied timezone. UTC timezone will be assumed if no timezone is supplied.
-   *
-   * @param value The string value to parse.
-   * @return The parsed {@link Date}.
-   *
-   * @throws java.lang.IllegalArgumentException If string can not be parsed.
-   */
-  public static Date convertDateTimeStringToDate(String value) {
-    return parseInternal(value, false);
-  }
-
-  /**
-   * Converts a date string to local date time.
-   *
-   * UTC timezone will be assumed if no timezone is supplied.
-   *
-   * @param value The string value to parse.
-   * @return The parsed {@link Date}.
-   *
-   * @throws java.lang.IllegalArgumentException If string can not be parsed.
-   */
-  public static Date convertDateStringToDate(String value) {
-    return parseInternal(value, true);
-  }
-
-
-  private static Date parseInternal(String value, boolean dateOnly) {
-    String originalValue = value;
-
-    if (value == null || value.isEmpty()) {
-      return null;
-    } else {
-      if (value.endsWith("z")) {
-        // This seems to be an edge case. Let's uppercase the Z to be sure.
-        value = value.substring(0, value.length() - 1) + "Z";
-      }
-
-      DateTimeFormatter[] formats = dateOnly ? DATE_FORMATS : DATE_TIME_FORMATS;
-      for (DateTimeFormatter format : formats) {
-        try {
-          return format.parseDateTime(value).toDate();
-        } catch (IllegalArgumentException e) {
-          // Ignore and try the next pattern.
-        }
-      }
+    private DateTimeUtils()
+    {
+        throw new UnsupportedOperationException();
     }
 
-    throw new IllegalArgumentException(
-        String.format("Date String %s not in valid UTC/local format", originalValue));
-  }
 
-  private static DateTimeFormatter[] createDateTimeFormats() {
-    return new DateTimeFormatter[] {
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-ddZ").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC()
-    };
-  }
+    /**
+     * Converts a date time string to local date time.
+     * <p/>
+     * Note: this method also allows dates without times, in which case the time will be 00:00:00 in the
+     * supplied timezone. UTC timezone will be assumed if no timezone is supplied.
+     *
+     * @param value The string value to parse.
+     * @return The parsed {@link Date}.
+     * @throws java.lang.IllegalArgumentException If string can not be parsed.
+     */
+    public static Date convertDateTimeStringToDate(String value)
+    {
+        return parseInternal(value, false);
+    }
 
-  private static DateTimeFormatter[] createDateFormats() {
-    return new DateTimeFormatter[] {
-        DateTimeFormat.forPattern("yyyy-MM-ddZ").withZoneUTC(),
-        DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC()
-    };
-  }
+    /**
+     * Converts a date string to local date time.
+     * <p/>
+     * UTC timezone will be assumed if no timezone is supplied.
+     *
+     * @param value The string value to parse.
+     * @return The parsed {@link Date}.
+     * @throws java.lang.IllegalArgumentException If string can not be parsed.
+     */
+    public static Date convertDateStringToDate(String value)
+    {
+        return parseInternal(value, true);
+    }
+
+
+    private static Date parseInternal(String value, boolean dateOnly)
+    {
+        String originalValue = value;
+
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        else {
+            if (value.endsWith("z")) {
+                // This seems to be an edge case. Let's uppercase the Z to be sure.
+                value = value.substring(0, value.length() - 1) + "Z";
+            }
+
+            DateTimeFormatter[] formats = dateOnly ? DATE_FORMATS : DATE_TIME_FORMATS;
+            for (DateTimeFormatter format : formats) {
+                try {
+                    return format.parseDateTime(value).toDate();
+                } catch (IllegalArgumentException e) {
+                    // Ignore and try the next pattern.
+                }
+            }
+        }
+
+        throw new IllegalArgumentException(
+                String.format("Date String %s not in valid UTC/local format", originalValue));
+    }
+
+    private static DateTimeFormatter[] createDateTimeFormats()
+    {
+        return new DateTimeFormatter[]{
+                DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-ddZ").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC()
+        };
+    }
+
+    private static DateTimeFormatter[] createDateFormats()
+    {
+        return new DateTimeFormatter[]{
+                DateTimeFormat.forPattern("yyyy-MM-ddZ").withZoneUTC(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC()
+        };
+    }
 
 }

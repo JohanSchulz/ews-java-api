@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 package microsoft.exchange.webservices.data.property.complex;
 
 import microsoft.exchange.webservices.data.property.complex.time.OlsonTimeZoneDefinition;
@@ -32,19 +32,21 @@ import org.junit.runners.JUnit4;
 import java.util.TimeZone;
 
 @RunWith(JUnit4.class)
-public class OlsonTimeZoneTest {
+public class OlsonTimeZoneTest
+{
 
-  @Test
-  public void testOlsonTimeZoneConversion() {
-    final String[] timeZoneIds = TimeZone.getAvailableIDs();
-    for (String timeZoneId : timeZoneIds) {
-      if(timeZoneId.startsWith("America") || timeZoneId.startsWith("Europe") || timeZoneId.startsWith("Africa")) {
-        //there are a few timezones that are out of date or don't have direct microsoft mappings according to the Unicode source we use so we will only test Americas, Europe and Africa
-        final OlsonTimeZoneDefinition olsonTimeZone = new OlsonTimeZoneDefinition(TimeZone.getTimeZone(timeZoneId));
-        Assert.assertNotNull(olsonTimeZone.getId());
-      }
+    @Test
+    public void testOlsonTimeZoneConversion()
+    {
+        final String[] timeZoneIds = TimeZone.getAvailableIDs();
+        for (String timeZoneId : timeZoneIds) {
+            if (timeZoneId.startsWith("America") || timeZoneId.startsWith("Europe") || timeZoneId.startsWith("Africa")) {
+                //there are a few timezones that are out of date or don't have direct microsoft mappings according to the Unicode source we use so we will only test Americas, Europe and Africa
+                final OlsonTimeZoneDefinition olsonTimeZone = new OlsonTimeZoneDefinition(TimeZone.getTimeZone(timeZoneId));
+                Assert.assertNotNull(olsonTimeZone.getId());
+            }
+
+        }
 
     }
-
-  }
 }

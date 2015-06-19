@@ -23,12 +23,6 @@
 
 package microsoft.exchange.webservices.data.credential;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.core.StringContains.containsString;
-import static org.hamcrest.text.IsEmptyString.isEmptyOrNullString;
-import static org.junit.Assert.assertThat;
-
 import microsoft.exchange.webservices.data.core.EwsUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,63 +35,77 @@ import org.junit.runners.JUnit4;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-@RunWith(JUnit4.class) public class WSSecurityBasedCredentialsTest {
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.text.IsEmptyString.isEmptyOrNullString;
+import static org.junit.Assert.assertThat;
 
-  private static final Log LOG = LogFactory.getLog(WSSecurityBasedCredentialsTest.class);
+@RunWith(JUnit4.class)
+public class WSSecurityBasedCredentialsTest
+{
 
-  private WSSecurityBasedCredentials wsSecurityBasedCredentials;
-  private XMLStreamWriter xmlStreamWriter = null;
-  private Writer stringWriter = null;
+    private static final Log LOG = LogFactory.getLog(WSSecurityBasedCredentialsTest.class);
 
-  @Before public void initTest() throws XMLStreamException {
-    // testObject
-    wsSecurityBasedCredentials = new WSSecurityBasedCredentials() {
+    private WSSecurityBasedCredentials wsSecurityBasedCredentials;
+    private XMLStreamWriter xmlStreamWriter = null;
+    private Writer stringWriter = null;
 
-    };
+    @Before
+    public void initTest() throws XMLStreamException
+    {
+        // testObject
+        wsSecurityBasedCredentials = new WSSecurityBasedCredentials()
+        {
 
-    // testContext
-    stringWriter = new StringWriter();
-    xmlStreamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(stringWriter);
-  }
+        };
 
-  @After public void tearDown() {
-    if (stringWriter != null) {
-      try {
-        stringWriter.close();
-      } catch (IOException e) {
-        LOG.warn(e.getMessage(), e);
-      }
+        // testContext
+        stringWriter = new StringWriter();
+        xmlStreamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(stringWriter);
     }
-    if (xmlStreamWriter != null) {
-      try {
-        xmlStreamWriter.close();
-      } catch (XMLStreamException e) {
-        LOG.warn(e.getMessage(), e);
-      }
+
+    @After
+    public void tearDown()
+    {
+        if (stringWriter != null) {
+            try {
+                stringWriter.close();
+            } catch (IOException e) {
+                LOG.warn(e.getMessage(), e);
+            }
+        }
+        if (xmlStreamWriter != null) {
+            try {
+                xmlStreamWriter.close();
+            } catch (XMLStreamException e) {
+                LOG.warn(e.getMessage(), e);
+            }
+        }
     }
-  }
 
-  @Test public void testEmitExtraSoapHeaderNamespaceAliases() throws XMLStreamException, IOException {
-    xmlStreamWriter.writeStartDocument();
-    xmlStreamWriter.writeStartElement("test");
+    @Test
+    public void testEmitExtraSoapHeaderNamespaceAliases() throws XMLStreamException, IOException
+    {
+        xmlStreamWriter.writeStartDocument();
+        xmlStreamWriter.writeStartElement("test");
 
-    wsSecurityBasedCredentials.emitExtraSoapHeaderNamespaceAliases(xmlStreamWriter);
+        wsSecurityBasedCredentials.emitExtraSoapHeaderNamespaceAliases(xmlStreamWriter);
 
-    xmlStreamWriter.writeEndElement();
-    xmlStreamWriter.writeEndDocument();
-    xmlStreamWriter.flush();
+        xmlStreamWriter.writeEndElement();
+        xmlStreamWriter.writeEndDocument();
+        xmlStreamWriter.flush();
 
-    assertThat(stringWriter.toString(),
-               allOf(not(isEmptyOrNullString()), containsString("xmlns"), containsString("test"),
-                     containsString(EwsUtilities.WSSecuritySecExtNamespacePrefix),
-                     containsString(EwsUtilities.WSAddressingNamespacePrefix),
-                     containsString(EwsUtilities.WSSecuritySecExtNamespace),
-                     containsString(EwsUtilities.WSAddressingNamespace)));
-  }
+        assertThat(stringWriter.toString(),
+                allOf(not(isEmptyOrNullString()), containsString("xmlns"), containsString("test"),
+                        containsString(EwsUtilities.WSSecuritySecExtNamespacePrefix),
+                        containsString(EwsUtilities.WSAddressingNamespacePrefix),
+                        containsString(EwsUtilities.WSSecuritySecExtNamespace),
+                        containsString(EwsUtilities.WSAddressingNamespace)));
+    }
 
 }

@@ -23,6 +23,7 @@
 
 package microsoft.exchange.webservices.data.core.request;
 
-public class WaitHandle {
+public class WaitHandle
+{
 
 }

@@ -35,18 +35,19 @@ import java.util.List;
  * @param <T2>      the generic type
  * @param <TResult> the generic type
  */
-public interface IFunctionDelegate<T1 extends List<?>, T2 extends List<?>, TResult> {
+public interface IFunctionDelegate<T1 extends List<?>, T2 extends List<?>, TResult>
+{
 
-  /**
-   * Func.
-   *
-   * @param arg1 the arg1
-   * @param arg2 the arg2
-   * @param arg3 the arg3
-   * @param arg4 the arg4
-   * @return the t result
-   * @throws Exception the exception
-   */
-  TResult func(T1 arg1, T2 arg2, ExchangeVersion arg3, URI arg4) throws Exception;
+    /**
+     * Func.
+     *
+     * @param arg1 the arg1
+     * @param arg2 the arg2
+     * @param arg3 the arg3
+     * @param arg4 the arg4
+     * @return the t result
+     * @throws Exception the exception
+     */
+    TResult func(T1 arg1, T2 arg2, ExchangeVersion arg3, URI arg4) throws Exception;
 
 }

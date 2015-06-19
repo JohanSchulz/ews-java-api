@@ -26,36 +26,40 @@ package microsoft.exchange.webservices.data.core.exception.service.remote;
 /**
  * The Class ServiceRequestException.
  */
-public class ServiceRequestException extends ServiceRemoteException {
+public class ServiceRequestException extends ServiceRemoteException
+{
 
-  /**
-   * Constant serialized ID used for compatibility.
-   */
-  private static final long serialVersionUID = 1L;
+    /**
+     * Constant serialized ID used for compatibility.
+     */
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * ServiceRequestException Constructor.
-   */
-  public ServiceRequestException() {
-    super();
-  }
+    /**
+     * ServiceRequestException Constructor.
+     */
+    public ServiceRequestException()
+    {
+        super();
+    }
 
-  /**
-   * ServiceRequestException Constructor.
-   *
-   * @param message the message
-   */
-  public ServiceRequestException(String message) {
-    super(message);
-  }
+    /**
+     * ServiceRequestException Constructor.
+     *
+     * @param message the message
+     */
+    public ServiceRequestException(String message)
+    {
+        super(message);
+    }
 
-  /**
-   * ServiceRequestException Constructor.
-   *
-   * @param message        the message
-   * @param innerException the inner exception
-   */
-  public ServiceRequestException(String message, Exception innerException) {
-    super(message, innerException);
-  }
+    /**
+     * ServiceRequestException Constructor.
+     *
+     * @param message        the message
+     * @param innerException the inner exception
+     */
+    public ServiceRequestException(String message, Exception innerException)
+    {
+        super(message, innerException);
+    }
 }

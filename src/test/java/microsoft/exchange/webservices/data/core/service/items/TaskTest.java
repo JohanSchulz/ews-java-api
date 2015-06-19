@@ -23,11 +23,9 @@
 
 package microsoft.exchange.webservices.data.core.service.items;
 
-import static org.junit.Assert.assertThat;
-
 import microsoft.exchange.webservices.base.BaseTest;
-import microsoft.exchange.webservices.data.core.service.item.Task;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceObjectPropertyException;
+import microsoft.exchange.webservices.data.core.service.item.Task;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsInstanceOf;
 import org.hamcrest.core.IsNot;
@@ -37,135 +35,147 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.junit.Assert.assertThat;
+
 /**
  * Testclass for methods of Task
  */
 @RunWith(JUnit4.class)
-public class TaskTest extends BaseTest {
+public class TaskTest extends BaseTest
+{
 
-  /**
-   * Mock for the Task
-   */
-  private Task taskMock;
+    /**
+     * Mock for the Task
+     */
+    private Task taskMock;
 
-  /**
-   * Setup Mocks
-   *
-   * @throws Exception
-   */
-  @Before
-  public void setup() throws Exception {
-    this.taskMock = new Task(TaskTest.exchangeServiceMock);
-  }
-
-  /**
-   * Test for reading the value before it is assigned
-   *
-   * @throws Exception
-   */
-  @Test(expected = ServiceObjectPropertyException.class)
-  public void testInitialValuePercent() throws Exception {
-    taskMock.getPercentComplete();
-  }
-
-  /**
-   * Test for adding 0.0 as percentCompleted
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testAddZeroPercent() throws Exception {
-    final Double targetValue = 0.0;
-    taskMock.setPercentComplete(targetValue);
-
-    assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
-    assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
-    assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
-  }
-
-  /**
-   * Test for adding 100.0 as percentCompleted
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testAdd100Percent() throws Exception {
-    final Double targetValue = 100.0;
-    taskMock.setPercentComplete(targetValue);
-
-    assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
-    assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
-    assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
-  }
-
-  /**
-   * Test for adding Double.MAX_VALUE as percentCompleted
-   *
-   * @throws Exception
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void testAddMaxDoublePercent() throws Exception {
-    final Double targetValue = Double.MAX_VALUE;
-    taskMock.setPercentComplete(targetValue);
-  }
-
-  /**
-   * Test for adding -0.1 as percentCompleted
-   *
-   * @throws Exception
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void testAddInvalidPercent() throws Exception {
-    final Double targetValue = -0.1;
-    taskMock.setPercentComplete(targetValue);
-  }
-
-  /**
-   * Test for adding +100.1 as percentCompleted
-   *
-   * @throws Exception
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void testAddInvalidPercent2() throws Exception {
-    final Double targetValue = +100.1;
-    taskMock.setPercentComplete(targetValue);
-  }
-
-  /**
-   * Test for adding Double.NaN as percentCompleted
-   *
-   * @throws Exception
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void testAddNanDoublePercent() throws Exception {
-    final Double targetValue = Double.NaN; // closest Value to Zero
-    taskMock.setPercentComplete(targetValue);
-  }
-
-  /**
-   * Test for checking if the value changes in case of a thrown exception
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testDontChangeValueOnException() throws Exception {
-    // set valid value
-    final Double targetValue = 50.5;
-    taskMock.setPercentComplete(targetValue);
-
-    assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
-    assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
-    assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
-
-    final Double invalidValue = -0.1;
-    try {
-      taskMock.setPercentComplete(invalidValue);
-    } catch (IllegalArgumentException ex) {
-      // ignored
+    /**
+     * Setup Mocks
+     *
+     * @throws Exception
+     */
+    @Before
+    public void setup() throws Exception
+    {
+        this.taskMock = new Task(TaskTest.exchangeServiceMock);
     }
 
-    assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
-    assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
-    assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
-  }
+    /**
+     * Test for reading the value before it is assigned
+     *
+     * @throws Exception
+     */
+    @Test(expected = ServiceObjectPropertyException.class)
+    public void testInitialValuePercent() throws Exception
+    {
+        taskMock.getPercentComplete();
+    }
+
+    /**
+     * Test for adding 0.0 as percentCompleted
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testAddZeroPercent() throws Exception
+    {
+        final Double targetValue = 0.0;
+        taskMock.setPercentComplete(targetValue);
+
+        assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
+        assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
+        assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
+    }
+
+    /**
+     * Test for adding 100.0 as percentCompleted
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testAdd100Percent() throws Exception
+    {
+        final Double targetValue = 100.0;
+        taskMock.setPercentComplete(targetValue);
+
+        assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
+        assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
+        assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
+    }
+
+    /**
+     * Test for adding Double.MAX_VALUE as percentCompleted
+     *
+     * @throws Exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddMaxDoublePercent() throws Exception
+    {
+        final Double targetValue = Double.MAX_VALUE;
+        taskMock.setPercentComplete(targetValue);
+    }
+
+    /**
+     * Test for adding -0.1 as percentCompleted
+     *
+     * @throws Exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddInvalidPercent() throws Exception
+    {
+        final Double targetValue = -0.1;
+        taskMock.setPercentComplete(targetValue);
+    }
+
+    /**
+     * Test for adding +100.1 as percentCompleted
+     *
+     * @throws Exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddInvalidPercent2() throws Exception
+    {
+        final Double targetValue = +100.1;
+        taskMock.setPercentComplete(targetValue);
+    }
+
+    /**
+     * Test for adding Double.NaN as percentCompleted
+     *
+     * @throws Exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNanDoublePercent() throws Exception
+    {
+        final Double targetValue = Double.NaN; // closest Value to Zero
+        taskMock.setPercentComplete(targetValue);
+    }
+
+    /**
+     * Test for checking if the value changes in case of a thrown exception
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testDontChangeValueOnException() throws Exception
+    {
+        // set valid value
+        final Double targetValue = 50.5;
+        taskMock.setPercentComplete(targetValue);
+
+        assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
+        assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
+        assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
+
+        final Double invalidValue = -0.1;
+        try {
+            taskMock.setPercentComplete(invalidValue);
+        } catch (IllegalArgumentException ex) {
+            // ignored
+        }
+
+        assertThat(taskMock.getPercentComplete(), IsNot.not(IsNull.nullValue()));
+        assertThat(taskMock.getPercentComplete(), IsInstanceOf.instanceOf(Double.class));
+        assertThat(taskMock.getPercentComplete(), IsEqual.equalTo(targetValue));
+    }
 }

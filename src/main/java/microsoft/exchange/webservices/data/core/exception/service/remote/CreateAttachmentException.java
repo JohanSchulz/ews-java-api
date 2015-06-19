@@ -31,47 +31,50 @@ import microsoft.exchange.webservices.data.core.response.ServiceResponseCollecti
  * Represents an error that occurs when a call to the CreateAttachment web
  * method fails.
  */
-public final class CreateAttachmentException extends ServiceRemoteException {
+public final class CreateAttachmentException extends ServiceRemoteException
+{
 
-  /**
-   * Constant serialized ID used for compatibility.
-   */
-  private static final long serialVersionUID = 1L;
+    /**
+     * Constant serialized ID used for compatibility.
+     */
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * The response.
-   */
-  private ServiceResponseCollection<CreateAttachmentResponse> responses;
+    /**
+     * The response.
+     */
+    private ServiceResponseCollection<CreateAttachmentResponse> responses;
 
-  /**
-   * Initializes a new instance of CreateAttachmentException.
-   *
-   * @param serviceResponses the service response
-   * @param message          the message
-   */
-  public CreateAttachmentException(ServiceResponseCollection<CreateAttachmentResponse> serviceResponses,
-      String message) {
-    super(message);
-    EwsUtilities.ewsAssert(serviceResponses != null,
-      "MultiServiceResponseException.ctor", "serviceResponses is null");
+    /**
+     * Initializes a new instance of CreateAttachmentException.
+     *
+     * @param serviceResponses the service response
+     * @param message          the message
+     */
+    public CreateAttachmentException(ServiceResponseCollection<CreateAttachmentResponse> serviceResponses,
+                                     String message)
+    {
+        super(message);
+        EwsUtilities.ewsAssert(serviceResponses != null,
+                "MultiServiceResponseException.ctor", "serviceResponses is null");
 
-    this.responses = serviceResponses;
-  }
+        this.responses = serviceResponses;
+    }
 
-  /**
-   * Initializes a new instance of CreateAttachmentException.
-   *
-   * @param serviceResponses the service response
-   * @param message          the message
-   * @param innerException   the inner exception
-   */
-  protected CreateAttachmentException(
-      ServiceResponseCollection<CreateAttachmentResponse> serviceResponses,
-      String message, Exception innerException) {
-    super(message, innerException);
-    EwsUtilities.ewsAssert(serviceResponses != null,
-      "MultiServiceResponseException.ctor", "serviceResponses is null");
+    /**
+     * Initializes a new instance of CreateAttachmentException.
+     *
+     * @param serviceResponses the service response
+     * @param message          the message
+     * @param innerException   the inner exception
+     */
+    protected CreateAttachmentException(
+            ServiceResponseCollection<CreateAttachmentResponse> serviceResponses,
+            String message, Exception innerException)
+    {
+        super(message, innerException);
+        EwsUtilities.ewsAssert(serviceResponses != null,
+                "MultiServiceResponseException.ctor", "serviceResponses is null");
 
-    this.responses = serviceResponses;
-  }
+        this.responses = serviceResponses;
+    }
 }

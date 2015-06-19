@@ -29,13 +29,14 @@ package microsoft.exchange.webservices.data.autodiscover;
  * @param <T>       the generic type
  * @param <TResult> the generic type
  */
-public interface IFunc<T, TResult> {
+public interface IFunc<T, TResult>
+{
 
-  /**
-   * Func.
-   *
-   * @param arg the arg
-   * @return the t result
-   */
-  TResult func(T arg);
+    /**
+     * Func.
+     *
+     * @param arg the arg
+     * @return the t result
+     */
+    TResult func(T arg);
 }

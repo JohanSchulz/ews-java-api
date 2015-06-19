@@ -26,23 +26,24 @@ package microsoft.exchange.webservices.data.core.enumeration.misc;
 /**
  * Defines the type of Id of a ConnectingId object.
  */
-public enum ConnectingIdType {
+public enum ConnectingIdType
+{
 
-  // / The connecting Id is a principal name.
-  /**
-   * The Principal name.
-   */
-  PrincipalName,
+    // / The connecting Id is a principal name.
+    /**
+     * The Principal name.
+     */
+    PrincipalName,
 
-  // / The Id is an SID.
-  /**
-   * The SID.
-   */
-  SID,
+    // / The Id is an SID.
+    /**
+     * The SID.
+     */
+    SID,
 
-  // / The Id is an SMTP address.
-  /**
-   * The Smtp address.
-   */
-  SmtpAddress
+    // / The Id is an SMTP address.
+    /**
+     * The Smtp address.
+     */
+    SmtpAddress
 }

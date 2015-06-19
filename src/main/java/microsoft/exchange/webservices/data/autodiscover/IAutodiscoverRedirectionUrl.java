@@ -29,15 +29,16 @@ import microsoft.exchange.webservices.data.autodiscover.exception.AutodiscoverLo
  * Defines a delegate that is used by the AutodiscoverService to ask whether a
  * redirectionUrl can be used.
  */
-public interface IAutodiscoverRedirectionUrl {
+public interface IAutodiscoverRedirectionUrl
+{
 
-  /**
-   * Autodiscover redirection url validation callback.
-   *
-   * @param redirectionUrl the redirection url
-   * @return true, if successful
-   * @throws AutodiscoverLocalException the autodiscover local exception
-   */
-  boolean autodiscoverRedirectionUrlValidationCallback(
-      String redirectionUrl) throws AutodiscoverLocalException;
+    /**
+     * Autodiscover redirection url validation callback.
+     *
+     * @param redirectionUrl the redirection url
+     * @return true, if successful
+     * @throws AutodiscoverLocalException the autodiscover local exception
+     */
+    boolean autodiscoverRedirectionUrlValidationCallback(
+            String redirectionUrl) throws AutodiscoverLocalException;
 }

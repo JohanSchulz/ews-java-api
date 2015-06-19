@@ -30,13 +30,14 @@ import microsoft.exchange.webservices.data.core.exception.misc.FormatException;
  *
  * @param <TResult> the generic type
  */
-public interface IFuncDelegate<TResult> {
+public interface IFuncDelegate<TResult>
+{
 
-  /**
-   * Func.
-   *
-   * @return the t result
-   * @throws FormatException the format exception
-   */
-  TResult func() throws FormatException;
+    /**
+     * Func.
+     *
+     * @return the t result
+     * @throws FormatException the format exception
+     */
+    TResult func() throws FormatException;
 }

@@ -28,15 +28,17 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 /**
  * Represents a push subscriptions..
  */
-public final class PushSubscription extends SubscriptionBase {
+public final class PushSubscription extends SubscriptionBase
+{
 
-  /**
-   * Initializes a new instance.
-   *
-   * @param service the service
-   * @throws Exception the exception
-   */
-  public PushSubscription(ExchangeService service) throws Exception {
-    super(service);
-  }
+    /**
+     * Initializes a new instance.
+     *
+     * @param service the service
+     * @throws Exception the exception
+     */
+    public PushSubscription(ExchangeService service) throws Exception
+    {
+        super(service);
+    }
 }

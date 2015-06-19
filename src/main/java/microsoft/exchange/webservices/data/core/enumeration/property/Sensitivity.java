@@ -26,30 +26,31 @@ package microsoft.exchange.webservices.data.core.enumeration.property;
 /**
  * Defines the sensitivity of an item.
  */
-public enum Sensitivity {
+public enum Sensitivity
+{
 
-  // The item has a normal sensitivity.
-  /**
-   * The Normal.
-   */
-  Normal,
+    // The item has a normal sensitivity.
+    /**
+     * The Normal.
+     */
+    Normal,
 
-  // The item is personal.
-  /**
-   * The Personal.
-   */
-  Personal,
+    // The item is personal.
+    /**
+     * The Personal.
+     */
+    Personal,
 
-  // The item is private.
-  /**
-   * The Private.
-   */
-  Private,
+    // The item is private.
+    /**
+     * The Private.
+     */
+    Private,
 
-  // The item is confidential.
-  /**
-   * The Confidential.
-   */
-  Confidential
+    // The item is confidential.
+    /**
+     * The Confidential.
+     */
+    Confidential
 
 }

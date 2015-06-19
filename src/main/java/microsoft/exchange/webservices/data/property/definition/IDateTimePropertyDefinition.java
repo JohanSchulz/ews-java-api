@@ -26,6 +26,7 @@ package microsoft.exchange.webservices.data.property.definition;
 /**
  * The Interface DateTimePropertyDefinitionInterface.
  */
-interface IDateTimePropertyDefinition {
+interface IDateTimePropertyDefinition
+{
 
 }

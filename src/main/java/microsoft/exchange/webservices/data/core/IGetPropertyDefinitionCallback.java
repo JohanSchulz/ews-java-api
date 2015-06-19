@@ -29,13 +29,14 @@ import microsoft.exchange.webservices.data.property.definition.PropertyDefinitio
 /**
  * The Interface GetPropertyDefinitionCallbackInterface.
  */
-interface IGetPropertyDefinitionCallback {
+interface IGetPropertyDefinitionCallback
+{
 
-  /**
-   * Gets the property definition callback.
-   *
-   * @param version the version
-   * @return the property definition callback
-   */
-  PropertyDefinition getPropertyDefinitionCallback(ExchangeVersion version);
+    /**
+     * Gets the property definition callback.
+     *
+     * @param version the version
+     * @return the property definition callback
+     */
+    PropertyDefinition getPropertyDefinitionCallback(ExchangeVersion version);
 }

@@ -23,46 +23,50 @@
 
 package microsoft.exchange.webservices.data.misc;
 
-import microsoft.exchange.webservices.data.core.request.HttpClientWebRequest;
-import microsoft.exchange.webservices.data.core.request.HttpWebRequest;
 import microsoft.exchange.webservices.data.core.exception.http.EWSHttpException;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.request.HttpClientWebRequest;
+import microsoft.exchange.webservices.data.core.request.HttpWebRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-public class CallableMethod implements Callable<Object> {
+public class CallableMethod implements Callable<Object>
+{
 
-  private static final Log LOG = LogFactory.getLog(CallableMethod.class);
+    private static final Log LOG = LogFactory.getLog(CallableMethod.class);
 
-  HttpWebRequest request;
+    HttpWebRequest request;
 
-  public CallableMethod(HttpWebRequest request) {
-    this.request = request;
-  }
-
-  protected HttpClientWebRequest executeMethod() throws EWSHttpException, HttpErrorException, IOException {
-
-    request.executeRequest();
-    return (HttpClientWebRequest) request;
-  }
-
-  public HttpWebRequest call() {
-
-    try {
-      return executeMethod();
-    } catch (EWSHttpException e) {
-      // TODO Auto-generated catch block
-      LOG.error(e);
-    } catch (HttpErrorException e) {
-      // TODO Auto-generated catch block
-      LOG.error(e);
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      LOG.error(e);
+    public CallableMethod(HttpWebRequest request)
+    {
+        this.request = request;
     }
-    return request;
-  }
+
+    protected HttpClientWebRequest executeMethod() throws EWSHttpException, HttpErrorException, IOException
+    {
+
+        request.executeRequest();
+        return (HttpClientWebRequest) request;
+    }
+
+    public HttpWebRequest call()
+    {
+
+        try {
+            return executeMethod();
+        } catch (EWSHttpException e) {
+            // TODO Auto-generated catch block
+            LOG.error(e);
+        } catch (HttpErrorException e) {
+            // TODO Auto-generated catch block
+            LOG.error(e);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            LOG.error(e);
+        }
+        return request;
+    }
 }

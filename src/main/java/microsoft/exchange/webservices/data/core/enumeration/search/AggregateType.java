@@ -26,17 +26,18 @@ package microsoft.exchange.webservices.data.core.enumeration.search;
 /**
  * Defines the type of aggregation to perform.
  */
-public enum AggregateType {
+public enum AggregateType
+{
 
-  // The maximum value is calculated.
-  /**
-   * The Minimum.
-   */
-  Minimum,
+    // The maximum value is calculated.
+    /**
+     * The Minimum.
+     */
+    Minimum,
 
-  // The minimum value is calculated.
-  /**
-   * The Maximum.
-   */
-  Maximum
+    // The minimum value is calculated.
+    /**
+     * The Maximum.
+     */
+    Maximum
 }

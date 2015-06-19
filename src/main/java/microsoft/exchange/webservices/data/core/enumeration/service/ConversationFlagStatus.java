@@ -26,21 +26,22 @@ package microsoft.exchange.webservices.data.core.enumeration.service;
 /**
  * Defines the flag status of a Conversation.
  */
-public enum ConversationFlagStatus {
+public enum ConversationFlagStatus
+{
 
-  /**
-   * Not Flagged.
-   */
-  NotFlagged,
+    /**
+     * Not Flagged.
+     */
+    NotFlagged,
 
-  /**
-   * Flagged.
-   */
-  Flagged,
+    /**
+     * Flagged.
+     */
+    Flagged,
 
-  /**
-   * Complete.
-   */
-  Complete
+    /**
+     * Complete.
+     */
+    Complete
 
 }

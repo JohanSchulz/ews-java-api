@@ -23,43 +23,48 @@
 
 package microsoft.exchange.webservices.data.exception;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-
 import microsoft.exchange.webservices.data.core.exception.service.local.InvalidOrUnsupportedTimeZoneDefinitionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.junit.Assert.*;
+
 @RunWith(JUnit4.class)
-public class InvalidOrUnsupportedTimeZoneDefinitionExceptionTest {
+public class InvalidOrUnsupportedTimeZoneDefinitionExceptionTest
+{
 
-  private final String msg = "some message";
-  private final Exception rootCause = new Exception();
+    private final String msg = "some message";
+    private final Exception rootCause = new Exception();
 
 
-  @Test public void testInvalidOrUnsupportedTimeZoneDefinitionExceptionStringException() {
-    InvalidOrUnsupportedTimeZoneDefinitionException
-        impl =
-        new InvalidOrUnsupportedTimeZoneDefinitionException(msg, rootCause);
-    assertEquals(msg, impl.getMessage());
-    assertSame(rootCause, impl.getCause());
-  }
+    @Test
+    public void testInvalidOrUnsupportedTimeZoneDefinitionExceptionStringException()
+    {
+        InvalidOrUnsupportedTimeZoneDefinitionException
+                impl =
+                new InvalidOrUnsupportedTimeZoneDefinitionException(msg, rootCause);
+        assertEquals(msg, impl.getMessage());
+        assertSame(rootCause, impl.getCause());
+    }
 
-  @Test public void testInvalidOrUnsupportedTimeZoneDefinitionExceptionString() {
-    InvalidOrUnsupportedTimeZoneDefinitionException
-        impl =
-        new InvalidOrUnsupportedTimeZoneDefinitionException(msg);
-    assertEquals(msg, impl.getMessage());
-    assertNull(impl.getCause());
-  }
+    @Test
+    public void testInvalidOrUnsupportedTimeZoneDefinitionExceptionString()
+    {
+        InvalidOrUnsupportedTimeZoneDefinitionException
+                impl =
+                new InvalidOrUnsupportedTimeZoneDefinitionException(msg);
+        assertEquals(msg, impl.getMessage());
+        assertNull(impl.getCause());
+    }
 
-  @Test public void testInvalidOrUnsupportedTimeZoneDefinitionException() {
-    InvalidOrUnsupportedTimeZoneDefinitionException
-        impl =
-        new InvalidOrUnsupportedTimeZoneDefinitionException();
-    assertNull(impl.getMessage());
-    assertNull(impl.getCause());
-  }
+    @Test
+    public void testInvalidOrUnsupportedTimeZoneDefinitionException()
+    {
+        InvalidOrUnsupportedTimeZoneDefinitionException
+                impl =
+                new InvalidOrUnsupportedTimeZoneDefinitionException();
+        assertNull(impl.getMessage());
+        assertNull(impl.getCause());
+    }
 }

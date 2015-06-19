@@ -28,14 +28,16 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.concurrent.Future;
 
-public class AsyncCallbackImplementation extends AsyncCallback {
+public class AsyncCallbackImplementation extends AsyncCallback
+{
 
-  private static final Log LOG = LogFactory.getLog(AsyncCallbackImplementation.class);
+    private static final Log LOG = LogFactory.getLog(AsyncCallbackImplementation.class);
 
-  @Override
-  public Object processMe(Future<?> task) {
-    LOG.debug("In Async Callback" + task.isDone());
-    return null;
-  }
+    @Override
+    public Object processMe(Future<?> task)
+    {
+        LOG.debug("In Async Callback" + task.isDone());
+        return null;
+    }
 
 }

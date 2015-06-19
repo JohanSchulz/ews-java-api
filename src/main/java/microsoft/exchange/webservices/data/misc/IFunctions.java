@@ -33,74 +33,92 @@ import java.util.UUID;
  * Class with re-usable function implementations.
  */
 
-public final class IFunctions {
+public final class IFunctions
+{
 
-  private IFunctions() {
-    throw new UnsupportedOperationException();
-  }
-
-  public static class ToString implements IFunction<Object, String> {
-    public static final ToString INSTANCE = new ToString();
-
-    public String func(final Object o) {
-      return String.valueOf(o);
+    private IFunctions()
+    {
+        throw new UnsupportedOperationException();
     }
-  }
 
-  public static class ToBoolean implements IFunction<String, Object> {
-    public static final ToBoolean INSTANCE = new ToBoolean();
+    public static class ToString implements IFunction<Object, String>
+    {
+        public static final ToString INSTANCE = new ToString();
 
-    public Boolean func(final String s) {
-      return Boolean.parseBoolean(s);
+        public String func(final Object o)
+        {
+            return String.valueOf(o);
+        }
     }
-  }
 
-  public static class StringToObject implements IFunction<String, Object> {
-    public static final StringToObject INSTANCE = new StringToObject();
+    public static class ToBoolean implements IFunction<String, Object>
+    {
+        public static final ToBoolean INSTANCE = new ToBoolean();
 
-    public Object func(final String o) {
-      return o;
+        public Boolean func(final String s)
+        {
+            return Boolean.parseBoolean(s);
+        }
     }
-  }
 
-  public static class ToUUID implements IFunction<String, Object> {
-    public static final ToUUID INSTANCE = new ToUUID();
+    public static class StringToObject implements IFunction<String, Object>
+    {
+        public static final StringToObject INSTANCE = new StringToObject();
 
-    public Object func(final String s) {
-      return UUID.fromString(s);
+        public Object func(final String o)
+        {
+            return o;
+        }
     }
-  }
 
-  public static class Base64Decoder implements IFunction<String, Object> {
-    public static final Base64Decoder INSTANCE = new Base64Decoder();
+    public static class ToUUID implements IFunction<String, Object>
+    {
+        public static final ToUUID INSTANCE = new ToUUID();
 
-    public Object func(final String s) {
-      return Base64.decodeBase64(s);
+        public Object func(final String s)
+        {
+            return UUID.fromString(s);
+        }
     }
-  }
 
-  public static class Base64Encoder implements IFunction<Object, String> {
-    public static final Base64Encoder INSTANCE = new Base64Encoder();
+    public static class Base64Decoder implements IFunction<String, Object>
+    {
+        public static final Base64Decoder INSTANCE = new Base64Decoder();
 
-    public String func(final Object o) {
-      return Base64.encodeBase64String((byte[]) o);
+        public Object func(final String s)
+        {
+            return Base64.decodeBase64(s);
+        }
     }
-  }
 
-  public static class ToLowerCase implements IFunction<Object, String> {
-    public static final ToLowerCase INSTANCE = new ToLowerCase();
+    public static class Base64Encoder implements IFunction<Object, String>
+    {
+        public static final Base64Encoder INSTANCE = new Base64Encoder();
 
-    public String func(final Object o) {
-      return o == null ? null : o.toString().toLowerCase();
+        public String func(final Object o)
+        {
+            return Base64.encodeBase64String((byte[]) o);
+        }
     }
-  }
 
-  public static class DateTimeToXSDateTime implements IFunction<Object, String> {
-    public static final DateTimeToXSDateTime INSTANCE = new DateTimeToXSDateTime();
+    public static class ToLowerCase implements IFunction<Object, String>
+    {
+        public static final ToLowerCase INSTANCE = new ToLowerCase();
 
-    public String func(final Object o) {
-      return EwsUtilities.dateTimeToXSDateTime((Date) o);
+        public String func(final Object o)
+        {
+            return o == null ? null : o.toString().toLowerCase();
+        }
     }
-  }
+
+    public static class DateTimeToXSDateTime implements IFunction<Object, String>
+    {
+        public static final DateTimeToXSDateTime INSTANCE = new DateTimeToXSDateTime();
+
+        public String func(final Object o)
+        {
+            return EwsUtilities.dateTimeToXSDateTime((Date) o);
+        }
+    }
 
 }

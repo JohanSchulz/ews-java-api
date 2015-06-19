@@ -28,15 +28,16 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 /**
  * The Interface ICreateServiceObjectWithServiceParam.
  */
-public interface ICreateServiceObjectWithServiceParam {
+public interface ICreateServiceObjectWithServiceParam
+{
 
-  /**
-   * Creates the service object with service param.
-   *
-   * @param srv the srv
-   * @return the object
-   * @throws Exception the exception
-   */
-  Object createServiceObjectWithServiceParam(ExchangeService srv)
-      throws Exception;
+    /**
+     * Creates the service object with service param.
+     *
+     * @param srv the srv
+     * @return the object
+     * @throws Exception the exception
+     */
+    Object createServiceObjectWithServiceParam(ExchangeService srv)
+            throws Exception;
 }

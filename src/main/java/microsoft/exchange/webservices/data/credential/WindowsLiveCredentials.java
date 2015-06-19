@@ -23,6 +23,7 @@
 
 package microsoft.exchange.webservices.data.credential;
 
-public class WindowsLiveCredentials extends WSSecurityBasedCredentials {
+public class WindowsLiveCredentials extends WSSecurityBasedCredentials
+{
 
 }

@@ -23,15 +23,15 @@
 
 package microsoft.exchange.webservices.data.core;
 
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 
 /**
  * <p>
@@ -76,95 +76,120 @@ import java.security.GeneralSecurityException;
  * </p>
  */
 
-public class EwsSSLProtocolSocketFactory extends SSLConnectionSocketFactory {
+public class EwsSSLProtocolSocketFactory extends SSLConnectionSocketFactory
+{
 
-  /**
-   * Default hostname verifier.
-   */
-  private static final HostnameVerifier DEFAULT_HOSTNAME_VERIFIER = new DefaultHostnameVerifier();
-
-
-  /**
-   * The SSL Context.
-   */
-  private final SSLContext sslcontext;
+    /**
+     * Default hostname verifier.
+     */
+//    private static final HostnameVerifier DEFAULT_HOSTNAME_VERIFIER = new DefaultHostnameVerifier();
+    private static final HostnameVerifier DEFAULT_HOSTNAME_VERIFIER = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
 
 
-  /**
-   * Constructor for EasySSLProtocolSocketFactory.
-   *
-   * @param context          SSL context
-   * @param hostnameVerifier hostname verifier
-   */
-  public EwsSSLProtocolSocketFactory(
-    SSLContext context, HostnameVerifier hostnameVerifier
-  ) {
-    super(context, hostnameVerifier);
-    this.sslcontext = context;
-  }
+    /**
+     * The SSL Context.
+     */
+    private final SSLContext sslcontext;
 
 
-  /**
-   * Create and configure SSL protocol socket factory using default hostname verifier.
-   * {@link EwsSSLProtocolSocketFactory#DEFAULT_HOSTNAME_VERIFIER}
-   *
-   * @param trustManager trust manager
-   * @return socket factory for SSL protocol
-   * @throws GeneralSecurityException on security error
-   */
-  public static EwsSSLProtocolSocketFactory build(TrustManager trustManager)
-    throws GeneralSecurityException {
-    return build(trustManager, DEFAULT_HOSTNAME_VERIFIER);
-  }
-
-  /**
-   * Create and configure SSL protocol socket factory using trust manager and hostname verifier.
-   *
-   * @param trustManager trust manager
-   * @param hostnameVerifier hostname verifier
-   * @return socket factory for SSL protocol
-   * @throws GeneralSecurityException on security error
-   */
-  public static EwsSSLProtocolSocketFactory build(
-    TrustManager trustManager, HostnameVerifier hostnameVerifier
-  ) throws GeneralSecurityException {
-    SSLContext sslContext = createSslContext(trustManager);
-    return new EwsSSLProtocolSocketFactory(sslContext, hostnameVerifier);
-  }
-
-  /**
-   * Create SSL context and initialize it using specific trust manager.
-   *
-   * @param trustManager trust manager
-   * @return initialized SSL context
-   * @throws GeneralSecurityException on security error
-   */
-  public static SSLContext createSslContext(TrustManager trustManager)
-    throws GeneralSecurityException {
-    EwsX509TrustManager x509TrustManager = new EwsX509TrustManager(null, trustManager);
-    SSLContext sslContext = SSLContexts.createDefault();
-    sslContext.init(
-      null,
-      new TrustManager[] { x509TrustManager },
-      null
-    );
-    return sslContext;
-  }
+    /**
+     * Constructor for EasySSLProtocolSocketFactory.
+     *
+     * @param context          SSL context
+     * @param hostnameVerifier hostname verifier
+     */
+    public EwsSSLProtocolSocketFactory(
+            SSLContext context, HostnameVerifier hostnameVerifier)
+    {
+        super(context, (X509HostnameVerifier) hostnameVerifier);
+        this.sslcontext = context;
+    }
 
 
-  /**
-   * @return SSL context
-   */
-  public SSLContext getContext() {
-    return sslcontext;
-  }
+    /**
+     * Create and configure SSL protocol socket factory using default hostname verifier.
+     * {@link EwsSSLProtocolSocketFactory#DEFAULT_HOSTNAME_VERIFIER}
+     *
+     * @param keystore KeyStore for certificate lookups
+     * @return socket factory for SSL protocol
+     * @throws GeneralSecurityException on security error
+     */
+    public static EwsSSLProtocolSocketFactory build(final KeyStore keystore)
+            throws GeneralSecurityException
+    {
+        SSLContext sslContext = createSslContext(keystore, null);
+        return new EwsSSLProtocolSocketFactory(sslContext, DEFAULT_HOSTNAME_VERIFIER);
+    }
 
-  public boolean equals(Object obj) {
-    return ((obj != null) && obj.getClass().equals(EwsSSLProtocolSocketFactory.class));
-  }
 
-  public int hashCode() {
-    return EwsSSLProtocolSocketFactory.class.hashCode();
-  }
+    /**
+     * Create and configure SSL protocol socket factory using default hostname verifier.
+     * {@link EwsSSLProtocolSocketFactory#DEFAULT_HOSTNAME_VERIFIER}
+     *
+     * @param trustManager trust manager
+     * @return socket factory for SSL protocol
+     * @throws GeneralSecurityException on security error
+     */
+    public static EwsSSLProtocolSocketFactory build(TrustManager trustManager)
+            throws GeneralSecurityException
+    {
+        return build(trustManager, DEFAULT_HOSTNAME_VERIFIER);
+    }
+
+    /**
+     * Create and configure SSL protocol socket factory using trust manager and hostname verifier.
+     *
+     * @param trustManager     trust manager
+     * @param hostnameVerifier hostname verifier
+     * @return socket factory for SSL protocol
+     * @throws GeneralSecurityException on security error
+     */
+    public static EwsSSLProtocolSocketFactory build(
+            TrustManager trustManager, HostnameVerifier hostnameVerifier
+    ) throws GeneralSecurityException
+    {
+        SSLContext sslContext = createSslContext(null, trustManager);
+        return new EwsSSLProtocolSocketFactory(sslContext, hostnameVerifier);
+    }
+
+    /**
+     * Create SSL context and initialize it using specific trust manager.
+     *
+     * @param trustManager trust manager
+     * @return initialized SSL context
+     * @throws GeneralSecurityException on security error
+     */
+    public static SSLContext createSslContext(
+            final KeyStore keystore, final TrustManager trustManager)
+            throws GeneralSecurityException
+    {
+        EwsX509TrustManager x509TrustManager = new EwsX509TrustManager(keystore, trustManager);
+        SSLContext sslContext = SSLContexts.createDefault();
+        sslContext.init(
+                null,
+                new TrustManager[]{x509TrustManager},
+                null
+        );
+        return sslContext;
+    }
+
+
+    /**
+     * @return SSL context
+     */
+    public SSLContext getContext()
+    {
+        return sslcontext;
+    }
+
+    public boolean equals(Object obj)
+    {
+        return ((obj != null) && obj.getClass().equals(EwsSSLProtocolSocketFactory.class));
+    }
+
+    public int hashCode()
+    {
+        return EwsSSLProtocolSocketFactory.class.hashCode();
+    }
 
 }

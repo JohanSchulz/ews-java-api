@@ -23,11 +23,6 @@
 
 package microsoft.exchange.webservices.data.core;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,58 +33,71 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class LazyMemberTest {
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.*;
 
-  LazyMember impl;
+public class LazyMemberTest
+{
 
-  @Mock ILazyMember<Object> iLazyMember;
+    LazyMember impl;
 
-  @Before
-  public void setUp() throws Exception {
+    @Mock
+    ILazyMember<Object> iLazyMember;
 
-    MockitoAnnotations.initMocks(this);
-    impl = new LazyMember(iLazyMember);
+    @Before
+    public void setUp() throws Exception
+    {
 
-    doReturn(new Object()).when(iLazyMember).createInstance();
+        MockitoAnnotations.initMocks(this);
+        impl = new LazyMember(iLazyMember);
 
-  }
+        doReturn(new Object()).when(iLazyMember).createInstance();
 
-  @Test public void testGetMember() throws Exception {
-    impl.getMember();
-    impl.getMember();
-
-    //createInstance has been called only one time
-    verify(iLazyMember, times(1)).createInstance();
-
-  }
-
-  @Test public void testGetMemberMultiThread() throws Exception {
-    final int poolSize = 3;
-    final CountDownLatch latch = new CountDownLatch(poolSize);
-    final ExecutorService pool = Executors.newFixedThreadPool(poolSize);
-
-    final Runnable runnableUsingSingleton = new Runnable() {
-      @Override public void run() {
-        try {
-          //just to ensure all threads will try to get the signleton at the same time
-          latch.await();
-          impl.getMember();
-        } catch (InterruptedException e) {
-          fail(e.getMessage());
-        }
-      }
-    };
-
-    for(int i = 0; i < poolSize; ++i) {
-      pool.submit(runnableUsingSingleton);
-      latch.countDown();  //decrease countdown
     }
 
-    pool.shutdown();
-    pool.awaitTermination(3, TimeUnit.SECONDS);
+    @Test
+    public void testGetMember() throws Exception
+    {
+        impl.getMember();
+        impl.getMember();
 
-    //createInstance has been called only one time
-    verify(iLazyMember, times(1)).createInstance();
+        //createInstance has been called only one time
+        verify(iLazyMember, times(1)).createInstance();
 
-  }
+    }
+
+    @Test
+    public void testGetMemberMultiThread() throws Exception
+    {
+        final int poolSize = 3;
+        final CountDownLatch latch = new CountDownLatch(poolSize);
+        final ExecutorService pool = Executors.newFixedThreadPool(poolSize);
+
+        final Runnable runnableUsingSingleton = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    //just to ensure all threads will try to get the signleton at the same time
+                    latch.await();
+                    impl.getMember();
+                } catch (InterruptedException e) {
+                    fail(e.getMessage());
+                }
+            }
+        };
+
+        for (int i = 0; i < poolSize; ++i) {
+            pool.submit(runnableUsingSingleton);
+            latch.countDown();  //decrease countdown
+        }
+
+        pool.shutdown();
+        pool.awaitTermination(3, TimeUnit.SECONDS);
+
+        //createInstance has been called only one time
+        verify(iLazyMember, times(1)).createInstance();
+
+    }
 }

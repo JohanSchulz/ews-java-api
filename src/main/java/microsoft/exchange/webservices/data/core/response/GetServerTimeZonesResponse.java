@@ -34,60 +34,61 @@ import java.util.Collection;
 /**
  * Represents the response to a GetServerTimeZones request.
  */
-public class GetServerTimeZonesResponse extends ServiceResponse {
+public class GetServerTimeZonesResponse extends ServiceResponse
+{
 
-  /**
-   * The time zones.
-   */
-  private Collection<TimeZoneDefinition> timeZones =
-      new ArrayList<TimeZoneDefinition>();
+    /**
+     * The time zones.
+     */
+    private Collection<TimeZoneDefinition> timeZones =
+            new ArrayList<TimeZoneDefinition>();
 
-  /**
-   * Initializes a new instance of the class.
-   */
-  public GetServerTimeZonesResponse() {
-    super();
-  }
-
-  /**
-   * Reads response elements from XML.
-   *
-   * @param reader the reader
-   * @throws Exception the exception
-   */
-  @Override
-  protected void readElementsFromXml(EwsServiceXmlReader reader) throws Exception {
-    super.readElementsFromXml(reader);
-
-    reader.readStartElement(XmlNamespace.Messages,
-        XmlElementNames.TimeZoneDefinitions);
-
-    if (!reader.isEmptyElement()) {
-      do {
-        reader.read();
-
-        if (reader.isStartElement(XmlNamespace.Types,
-            XmlElementNames.TimeZoneDefinition)) {
-          TimeZoneDefinition timeZoneDefinition =
-              new TimeZoneDefinition();
-          timeZoneDefinition.loadFromXml(reader);
-
-          this.timeZones.add(timeZoneDefinition);
-        }
-      } while (!reader.isEndElement(XmlNamespace.Messages,
-          XmlElementNames.TimeZoneDefinitions));
-    } else {
-      reader.read();
+    /**
+     * Initializes a new instance of the class.
+     */
+    public GetServerTimeZonesResponse()
+    {
+        super();
     }
-  }
 
-  /**
-   * Reads response elements from XML.
-   *
-   * @return the time zones
-   */
-  public Collection<TimeZoneDefinition> getTimeZones() {
-    return this.timeZones;
-  }
+    /**
+     * Reads response elements from XML.
+     *
+     * @param reader the reader
+     * @throws Exception the exception
+     */
+    @Override
+    protected void readElementsFromXml(EwsServiceXmlReader reader) throws Exception
+    {
+        super.readElementsFromXml(reader);
+
+        reader.readStartElement(XmlNamespace.Messages, XmlElementNames.TimeZoneDefinitions);
+
+        if (!reader.isEmptyElement()) {
+            do {
+                reader.read();
+
+                if (reader.isStartElement(XmlNamespace.Types, XmlElementNames.TimeZoneDefinition)) {
+                    TimeZoneDefinition timeZoneDefinition = new TimeZoneDefinition();
+                    timeZoneDefinition.loadFromXml(reader);
+                    this.timeZones.add(timeZoneDefinition);
+                }
+            } while (!reader.isEndElement(XmlNamespace.Messages,
+                    XmlElementNames.TimeZoneDefinitions));
+        }
+        else {
+            reader.read();
+        }
+    }
+
+    /**
+     * Reads response elements from XML.
+     *
+     * @return the time zones
+     */
+    public Collection<TimeZoneDefinition> getTimeZones()
+    {
+        return this.timeZones;
+    }
 
 }

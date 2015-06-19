@@ -26,25 +26,26 @@ package microsoft.exchange.webservices.data.core.enumeration.misc;
 /**
  * Enumeration of reasons that a hanging request may disconnect.
  */
-public enum HangingRequestDisconnectReason {
+public enum HangingRequestDisconnectReason
+{
 
-  /**
-   * The server cleanly closed the connection.
-   */
-  Clean,
+    /**
+     * The server cleanly closed the connection.
+     */
+    Clean,
 
-  /**
-   * The client closed the connection.
-   */
-  UserInitiated,
+    /**
+     * The client closed the connection.
+     */
+    UserInitiated,
 
-  /**
-   * The connection timed out do to a lack of a heartbeat received.
-   */
-  Timeout,
+    /**
+     * The connection timed out do to a lack of a heartbeat received.
+     */
+    Timeout,
 
-  /**
-   * An exception occurred on the connection
-   */
-  Exception
+    /**
+     * An exception occurred on the connection
+     */
+    Exception
 }

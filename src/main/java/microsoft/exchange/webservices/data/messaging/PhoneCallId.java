@@ -33,78 +33,86 @@ import microsoft.exchange.webservices.data.property.complex.ComplexProperty;
 /**
  * Represents the Id of a phone call.
  */
-public final class PhoneCallId extends ComplexProperty {
+public final class PhoneCallId extends ComplexProperty
+{
 
-  /**
-   * The id.
-   */
-  private String id;
+    /**
+     * The id.
+     */
+    private String id;
 
-  /**
-   * Initializes a new instance of the PhoneCallId class.
-   */
-  public PhoneCallId() {
-  }
+    /**
+     * Initializes a new instance of the PhoneCallId class.
+     */
+    public PhoneCallId()
+    {
+    }
 
-  /**
-   * Initializes a new instance of the PhoneCallId class.
-   *
-   * @param id the id
-   */
-  protected PhoneCallId(String id) {
-    this.id = id;
-  }
+    /**
+     * Initializes a new instance of the PhoneCallId class.
+     *
+     * @param id the id
+     */
+    protected PhoneCallId(String id)
+    {
+        this.id = id;
+    }
 
-  /**
-   * Reads attribute from XML.
-   *
-   * @param reader the reader
-   * @throws Exception the exception
-   */
-  @Override
-  public void readAttributesFromXml(EwsServiceXmlReader reader)
-      throws Exception {
-    this.id = reader.readAttributeValue(XmlAttributeNames.Id);
-  }
+    /**
+     * Reads attribute from XML.
+     *
+     * @param reader the reader
+     * @throws Exception the exception
+     */
+    @Override
+    public void readAttributesFromXml(EwsServiceXmlReader reader)
+            throws Exception
+    {
+        this.id = reader.readAttributeValue(XmlAttributeNames.Id);
+    }
 
-  /**
-   * Writes attribute to XML.
-   *
-   * @param writer the writer
-   * @throws ServiceXmlSerializationException the service xml serialization exception
-   */
-  @Override
-  public void writeAttributesToXml(EwsServiceXmlWriter writer)
-      throws ServiceXmlSerializationException {
-    writer.writeAttributeValue(XmlAttributeNames.Id, this.id);
-  }
+    /**
+     * Writes attribute to XML.
+     *
+     * @param writer the writer
+     * @throws ServiceXmlSerializationException the service xml serialization exception
+     */
+    @Override
+    public void writeAttributesToXml(EwsServiceXmlWriter writer)
+            throws ServiceXmlSerializationException
+    {
+        writer.writeAttributeValue(XmlAttributeNames.Id, this.id);
+    }
 
-  /**
-   * Writes to XML.
-   *
-   * @param writer the writer
-   * @throws Exception the exception
-   */
-  protected void writeToXml(EwsServiceXmlWriter writer) throws Exception {
-    this.writeToXml(writer, XmlElementNames.PhoneCallId);
-  }
+    /**
+     * Writes to XML.
+     *
+     * @param writer the writer
+     * @throws Exception the exception
+     */
+    protected void writeToXml(EwsServiceXmlWriter writer) throws Exception
+    {
+        this.writeToXml(writer, XmlElementNames.PhoneCallId);
+    }
 
-  /**
-   * Gets the Id of the phone call.
-   *
-   * @return the id
-   */
-  protected String getId() {
-    return id;
-  }
+    /**
+     * Gets the Id of the phone call.
+     *
+     * @return the id
+     */
+    protected String getId()
+    {
+        return id;
+    }
 
-  /**
-   * Sets the id.
-   *
-   * @param id the new id
-   */
-  protected void setId(String id) {
-    this.id = id;
-  }
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
+    protected void setId(String id)
+    {
+        this.id = id;
+    }
 
 }

@@ -28,14 +28,16 @@ package microsoft.exchange.webservices.data.misc;
  *
  * @param <T> the generic type
  */
-public class RefParam<T> extends Param<T> {
+public class RefParam<T> extends Param<T>
+{
 
-  /**
-   * Instantiates a new ref param.
-   *
-   * @param param the param
-   */
-  public RefParam(T param) {
-    this.setParam(param);
-  }
+    /**
+     * Instantiates a new ref param.
+     *
+     * @param param the param
+     */
+    public RefParam(T param)
+    {
+        this.setParam(param);
+    }
 }

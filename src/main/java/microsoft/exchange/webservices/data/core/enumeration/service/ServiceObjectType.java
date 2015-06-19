@@ -26,23 +26,24 @@ package microsoft.exchange.webservices.data.core.enumeration.service;
 /**
  * Defines the type of a service object.
  */
-public enum ServiceObjectType {
+public enum ServiceObjectType
+{
 
-  // The object is a folder.
-  /**
-   * The Folder.
-   */
-  Folder,
+    // The object is a folder.
+    /**
+     * The Folder.
+     */
+    Folder,
 
-  // The object is an item.
-  /**
-   * The Item.
-   */
-  Item,
+    // The object is an item.
+    /**
+     * The Item.
+     */
+    Item,
 
-  /// Data represents a conversation
-  /**
-   * The Conversation.
-   */
-  Conversation
+    /// Data represents a conversation
+    /**
+     * The Conversation.
+     */
+    Conversation
 }

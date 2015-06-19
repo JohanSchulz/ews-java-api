@@ -32,41 +32,54 @@ import java.util.List;
 
 
 @RunWith(JUnit4.class)
-public class ComplexPropertyCollectionTest {
+public class ComplexPropertyCollectionTest
+{
 
-  @Test
-  public void testComplexPropertyChangedPositive() {
-    final ComplexPropertyCollection<ComplexProperty> collection = createFakeComplexPropertyCollection();
+    @Test
+    public void testComplexPropertyChangedPositive()
+    {
+        final ComplexPropertyCollection<ComplexProperty> collection = createFakeComplexPropertyCollection();
 
-    final ComplexProperty property = createFakeComplexProperty();
-    collection.complexPropertyChanged(property);
+        final ComplexProperty property = createFakeComplexProperty();
+        collection.complexPropertyChanged(property);
 
-    final List<ComplexProperty> modifiedItems = collection.getModifiedItems();
-    Assert.assertTrue(collection.getAddedItems().isEmpty());
-    Assert.assertTrue(modifiedItems.contains(property));
-    Assert.assertEquals(1, modifiedItems.size());
-  }
+        final List<ComplexProperty> modifiedItems = collection.getModifiedItems();
+        Assert.assertTrue(collection.getAddedItems().isEmpty());
+        Assert.assertTrue(modifiedItems.contains(property));
+        Assert.assertEquals(1, modifiedItems.size());
+    }
 
-  @Test(expected = RuntimeException.class)
-  public void testComplexPropertyChangedNegative() {
-    final ComplexPropertyCollection<ComplexProperty> collection = createFakeComplexPropertyCollection();
-    collection.complexPropertyChanged(null);
-  }
+    @Test(expected = RuntimeException.class)
+    public void testComplexPropertyChangedNegative()
+    {
+        final ComplexPropertyCollection<ComplexProperty> collection = createFakeComplexPropertyCollection();
+        collection.complexPropertyChanged(null);
+    }
 
 
-  private ComplexProperty createFakeComplexProperty() {
-    return new ComplexProperty() {};
-  }
+    private ComplexProperty createFakeComplexProperty()
+    {
+        return new ComplexProperty()
+        {
+        };
+    }
 
-  private ComplexPropertyCollection<ComplexProperty> createFakeComplexPropertyCollection() {
-    return new ComplexPropertyCollection<ComplexProperty>() {
-      @Override protected ComplexProperty createComplexProperty(final String xmlElementName) {
-        return null;
-      }
-      @Override protected String getCollectionItemXmlElementName(final ComplexProperty complexProperty) {
-        return null;
-      }
-    };
-  }
+    private ComplexPropertyCollection<ComplexProperty> createFakeComplexPropertyCollection()
+    {
+        return new ComplexPropertyCollection<ComplexProperty>()
+        {
+            @Override
+            protected ComplexProperty createComplexProperty(final String xmlElementName)
+            {
+                return null;
+            }
+
+            @Override
+            protected String getCollectionItemXmlElementName(final ComplexProperty complexProperty)
+            {
+                return null;
+            }
+        };
+    }
 
 }

@@ -25,21 +25,24 @@ package microsoft.exchange.webservices.data.misc;
 
 import java.util.concurrent.Future;
 
-public abstract class AsyncCallback extends AbstractAsyncCallback {
+public abstract class AsyncCallback extends AbstractAsyncCallback
+{
 
-  AsyncCallback() {
+    AsyncCallback()
+    {
 
-  }
+    }
 
-  void setTask(Future<?> task) {
+    void setTask(Future<?> task)
+    {
 
-    this.task = task;
-  }
+        this.task = task;
+    }
 
-  Future<?> getTask() {
-    return this.task;
-  }
-
+    Future<?> getTask()
+    {
+        return this.task;
+    }
 
 
 }
