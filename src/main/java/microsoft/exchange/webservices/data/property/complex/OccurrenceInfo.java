@@ -71,30 +71,23 @@ public final class OccurrenceInfo extends ComplexProperty
     public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
             throws Exception
     {
-        if (reader.getLocalName().equals(XmlElementNames.ItemId)) {
-
-            this.itemId = new ItemId();
-            this.itemId.loadFromXml(reader, reader.getLocalName());
-            return true;
-        }
-        else if (reader.getLocalName().equals(XmlElementNames.Start)) {
-
-            this.start = reader.readElementValueAsDateTime();
-            return true;
-        }
-        else if (reader.getLocalName().equals(XmlElementNames.End)) {
-
-            this.end = reader.readElementValueAsDateTime();
-            return true;
-        }
-        else if (reader.getLocalName().equals(XmlElementNames.OriginalStart)) {
-
-            this.originalStart = reader.readElementValueAsDateTime();
-            return true;
-        }
-        else {
-
-            return false;
+        String localName = reader.getLocalName();
+        switch (localName) {
+            case XmlElementNames.ItemId:
+                this.itemId = new ItemId();
+                this.itemId.loadFromXml(reader, localName);
+                return true;
+            case XmlElementNames.Start:
+                this.start = reader.readElementValueAsDateTime();
+                return true;
+            case XmlElementNames.End:
+                this.end = reader.readElementValueAsDateTime();
+                return true;
+            case XmlElementNames.OriginalStart:
+                this.originalStart = reader.readElementValueAsDateTime();
+                return true;
+            default:
+                return false;
         }
     }
 

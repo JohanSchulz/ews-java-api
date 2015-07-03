@@ -33,7 +33,6 @@ import microsoft.exchange.webservices.data.core.enumeration.service.Conversation
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendCancellationsMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.calendar.AffectedTaskOccurrence;
-import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceResponseException;
 import microsoft.exchange.webservices.data.core.service.ServiceObject;
@@ -245,11 +244,12 @@ public class Conversation extends ServiceObject
     public void disableAlwaysCategorizeItems(boolean processSynchronously)
             throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
-        ArrayList<ConversationId> convArry = new ArrayList<ConversationId>();
-        convArry.add(this.getId());
-        this.getService().disableAlwaysCategorizeItemsInConversations(
-                convArry, processSynchronously).
-                getResponseAtIndex(0).throwIfNecessary();
+        ArrayList<ConversationId> conversationIds = new ArrayList<ConversationId>();
+        conversationIds.add(this.getId());
+        this.getService()
+                .disableAlwaysCategorizeItemsInConversations(conversationIds, processSynchronously)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -268,11 +268,12 @@ public class Conversation extends ServiceObject
     public void enableAlwaysDeleteItems(boolean processSynchronously)
             throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
-        ArrayList<ConversationId> convArry = new ArrayList<ConversationId>();
-        convArry.add(this.getId());
-        this.getService().enableAlwaysDeleteItemsInConversations(
-                convArry,
-                processSynchronously).getResponseAtIndex(0).throwIfNecessary();
+        ArrayList<ConversationId> conversationIds = new ArrayList<ConversationId>();
+        conversationIds.add(this.getId());
+        this.getService()
+                .enableAlwaysDeleteItemsInConversations(conversationIds, processSynchronously)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -291,11 +292,12 @@ public class Conversation extends ServiceObject
     public void disableAlwaysDeleteItems(boolean processSynchronously)
             throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
-        ArrayList<ConversationId> convArry = new ArrayList<ConversationId>();
-        convArry.add(this.getId());
-        this.getService().disableAlwaysDeleteItemsInConversations(
-                convArry,
-                processSynchronously).getResponseAtIndex(0).throwIfNecessary();
+        ArrayList<ConversationId> conversationIds = new ArrayList<ConversationId>();
+        conversationIds.add(this.getId());
+        this.getService()
+                .disableAlwaysDeleteItemsInConversations(conversationIds, processSynchronously)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -312,16 +314,15 @@ public class Conversation extends ServiceObject
      * @throws IndexOutOfBoundsException
      * @throws ServiceResponseException
      */
-    public void enableAlwaysMoveItems(FolderId destinationFolderId,
-                                      boolean processSynchronously) throws ServiceResponseException,
-            IndexOutOfBoundsException, Exception
+    public void enableAlwaysMoveItems(FolderId destinationFolderId, boolean processSynchronously)
+            throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
-        ArrayList<ConversationId> convArry = new ArrayList<ConversationId>();
-        convArry.add(this.getId());
-        this.getService().enableAlwaysMoveItemsInConversations(
-                convArry,
-                destinationFolderId,
-                processSynchronously).getResponseAtIndex(0).throwIfNecessary();
+        ArrayList<ConversationId> conversationIds = new ArrayList<ConversationId>();
+        conversationIds.add(this.getId());
+        this.getService()
+                .enableAlwaysMoveItemsInConversations(conversationIds, destinationFolderId, processSynchronously)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -340,11 +341,12 @@ public class Conversation extends ServiceObject
     public void disableAlwaysMoveItemsInConversation(boolean processSynchronously)
             throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
-        ArrayList<ConversationId> convArry = new ArrayList<ConversationId>();
-        convArry.add(this.getId());
-        this.getService().disableAlwaysMoveItemsInConversations(
-                convArry,
-                processSynchronously).getResponseAtIndex(0).throwIfNecessary();
+        ArrayList<ConversationId> conversationIds = new ArrayList<ConversationId>();
+        conversationIds.add(this.getId());
+        this.getService()
+                .disableAlwaysMoveItemsInConversations(conversationIds, processSynchronously)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -368,10 +370,10 @@ public class Conversation extends ServiceObject
         List<HashMap<ConversationId, Date>> f = new ArrayList<HashMap<ConversationId, Date>>();
         f.add(m);
 
-        this.getService().deleteItemsInConversations(
-                f,
-                contextFolderId,
-                deleteMode).getResponseAtIndex(0).throwIfNecessary();
+        this.getService()
+                .deleteItemsInConversations(f, contextFolderId, deleteMode)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
 
@@ -387,10 +389,8 @@ public class Conversation extends ServiceObject
      * @throws IndexOutOfBoundsException
      * @throws ServiceResponseException
      */
-    public void moveItemsInConversation(
-            FolderId contextFolderId,
-            FolderId destinationFolderId) throws ServiceResponseException,
-            IndexOutOfBoundsException, Exception
+    public void moveItemsInConversation(FolderId contextFolderId, FolderId destinationFolderId)
+            throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
         HashMap<ConversationId, Date> m = new HashMap<ConversationId, Date>();
         m.put(this.getId(), this.getGlobalLastDeliveryTime());
@@ -398,9 +398,10 @@ public class Conversation extends ServiceObject
         List<HashMap<ConversationId, Date>> f = new ArrayList<HashMap<ConversationId, Date>>();
         f.add(m);
 
-        this.getService().moveItemsInConversations(
-                f, contextFolderId, destinationFolderId).
-                getResponseAtIndex(0).throwIfNecessary();
+        this.getService()
+                .moveItemsInConversations(f, contextFolderId, destinationFolderId)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -415,10 +416,8 @@ public class Conversation extends ServiceObject
      * @throws IndexOutOfBoundsException
      * @throws ServiceResponseException
      */
-    public void copyItemsInConversation(
-            FolderId contextFolderId,
-            FolderId destinationFolderId) throws ServiceResponseException,
-            IndexOutOfBoundsException, Exception
+    public void copyItemsInConversation(FolderId contextFolderId, FolderId destinationFolderId)
+            throws ServiceResponseException, IndexOutOfBoundsException, Exception
     {
         HashMap<ConversationId, Date> m = new HashMap<ConversationId, Date>();
         m.put(this.getId(), this.getGlobalLastDeliveryTime());
@@ -426,9 +425,10 @@ public class Conversation extends ServiceObject
         List<HashMap<ConversationId, Date>> f = new ArrayList<HashMap<ConversationId, Date>>();
         f.add(m);
 
-        this.getService().copyItemsInConversations(
-                f, contextFolderId, destinationFolderId).
-                getResponseAtIndex(0).throwIfNecessary();
+        this.getService()
+                .copyItemsInConversations(f, contextFolderId, destinationFolderId)
+                .getResponseAtIndex(0)
+                .throwIfNecessary();
     }
 
     /**
@@ -445,10 +445,8 @@ public class Conversation extends ServiceObject
      * @throws IndexOutOfBoundsException
      * @throws ServiceResponseException
      */
-    public void setReadStateForItemsInConversation(
-            FolderId contextFolderId,
-            boolean isRead) throws ServiceResponseException,
-            IndexOutOfBoundsException, Exception
+    public void setReadStateForItemsInConversation(FolderId contextFolderId, boolean isRead)
+            throws ServiceResponseException, IndexOutOfBoundsException, ServiceLocalException
     {
         HashMap<ConversationId, Date> m = new HashMap<ConversationId, Date>();
         m.put(this.getId(), this.getGlobalLastDeliveryTime());
@@ -456,9 +454,15 @@ public class Conversation extends ServiceObject
         List<HashMap<ConversationId, Date>> f = new ArrayList<HashMap<ConversationId, Date>>();
         f.add(m);
 
-        this.getService().setReadStateForItemsInConversations(
-                f, contextFolderId, isRead).
-                getResponseAtIndex(0).throwIfNecessary();
+        try {
+            this.getService()
+                    .setReadStateForItemsInConversations(f, contextFolderId, isRead)
+                    .getResponseAtIndex(0)
+                    .throwIfNecessary();
+        } catch (Exception e) {
+            throw new ServiceLocalException("Conversation.setReadStateForItemsInConversation", e);
+        }
+
     }
 
     /**
@@ -469,29 +473,27 @@ public class Conversation extends ServiceObject
      */
     public ConversationId getId() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                getIdPropertyDefinition());
+        return getPropertyBag().getObjectFromPropertyDefinition(getIdPropertyDefinition());
     }
 
     /**
      * Gets the topic of this Conversation.
      *
      * @return value
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public String getTopic() throws ArgumentException
+    public String getTopic() throws ServiceLocalException
     {
         String returnValue = "";
 
-        /**This property need not be present hence the
-         *  property bag may not contain it.
-         *Check for the presence of this property before accessing it.
+        /**
+         * This property need not be present hence the property bag may not contain it.
+         * Check for the presence of this property before accessing it.
          */
         if (this.getPropertyBag().contains(ConversationSchema.Topic)) {
             OutParam<String> out = new OutParam<String>();
-            this.getPropertyBag().tryGetPropertyType(String.class,
-                    ConversationSchema.Topic,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(String.class, ConversationSchema.Topic, out);
             returnValue = out.getParam();
         }
 
@@ -503,12 +505,11 @@ public class Conversation extends ServiceObject
      * messages in this conversation in the current folder only.
      *
      * @return String
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public StringList getUniqueRecipients() throws Exception
+    public StringList getUniqueRecipients() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.UniqueRecipients);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.UniqueRecipients);
     }
 
     /**
@@ -516,12 +517,11 @@ public class Conversation extends ServiceObject
      * messages in this conversation across all folder in the mailbox.
      *
      * @return String
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public StringList getGlobalUniqueRecipients() throws Exception
+    public StringList getGlobalUniqueRecipients() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalUniqueRecipients);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalUniqueRecipients);
     }
 
     /**
@@ -530,9 +530,9 @@ public class Conversation extends ServiceObject
      * the current folder only.
      *
      * @return unreadSenders
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public StringList getUniqueUnreadSenders() throws ArgumentException
+    public StringList getUniqueUnreadSenders() throws ServiceLocalException
     {
         StringList unreadSenders = null;
 
@@ -542,9 +542,8 @@ public class Conversation extends ServiceObject
          */
         if (this.getPropertyBag().contains(ConversationSchema.UniqueUnreadSenders)) {
             OutParam<StringList> out = new OutParam<StringList>();
-            this.getPropertyBag().tryGetPropertyType(StringList.class,
-                    ConversationSchema.UniqueUnreadSenders,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(StringList.class, ConversationSchema.UniqueUnreadSenders, out);
             unreadSenders = out.getParam();
         }
 
@@ -558,9 +557,9 @@ public class Conversation extends ServiceObject
      * conversation across all folder in the mailbox.
      *
      * @return unreadSenders
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public StringList getGlobalUniqueUnreadSenders() throws ArgumentException
+    public StringList getGlobalUniqueUnreadSenders() throws ServiceLocalException
     {
         StringList unreadSenders = null;
 
@@ -569,9 +568,8 @@ public class Conversation extends ServiceObject
         // Check for the presence of this property before accessing it.
         if (this.getPropertyBag().contains(ConversationSchema.GlobalUniqueUnreadSenders)) {
             OutParam<StringList> out = new OutParam<StringList>();
-            this.getPropertyBag().tryGetPropertyType(StringList.class,
-                    ConversationSchema.GlobalUniqueUnreadSenders,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(StringList.class, ConversationSchema.GlobalUniqueUnreadSenders, out);
             unreadSenders = out.getParam();
         }
 
@@ -583,12 +581,11 @@ public class Conversation extends ServiceObject
      * messages in this conversation in the current folder only.
      *
      * @return String
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public StringList getUniqueSenders() throws Exception
+    public StringList getUniqueSenders() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.UniqueSenders);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.UniqueSenders);
     }
 
     /**
@@ -596,12 +593,11 @@ public class Conversation extends ServiceObject
      * in this conversation across all folder in the mailbox.
      *
      * @return String
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public StringList getGlobalUniqueSenders() throws Exception
+    public StringList getGlobalUniqueSenders() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalUniqueSenders);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalUniqueSenders);
     }
 
     /**
@@ -609,12 +605,11 @@ public class Conversation extends ServiceObject
      * received in this conversation in the current folder only.
      *
      * @return Date
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public Date getLastDeliveryTime() throws Exception
+    public Date getLastDeliveryTime() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.LastDeliveryTime);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.LastDeliveryTime);
     }
 
     /**
@@ -622,12 +617,11 @@ public class Conversation extends ServiceObject
      * received in this conversation across all folder in the mailbox.
      *
      * @return Date
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public Date getGlobalLastDeliveryTime() throws Exception
+    public Date getGlobalLastDeliveryTime() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalLastDeliveryTime);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalLastDeliveryTime);
     }
 
     /**
@@ -635,21 +629,21 @@ public class Conversation extends ServiceObject
      * messages in this conversation, in the current folder only.
      *
      * @return value
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public StringList getCategories() throws ArgumentException
+    public StringList getCategories() throws ServiceLocalException
     {
         StringList returnValue = null;
 
-        /**This property need not be present hence
+        /**
+         * This property need not be present hence
          * the property bag may not contain it.
          * Check for the presence of this property before accessing it.
          */
         if (this.getPropertyBag().contains(ConversationSchema.Categories)) {
             OutParam<StringList> out = new OutParam<StringList>();
-            this.getPropertyBag().tryGetPropertyType(StringList.class,
-                    ConversationSchema.Categories,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(StringList.class, ConversationSchema.Categories, out);
             returnValue = out.getParam();
         }
         return returnValue;
@@ -660,9 +654,9 @@ public class Conversation extends ServiceObject
      * messages in this conversation, across all folder in the mailbox.
      *
      * @return returnValue
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public StringList getGlobalCategories() throws ArgumentException
+    public StringList getGlobalCategories() throws ServiceLocalException
     {
         StringList returnValue = null;
 
@@ -671,9 +665,8 @@ public class Conversation extends ServiceObject
         // Check for the presence of this property before accessing it.
         if (this.getPropertyBag().contains(ConversationSchema.GlobalCategories)) {
             OutParam<StringList> out = new OutParam<StringList>();
-            this.getPropertyBag().tryGetPropertyType(StringList.class,
-                    ConversationSchema.GlobalCategories,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(StringList.class, ConversationSchema.GlobalCategories, out);
             returnValue = out.getParam();
         }
         return returnValue;
@@ -684,21 +677,18 @@ public class Conversation extends ServiceObject
      * by aggregating individual messages flag status in the current folder.
      *
      * @return returnValue
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public ConversationFlagStatus getFlagStatus() throws ArgumentException
+    public ConversationFlagStatus getFlagStatus() throws ServiceLocalException
     {
         ConversationFlagStatus returnValue = ConversationFlagStatus.NotFlagged;
 
-        // This property need not be present hence the
-        //property bag may not contain it.
+        // This property need not be present hence the property bag may not contain it.
         // Check for the presence of this property before accessing it.
         if (this.getPropertyBag().contains(ConversationSchema.FlagStatus)) {
             OutParam<ConversationFlagStatus> out = new OutParam<ConversationFlagStatus>();
-            this.getPropertyBag().tryGetPropertyType(
-                    ConversationFlagStatus.class,
-                    ConversationSchema.FlagStatus,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(ConversationFlagStatus.class, ConversationSchema.FlagStatus, out);
             returnValue = out.getParam();
         }
 
@@ -710,10 +700,9 @@ public class Conversation extends ServiceObject
      * individual messages flag status across all folder in the mailbox.
      *
      * @return returnValue
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public ConversationFlagStatus getGlobalFlagStatus()
-            throws ArgumentException
+    public ConversationFlagStatus getGlobalFlagStatus() throws ServiceLocalException
     {
         ConversationFlagStatus returnValue = ConversationFlagStatus.NotFlagged;
 
@@ -722,10 +711,8 @@ public class Conversation extends ServiceObject
         // Check for the presence of this property before accessing it.
         if (this.getPropertyBag().contains(ConversationSchema.GlobalFlagStatus)) {
             OutParam<ConversationFlagStatus> out = new OutParam<ConversationFlagStatus>();
-            this.getPropertyBag().tryGetPropertyType(
-                    ConversationFlagStatus.class,
-                    ConversationSchema.GlobalFlagStatus,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(ConversationFlagStatus.class, ConversationSchema.GlobalFlagStatus, out);
             returnValue = out.getParam();
         }
 
@@ -739,9 +726,9 @@ public class Conversation extends ServiceObject
      * @return Value
      * @throws ServiceLocalException
      */
-    public boolean getHasAttachments() throws ServiceLocalException
+    public Boolean getHasAttachments() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(ConversationSchema.HasAttachments);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.HasAttachments);
     }
 
     /**
@@ -752,10 +739,9 @@ public class Conversation extends ServiceObject
      * @return boolean
      * @throws ServiceLocalException
      */
-    public boolean getGlobalHasAttachments() throws ServiceLocalException
+    public Boolean getGlobalHasAttachments() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalHasAttachments);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalHasAttachments);
     }
 
     /**
@@ -765,10 +751,9 @@ public class Conversation extends ServiceObject
      * @return integer
      * @throws ServiceLocalException
      */
-    public int getMessageCount() throws ServiceLocalException
+    public Integer getMessageCount() throws ServiceLocalException
     {
-        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(
-                ConversationSchema.MessageCount);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.MessageCount);
     }
 
     /**
@@ -778,10 +763,9 @@ public class Conversation extends ServiceObject
      * @return integer
      * @throws ServiceLocalException
      */
-    public int getGlobalMessageCount() throws ServiceLocalException
+    public Integer getGlobalMessageCount() throws ServiceLocalException
     {
-        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalMessageCount);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalMessageCount);
     }
 
     /**
@@ -789,11 +773,11 @@ public class Conversation extends ServiceObject
      * conversation in the current folder only.
      *
      * @return returnValue
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public int getUnreadCount() throws ArgumentException
+    public Integer getUnreadCount() throws ServiceLocalException
     {
-        int returnValue = 0;
+        Integer returnValue = 0;
 
         /**This property need not be present hence the
          * property bag may not contain it.
@@ -801,9 +785,8 @@ public class Conversation extends ServiceObject
          */
         if (this.getPropertyBag().contains(ConversationSchema.UnreadCount)) {
             OutParam<Integer> out = new OutParam<Integer>();
-            this.getPropertyBag().tryGetPropertyType(Integer.class,
-                    ConversationSchema.UnreadCount,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(Integer.class, ConversationSchema.UnreadCount, out);
             returnValue = out.getParam().intValue();
         }
 
@@ -815,17 +798,16 @@ public class Conversation extends ServiceObject
      * conversation across all folder in the mailbox.
      *
      * @return returnValue
-     * @throws ArgumentException
+     * @throws ServiceLocalException
      */
-    public int getGlobalUnreadCount() throws ArgumentException
+    public Integer getGlobalUnreadCount() throws ServiceLocalException
     {
         int returnValue = 0;
 
         if (this.getPropertyBag().contains(ConversationSchema.GlobalUnreadCount)) {
             OutParam<Integer> out = new OutParam<Integer>();
-            this.getPropertyBag().tryGetPropertyType(Integer.class,
-                    ConversationSchema.GlobalUnreadCount,
-                    out);
+            this.getPropertyBag()
+                    .tryGetPropertyType(Integer.class, ConversationSchema.GlobalUnreadCount, out);
             returnValue = out.getParam().intValue();
         }
         return returnValue;
@@ -841,10 +823,9 @@ public class Conversation extends ServiceObject
      * @return integer
      * @throws ServiceLocalException
      */
-    public int getSize() throws ServiceLocalException
+    public Integer getSize() throws ServiceLocalException
     {
-        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(
-                ConversationSchema.Size);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.Size);
     }
 
     /**
@@ -857,8 +838,7 @@ public class Conversation extends ServiceObject
      */
     public int getGlobalSize() throws ServiceLocalException
     {
-        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalSize);
+        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(ConversationSchema.GlobalSize);
     }
 
     /**
@@ -866,12 +846,11 @@ public class Conversation extends ServiceObject
      * in this conversation, in the current folder only.
      *
      * @return string
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public StringList getItemClasses() throws Exception
+    public StringList getItemClasses() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.ItemClasses);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.ItemClasses);
     }
 
     /**
@@ -879,12 +858,11 @@ public class Conversation extends ServiceObject
      * in this conversation, across all folder in the mailbox.
      *
      * @return string
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public StringList getGlobalItemClasses() throws Exception
+    public StringList getGlobalItemClasses() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalItemClasses);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalItemClasses);
     }
 
     /**
@@ -892,12 +870,11 @@ public class Conversation extends ServiceObject
      * aggregating individual messages importance in the current folder only.
      *
      * @return important
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public Importance getImportance() throws Exception
+    public Importance getImportance() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.Importance);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.Importance);
     }
 
     /**
@@ -906,12 +883,11 @@ public class Conversation extends ServiceObject
      * folder in the mailbox.
      *
      * @return important
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public Importance getGlobalImportance() throws Exception
+    public Importance getGlobalImportance() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalImportance);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalImportance);
     }
 
     /**
@@ -919,12 +895,11 @@ public class Conversation extends ServiceObject
      * in the current folder only.
      *
      * @return Id
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public ItemIdCollection getItemIds() throws Exception
+    public ItemIdCollection getItemIds() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.ItemIds);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.ItemIds);
     }
 
     /**
@@ -932,12 +907,11 @@ public class Conversation extends ServiceObject
      * across all folder in the mailbox.
      *
      * @return Id
-     * @throws Exception
+     * @throws ServiceLocalException
      */
-    public ItemIdCollection getGlobalItemIds() throws Exception
+    public ItemIdCollection getGlobalItemIds() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ConversationSchema.GlobalItemIds);
+        return getPropertyBag().getObjectFromPropertyDefinition(ConversationSchema.GlobalItemIds);
     }
 
 }

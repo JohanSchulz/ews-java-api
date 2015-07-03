@@ -23,8 +23,11 @@
 
 package microsoft.exchange.webservices.data.property.complex;
 
+import microsoft.exchange.webservices.data.core.EwsUtilities;
 import microsoft.exchange.webservices.data.core.XmlElementNames;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentNullException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents the Id of a Conversation.
@@ -47,8 +50,7 @@ public class ConversationId extends ServiceId
      * @return A ConversationId initialized with the specified unique Id.
      * @throws Exception the exception
      */
-    public static ConversationId getConversationIdFromUniqueId(String uniqueId)
-            throws Exception
+    public static ConversationId getConversationIdFromUniqueId(String uniqueId) throws Exception
     {
         return new ConversationId(uniqueId);
     }
@@ -58,17 +60,13 @@ public class ConversationId extends ServiceId
      *
      * @param conversationId the conversation id
      * @return A ConversationId initialized with the specified unique Id.
-     * @throws ArgumentNullException the argument null exception
+     * @throws Exception the validation exception
      */
-    public static String getStringFromConversationId(
-            ConversationId conversationId) throws ArgumentNullException
+    public static String getStringFromConversationId(ConversationId conversationId) throws Exception
     {
-        if (conversationId == null) {
-            throw new ArgumentNullException("conversationId");
-        }
+        EwsUtilities.validateParam(conversationId, "conversationId");
 
-        if (null == conversationId.getUniqueId()
-                || conversationId.getUniqueId().isEmpty()) {
+        if (StringUtils.isEmpty(conversationId.getUniqueId())) {
             return "";
         }
         else {

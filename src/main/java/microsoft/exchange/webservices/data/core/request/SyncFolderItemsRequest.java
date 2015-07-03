@@ -30,6 +30,7 @@ import microsoft.exchange.webservices.data.core.enumeration.service.ServiceObjec
 import microsoft.exchange.webservices.data.core.enumeration.service.SyncFolderItemsScope;
 import microsoft.exchange.webservices.data.core.enumeration.service.error.ServiceErrorHandling;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceVersionException;
 import microsoft.exchange.webservices.data.core.response.SyncFolderItemsResponse;
 import microsoft.exchange.webservices.data.misc.ItemIdWrapperList;
@@ -317,7 +318,6 @@ public class SyncFolderItemsRequest extends
      */
     public int getMaxChangesReturned()
     {
-
         return this.maxChangesReturned;
     }
 
@@ -327,14 +327,13 @@ public class SyncFolderItemsRequest extends
      * @param maxChangesReturned the new max changes returned
      * @throws ArgumentException the argument exception
      */
-    public void setMaxChangesReturned(int maxChangesReturned)
-            throws ArgumentException
+    public void setMaxChangesReturned(int maxChangesReturned) throws ServiceLocalException
     {
         if (maxChangesReturned >= 1 && maxChangesReturned <= 512) {
             this.maxChangesReturned = maxChangesReturned;
         }
         else {
-            throw new ArgumentException("MaxChangesReturned must be between 1 and 512.");
+            throw new ServiceLocalException("MaxChangesReturned must be between 1 and 512.");
         }
     }
 

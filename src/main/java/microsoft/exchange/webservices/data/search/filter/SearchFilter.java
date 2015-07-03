@@ -305,11 +305,11 @@ public abstract class SearchFilter extends ComplexProperty
          * Writes the attribute to XML.
          *
          * @param writer the writer
-         * @throws ServiceXmlSerializationException the service xml serialization exception
+         * @throws Exception the service xml serialization exception
          */
         @Override
         public void writeAttributesToXml(EwsServiceXmlWriter writer)
-                throws ServiceXmlSerializationException
+                throws Exception
         {
             super.writeAttributesToXml(writer);
 

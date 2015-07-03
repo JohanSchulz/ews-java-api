@@ -88,6 +88,7 @@ public final class EmailAddressCollection extends ComplexPropertyCollection<Emai
      * address.
      */
     public EmailAddress add(String smtpAddress)
+            throws Exception
     {
         EmailAddress emailAddress = new EmailAddress(smtpAddress);
         this.add(emailAddress);
@@ -100,11 +101,11 @@ public final class EmailAddressCollection extends ComplexPropertyCollection<Emai
      * @param smtpAddresses The SMTP addresses used to initialize the e-mail addresses.
      */
     public void addSmtpAddressRange(Iterator<String> smtpAddresses)
+            throws Exception
     {
-        if (null != smtpAddresses) {
-            while (smtpAddresses.hasNext()) {
-                this.add(smtpAddresses.next());
-            }
+        EwsUtilities.validateParam(smtpAddresses, "smtpAddresses");
+        while (smtpAddresses.hasNext()) {
+            this.add(smtpAddresses.next());
         }
     }
 

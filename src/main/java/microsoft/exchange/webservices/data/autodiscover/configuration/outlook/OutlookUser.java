@@ -34,6 +34,7 @@ import microsoft.exchange.webservices.data.core.XmlElementNames;
 import microsoft.exchange.webservices.data.core.enumeration.attribute.EditorBrowsableState;
 import microsoft.exchange.webservices.data.core.enumeration.misc.XmlNamespace;
 import microsoft.exchange.webservices.data.security.XmlNodeType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +60,7 @@ final class OutlookUser
                     {
                         public Map<UserSettingName, IFunc<OutlookUser, String>> createInstance()
                         {
-                            Map<UserSettingName, IFunc<OutlookUser, String>> results =
-                                    new HashMap<UserSettingName, IFunc<OutlookUser, String>>();
+                            Map<UserSettingName, IFunc<OutlookUser, String>> results = new HashMap<UserSettingName, IFunc<OutlookUser, String>>();
                             results.put(UserSettingName.UserDisplayName,
                                     new IFunc<OutlookUser, String>()
                                     {
@@ -119,25 +119,24 @@ final class OutlookUser
      */
     protected void loadFromXml(EwsXmlReader reader) throws Exception
     {
-
         do {
             reader.read();
 
             if (reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) {
-                if (reader.getLocalName().equals(XmlElementNames.DisplayName)) {
-                    this.displayName = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.LegacyDN)) {
-                    this.legacyDN = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.DeploymentId)) {
-                    this.deploymentId = reader.readElementValue();
-                }
-                else {
-                    reader.skipCurrentElement();
-
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.DisplayName:
+                        this.displayName = reader.readElementValue();
+                        break;
+                    case XmlElementNames.LegacyDN:
+                        this.legacyDN = reader.readElementValue();
+                        break;
+                    case XmlElementNames.DeploymentId:
+                        this.deploymentId = reader.readElementValue();
+                        break;
+                    default:
+                        reader.skipCurrentElement();
+                        break;
                 }
             }
         } while (!reader.isEndElement(XmlNamespace.NotSpecified,
@@ -154,22 +153,14 @@ final class OutlookUser
             List<UserSettingName> requestedSettings,
             GetUserSettingsResponse response)
     {
-        // In English: collect converters that are
-        //contained in the requested settings.
-        Map<UserSettingName, IFunc<OutlookUser, String>>
-                converterQuery = new HashMap<UserSettingName,
-                IFunc<OutlookUser, String>>();
-        for (Entry<UserSettingName, IFunc<OutlookUser, String>> map : converterDictionary.getMember()
-                .entrySet()) {
-            if (requestedSettings.contains(map.getKey())) {
-                converterQuery.put(map.getKey(), map.getValue());
-            }
-        }
-
-        for (Entry<UserSettingName, IFunc<OutlookUser, String>> kv : converterQuery.entrySet()) {
-            String value = kv.getValue().func(this);
-            if (!(value == null || value.isEmpty())) {
-                response.getSettings().put(kv.getKey(), value);
+        // In English: collect converters that are contained in the requested settings.
+        for (Entry<UserSettingName, IFunc<OutlookUser, String>> map : converterDictionary.getMember().entrySet()) {
+            UserSettingName uname = map.getKey();
+            if (requestedSettings.contains(uname)) {
+                String value = map.getValue().func(this);
+                if (StringUtils.isNotEmpty(value)) {
+                    response.getSettings().put(uname, value);
+                }
             }
         }
     }

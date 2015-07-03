@@ -125,7 +125,6 @@ public final class SuppressReadReceipt extends ServiceObject
         ((ItemId) this.getPropertyBag().getObjectFromPropertyDefinition(
                 ResponseObjectSchema.ReferenceItemId))
                 .assign(this.referenceItem.getId());
-        this.getService().internalCreateResponseObject(this, parentFolderId,
-                messageDisposition);
+        this.getService().internalCreateResponseObject(this, parentFolderId, messageDisposition);
     }
 }

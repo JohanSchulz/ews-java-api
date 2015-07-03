@@ -63,13 +63,11 @@ public final class AlternateMailboxCollection
             reader.read();
 
             if ((reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) &&
-                    (reader.getLocalName()
-                            .equals(XmlElementNames.AlternateMailbox))) {
-                instance.getEntries().add(
-                        AlternateMailbox.loadFromXml(reader));
+                    (reader.getLocalName().equals(XmlElementNames.AlternateMailbox))) {
+
+                instance.getEntries().add(AlternateMailbox.loadFromXml(reader));
             }
-        } while (!reader.isEndElement(XmlNamespace.Autodiscover,
-                XmlElementNames.AlternateMailbox));
+        } while (!reader.isEndElement(XmlNamespace.Autodiscover, XmlElementNames.AlternateMailbox));
 
         return instance;
     }

@@ -155,18 +155,16 @@ public class Mailbox extends ComplexProperty implements ISearchStringProvider
     public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
             throws Exception
     {
-        if (reader.getLocalName()
-                .equalsIgnoreCase(XmlElementNames.EmailAddress)) {
-            this.setAddress(reader.readElementValue());
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.RoutingType)) {
-            this.setRoutingType(reader.readElementValue());
-            return true;
-        }
-        else {
-            return false;
+        String localName = reader.getLocalName();
+        switch (localName) {
+            case XmlElementNames.EmailAddress:
+                this.setAddress(reader.readElementValue());
+                return true;
+            case XmlElementNames.RoutingType:
+                this.setRoutingType(reader.readElementValue());
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -180,10 +178,8 @@ public class Mailbox extends ComplexProperty implements ISearchStringProvider
     public void writeElementsToXml(EwsServiceXmlWriter writer)
             throws XMLStreamException, ServiceXmlSerializationException
     {
-        writer.writeElementValue(XmlNamespace.Types,
-                XmlElementNames.EmailAddress, this.address);
-        writer.writeElementValue(XmlNamespace.Types,
-                XmlElementNames.RoutingType, this.routingType);
+        writer.writeElementValue(XmlNamespace.Types, XmlElementNames.EmailAddress, this.address);
+        writer.writeElementValue(XmlNamespace.Types, XmlElementNames.RoutingType, this.routingType);
     }
 
     /**
@@ -209,8 +205,7 @@ public class Mailbox extends ComplexProperty implements ISearchStringProvider
         super.internalValidate();
 
         EwsUtilities.validateNonBlankStringParamAllowNull(this.getAddress(), "address");
-        EwsUtilities.validateNonBlankStringParamAllowNull(
-                this.getRoutingType(), "routingType");
+        EwsUtilities.validateNonBlankStringParamAllowNull(this.getRoutingType(), "routingType");
     }
 
 
@@ -222,70 +217,30 @@ public class Mailbox extends ComplexProperty implements ISearchStringProvider
      * otherwise, false.
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object o)
     {
-        if (super.equals(obj)) {
-            return true;
-        }
-        else {
-            if (!(obj instanceof Mailbox)) {
-                return false;
-            }
-            else {
-                Mailbox other = (Mailbox) obj;
-                if (((this.address == null) && (other.address == null))
-                        || ((this.address != null) && this.address
-                        .equalsIgnoreCase(other.address))) {
-                    return ((this.routingType == null) &&
-                            (other.routingType == null))
-                            || ((this.routingType != null) && this.routingType
-                            .equalsIgnoreCase(other.routingType));
-                }
-                else {
-                    return false;
-                }
-            }
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Mailbox mailbox = (Mailbox) o;
+
+        if (address != null ? !address.equals(mailbox.address) : mailbox.address != null) return false;
+        if (routingType != null ? !routingType.equals(mailbox.routingType) : mailbox.routingType != null) return false;
+
+        return true;
     }
 
-    /**
-     * Serves as a hash function for a particular type.
-     *
-     * @return A hash code for the current object
-     */
     @Override
     public int hashCode()
     {
-        if (!(null == this.getAddress() || this.getAddress().isEmpty())) {
-            int hashCode = this.address.hashCode();
-
-            if (!(null == this.getRoutingType() || this.getRoutingType()
-                    .isEmpty())) {
-                hashCode ^= this.routingType.hashCode();
-            }
-            return hashCode;
-        }
-        else {
-            return super.hashCode();
-        }
+        int result = routingType != null ? routingType.hashCode() : 0;
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
     }
 
-    /**
-     * Returns a String that represents the current Object.
-     *
-     * @return A String that represents the current Object.
-     */
     @Override
     public String toString()
     {
-        if (!this.isValid()) {
-            return "";
-        }
-        else if (!(this.routingType == null || this.routingType.isEmpty())) {
-            return this.routingType + ":" + this.address;
-        }
-        else {
-            return this.address;
-        }
+        return this.routingType + ":" + this.address;
     }
 }

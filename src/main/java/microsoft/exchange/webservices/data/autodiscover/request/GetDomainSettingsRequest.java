@@ -50,8 +50,7 @@ public class GetDomainSettingsRequest extends AutodiscoverRequest
      * Action Uri of Autodiscover.GetDomainSettings method.
      */
     private static final String GetDomainSettingsActionUri =
-            EwsUtilities.AutodiscoverSoapNamespace +
-                    "/Autodiscover/GetDomainSettings";
+            EwsUtilities.AutodiscoverSoapNamespace + "/Autodiscover/GetDomainSettings";
 
     /**
      * The domains.
@@ -89,11 +88,11 @@ public class GetDomainSettingsRequest extends AutodiscoverRequest
         EwsUtilities.validateParam(this.getDomains(), "domains");
         EwsUtilities.validateParam(this.getSettings(), "settings");
 
-        if (this.getSettings().size() == 0) {
+        if (this.getSettings().isEmpty()) {
             throw new ServiceValidationException("At least one setting must be requested.");
         }
 
-        if (domains.size() == 0) {
+        if (domains.isEmpty()) {
             throw new ServiceValidationException("At least one domain name must be requested.");
         }
 
@@ -113,10 +112,9 @@ public class GetDomainSettingsRequest extends AutodiscoverRequest
     public GetDomainSettingsResponseCollection execute() throws Exception
     {
         GetDomainSettingsResponseCollection responses =
-                (GetDomainSettingsResponseCollection) this
-                        .internalExecute();
+                (GetDomainSettingsResponseCollection) this.internalExecute();
         if (responses.getErrorCode() == AutodiscoverErrorCode.NoError) {
-            this.PostProcessResponses(responses);
+            this.postProcessResponses(responses);
         }
         return responses;
     }
@@ -126,14 +124,13 @@ public class GetDomainSettingsRequest extends AutodiscoverRequest
      *
      * @param responses The GetDomainSettings response.
      */
-    private void PostProcessResponses(
+    private void postProcessResponses(
             GetDomainSettingsResponseCollection responses)
     {
         // Note:The response collection may not include all of the requested
         // domains if the request has been throttled.
         for (int index = 0; index < responses.getCount(); index++) {
-            responses.getResponses().get(index).setDomain(
-                    this.getDomains().get(index));
+            responses.getResponses().get(index).setDomain(this.getDomains().get(index));
         }
     }
 
@@ -207,32 +204,26 @@ public class GetDomainSettingsRequest extends AutodiscoverRequest
     protected void writeElementsToXml(EwsServiceXmlWriter writer)
             throws XMLStreamException, ServiceXmlSerializationException
     {
-        writer.writeStartElement(XmlNamespace.Autodiscover,
-                XmlElementNames.Request);
+        writer.writeStartElement(XmlNamespace.Autodiscover, XmlElementNames.Request);
 
-        writer.writeStartElement(XmlNamespace.Autodiscover,
-                XmlElementNames.Domains);
+        writer.writeStartElement(XmlNamespace.Autodiscover, XmlElementNames.Domains);
 
         for (String domain : this.getDomains()) {
             if (!(domain == null || domain.isEmpty())) {
-                writer.writeElementValue(XmlNamespace.Autodiscover,
-                        XmlElementNames.Domain, domain);
+                writer.writeElementValue(XmlNamespace.Autodiscover, XmlElementNames.Domain, domain);
             }
         }
         writer.writeEndElement(); // Domains
 
-        writer.writeStartElement(XmlNamespace.Autodiscover,
-                XmlElementNames.RequestedSettings);
+        writer.writeStartElement(XmlNamespace.Autodiscover, XmlElementNames.RequestedSettings);
         for (DomainSettingName setting : settings) {
-            writer.writeElementValue(XmlNamespace.Autodiscover,
-                    XmlElementNames.Setting, setting);
+            writer.writeElementValue(XmlNamespace.Autodiscover, XmlElementNames.Setting, setting);
         }
 
         writer.writeEndElement(); // RequestedSettings
 
         if (this.requestedVersion != null) {
-            writer.writeElementValue(XmlNamespace.Autodiscover,
-                    XmlElementNames.RequestedVersion, this.requestedVersion);
+            writer.writeElementValue(XmlNamespace.Autodiscover, XmlElementNames.RequestedVersion, this.requestedVersion);
         }
 
         writer.writeEndElement(); // Request

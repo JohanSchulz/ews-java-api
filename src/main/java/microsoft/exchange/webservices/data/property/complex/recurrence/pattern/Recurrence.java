@@ -24,15 +24,18 @@
 package microsoft.exchange.webservices.data.property.complex.recurrence.pattern;
 
 import microsoft.exchange.webservices.data.attribute.EditorBrowsable;
-import microsoft.exchange.webservices.data.core.*;
+import microsoft.exchange.webservices.data.core.EwsServiceXmlReader;
+import microsoft.exchange.webservices.data.core.EwsServiceXmlWriter;
+import microsoft.exchange.webservices.data.core.EwsUtilities;
+import microsoft.exchange.webservices.data.core.XmlElementNames;
 import microsoft.exchange.webservices.data.core.enumeration.attribute.EditorBrowsableState;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.misc.XmlNamespace;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.DayOfTheWeek;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.DayOfTheWeekIndex;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.Month;
-import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
 import microsoft.exchange.webservices.data.property.complex.ComplexProperty;
 import microsoft.exchange.webservices.data.property.complex.IComplexPropertyChangedDelegate;
@@ -42,7 +45,10 @@ import microsoft.exchange.webservices.data.property.complex.recurrence.range.NoE
 import microsoft.exchange.webservices.data.property.complex.recurrence.range.NumberedRecurrenceRange;
 import microsoft.exchange.webservices.data.property.complex.recurrence.range.RecurrenceRange;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Represents a recurrence pattern, as used by Appointment and Task item.
@@ -131,19 +137,16 @@ public abstract class Recurrence extends ComplexProperty
             range = new NoEndRecurrenceRange(this.getStartDate());
         }
         else if (this.getNumberOfOccurrences() != null) {
-            range = new NumberedRecurrenceRange(this.startDate,
-                    this.numberOfOccurrences);
+            range = new NumberedRecurrenceRange(this.startDate, this.numberOfOccurrences);
         }
         else {
             if (this.getEndDate() != null) {
-                range = new EndDateRecurrenceRange(this.getStartDate(), this
-                        .getEndDate());
+                range = new EndDateRecurrenceRange(this.getStartDate(), this.getEndDate());
             }
         }
         if (range != null) {
             range.writeToXml(writer, range.getXmlElementName());
         }
-
     }
 
     /**
@@ -156,16 +159,15 @@ public abstract class Recurrence extends ComplexProperty
      * @return Property value
      * @throws ServiceValidationException the service validation exception
      */
-    public <T> T getFieldValueOrThrowIfNull(Class<T> cls, Object value,
-                                            String name) throws ServiceValidationException
+    public <T> T getFieldValueOrThrowIfNull(Class<T> cls, Object value, String name)
+            throws ServiceValidationException
     {
         if (value != null) {
             return (T) value;
         }
         else {
-            throw new ServiceValidationException(String.format(
-                    "The recurrence pattern's %s property must be specified.",
-                    name));
+            throw new ServiceValidationException(
+                    String.format("The recurrence pattern's %s property must be specified.", name));
         }
     }
 
@@ -177,9 +179,7 @@ public abstract class Recurrence extends ComplexProperty
      */
     public Date getStartDate() throws ServiceValidationException
     {
-        return this.getFieldValueOrThrowIfNull(Date.class, this.startDate,
-                "StartDate");
-
+        return this.getFieldValueOrThrowIfNull(Date.class, this.startDate, "StartDate");
     }
 
     /**
@@ -200,7 +200,6 @@ public abstract class Recurrence extends ComplexProperty
      */
     public boolean hasEnd()
     {
-
         return ((this.numberOfOccurrences != null) || (this.endDate != null));
     }
 
@@ -239,7 +238,6 @@ public abstract class Recurrence extends ComplexProperty
     public Integer getNumberOfOccurrences()
     {
         return this.numberOfOccurrences;
-
     }
 
     /**
@@ -247,12 +245,12 @@ public abstract class Recurrence extends ComplexProperty
      * Setting NumberOfOccurrences resets EndDate.
      *
      * @param value the new number of occurrences
-     * @throws ArgumentException the argument exception
+     * @throws ServiceLocalException the argument exception
      */
-    public void setNumberOfOccurrences(Integer value) throws ArgumentException
+    public void setNumberOfOccurrences(Integer value) throws ServiceLocalException
     {
         if (value < 1) {
-            throw new ArgumentException("NumberOfOccurrences must be greater than 0.");
+            throw new ServiceLocalException("NumberOfOccurrences must be greater than 0.");
         }
 
         if (this.canSetFieldValue(this.numberOfOccurrences, value)) {
@@ -261,7 +259,6 @@ public abstract class Recurrence extends ComplexProperty
         }
 
         this.endDate = null;
-
     }
 
     /**
@@ -272,7 +269,6 @@ public abstract class Recurrence extends ComplexProperty
      */
     public Date getEndDate()
     {
-
         return this.endDate;
     }
 
@@ -284,14 +280,12 @@ public abstract class Recurrence extends ComplexProperty
      */
     public void setEndDate(Date value)
     {
-
         if (this.canSetFieldValue(this.endDate, value)) {
             this.endDate = value;
             this.changed();
         }
 
         this.numberOfOccurrences = null;
-
     }
 
     /**
@@ -300,7 +294,6 @@ public abstract class Recurrence extends ComplexProperty
      */
     public final static class DailyPattern extends IntervalPattern
     {
-
         /**
          * Gets the name of the XML element.
          *
@@ -315,7 +308,6 @@ public abstract class Recurrence extends ComplexProperty
         /**
          * Initializes a new instance of the DailyPattern class.
          */
-
         public DailyPattern()
         {
             super();
@@ -333,7 +325,6 @@ public abstract class Recurrence extends ComplexProperty
         {
             super(startDate, interval);
         }
-
     }
 
 
@@ -365,7 +356,6 @@ public abstract class Recurrence extends ComplexProperty
                 throws ArgumentOutOfRangeException
         {
             super(startDate, interval);
-
         }
 
         /**
@@ -424,7 +414,6 @@ public abstract class Recurrence extends ComplexProperty
         public IntervalPattern(Date startDate, int interval)
                 throws ArgumentOutOfRangeException
         {
-
             super(startDate);
             if (interval < 1) {
                 throw new ArgumentOutOfRangeException("interval", "The interval must be greater than or equal to 1.");
@@ -444,8 +433,7 @@ public abstract class Recurrence extends ComplexProperty
         {
             super.internalWritePropertiesToXml(writer);
 
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.Interval, this.getInterval());
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.Interval, this.getInterval());
         }
 
         /**
@@ -459,19 +447,17 @@ public abstract class Recurrence extends ComplexProperty
         public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
                 throws Exception
         {
+            boolean success = false;
             if (super.tryReadElementFromXml(reader)) {
-                return true;
+                success = true;
             }
             else {
-
-                if (reader.getLocalName().equals(XmlElementNames.Interval)) {
+                if (XmlElementNames.Interval.equals(reader.getLocalName())) {
                     this.interval = reader.readElementValue(Integer.class);
-                    return true;
-                }
-                else {
-                    return false;
+                    success = true;
                 }
             }
+            return success;
         }
 
         /**
@@ -492,18 +478,15 @@ public abstract class Recurrence extends ComplexProperty
          */
         public void setInterval(int value) throws ArgumentOutOfRangeException
         {
-
             if (value < 1) {
-                throw new ArgumentOutOfRangeException("value", "The interval must be greater than or equal to 1.");
+                throw new ArgumentOutOfRangeException("The interval must be greater than or equal to 1.");
             }
 
             if (this.canSetFieldValue(this.interval, value)) {
                 this.interval = value;
                 this.changed();
             }
-
         }
-
     }
 
 
@@ -511,10 +494,8 @@ public abstract class Recurrence extends ComplexProperty
      * Represents a recurrence pattern where each occurrence happens on a
      * specific day a specific number of months after the previous one.
      */
-
     public final static class MonthlyPattern extends IntervalPattern
     {
-
         /**
          * The day of month.
          */
@@ -526,7 +507,6 @@ public abstract class Recurrence extends ComplexProperty
         public MonthlyPattern()
         {
             super();
-
         }
 
         /**
@@ -535,7 +515,7 @@ public abstract class Recurrence extends ComplexProperty
          * @param startDate  the start date
          * @param interval   the interval
          * @param dayOfMonth the day of month
-         * @throws ArgumentOutOfRangeException the argument out of range exception
+         * @throws ArgumentOutOfRangeException the argument is not valid
          */
         public MonthlyPattern(Date startDate, int interval, int dayOfMonth)
                 throws ArgumentOutOfRangeException
@@ -570,8 +550,7 @@ public abstract class Recurrence extends ComplexProperty
         {
             super.internalWritePropertiesToXml(writer);
 
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.DayOfMonth, this.getDayOfMonth());
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.DayOfMonth, this.getDayOfMonth());
         }
 
         /**
@@ -622,9 +601,7 @@ public abstract class Recurrence extends ComplexProperty
          */
         public int getDayOfMonth() throws ServiceValidationException
         {
-            return this.getFieldValueOrThrowIfNull(int.class, this.dayOfMonth,
-                    "DayOfMonth");
-
+            return this.getFieldValueOrThrowIfNull(int.class, this.dayOfMonth, "DayOfMonth");
         }
 
         /**
@@ -637,7 +614,7 @@ public abstract class Recurrence extends ComplexProperty
                 throws ArgumentOutOfRangeException
         {
             if (value < 1 || value > 31) {
-                throw new ArgumentOutOfRangeException("DayOfMonth", "DayOfMonth must be between 1 and 31.");
+                throw new ArgumentOutOfRangeException("DayOfMonth must be between 1 and 31.");
             }
 
             if (this.canSetFieldValue(this.dayOfMonth, value)) {
@@ -653,17 +630,14 @@ public abstract class Recurrence extends ComplexProperty
      * each occurrence happens a specified number of months after the previous
      * one is completed.
      */
-    public final static class MonthlyRegenerationPattern extends
-                                                         IntervalPattern
+    public final static class MonthlyRegenerationPattern extends IntervalPattern
     {
-
         /**
          * Instantiates a new monthly regeneration pattern.
          */
         public MonthlyRegenerationPattern()
         {
             super();
-
         }
 
         /**
@@ -677,7 +651,6 @@ public abstract class Recurrence extends ComplexProperty
                 throws ArgumentOutOfRangeException
         {
             super(startDate, interval);
-
         }
 
         /**
@@ -741,11 +714,10 @@ public abstract class Recurrence extends ComplexProperty
          * @param interval          the interval
          * @param dayOfTheWeek      the day of the week
          * @param dayOfTheWeekIndex the day of the week index
-         * @throws ArgumentOutOfRangeException the argument out of range exception
+         * @throws Exception if the argument is not valid
          */
-        public RelativeMonthlyPattern(Date startDate, int interval,
-                                      DayOfTheWeek dayOfTheWeek, DayOfTheWeekIndex dayOfTheWeekIndex)
-                throws ArgumentOutOfRangeException
+        public RelativeMonthlyPattern(Date startDate, int interval, DayOfTheWeek dayOfTheWeek, DayOfTheWeekIndex dayOfTheWeekIndex)
+                throws Exception
         {
             super(startDate, interval);
 
@@ -776,13 +748,9 @@ public abstract class Recurrence extends ComplexProperty
         {
             super.internalWritePropertiesToXml(writer);
 
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.DaysOfWeek, this.getDayOfTheWeek());
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.DaysOfWeek, this.getDayOfTheWeek());
 
-            writer
-                    .writeElementValue(XmlNamespace.Types,
-                            XmlElementNames.DayOfWeekIndex, this
-                                    .getDayOfTheWeekIndex());
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.DayOfWeekIndex, this.getDayOfTheWeekIndex());
         }
 
         /**
@@ -796,28 +764,27 @@ public abstract class Recurrence extends ComplexProperty
         public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
                 throws Exception
         {
+            boolean result = false;
             if (super.tryReadElementFromXml(reader)) {
-                return true;
+                result = true;
             }
             else {
-                if (reader.getLocalName().equals(XmlElementNames.DaysOfWeek)) {
-
-                    this.dayOfTheWeek = reader
-                            .readElementValue(DayOfTheWeek.class);
-                    return true;
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.DayOfWeekIndex)) {
-
-                    this.dayOfTheWeekIndex = reader
-                            .readElementValue(DayOfTheWeekIndex.class);
-                    return true;
-                }
-                else {
-
-                    return false;
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.DaysOfWeek:
+                        this.dayOfTheWeek = reader.readElementValue(DayOfTheWeek.class);
+                        result = true;
+                        break;
+                    case XmlElementNames.DayOfWeekIndex:
+                        this.dayOfTheWeekIndex = reader.readElementValue(DayOfTheWeekIndex.class);
+                        result = true;
+                        break;
+                    default:
+                        break;
                 }
             }
+
+            return result;
         }
 
         /**
@@ -865,7 +832,6 @@ public abstract class Recurrence extends ComplexProperty
                 this.dayOfTheWeekIndex = value;
                 this.changed();
             }
-
         }
 
         /**
@@ -879,7 +845,6 @@ public abstract class Recurrence extends ComplexProperty
         {
             return this.getFieldValueOrThrowIfNull(DayOfTheWeek.class,
                     this.dayOfTheWeek, "DayOfTheWeek");
-
         }
 
         /**
@@ -889,7 +854,6 @@ public abstract class Recurrence extends ComplexProperty
          */
         public void setDayOfTheWeek(DayOfTheWeek value)
         {
-
             if (this.canSetFieldValue(this.dayOfTheWeek, value)) {
                 this.dayOfTheWeek = value;
                 this.changed();
@@ -903,7 +867,6 @@ public abstract class Recurrence extends ComplexProperty
      */
     public final static class RelativeYearlyPattern extends Recurrence
     {
-
         /**
          * The day of the week.
          */
@@ -943,14 +906,11 @@ public abstract class Recurrence extends ComplexProperty
         {
             super.internalWritePropertiesToXml(writer);
 
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.DaysOfWeek, this.dayOfTheWeek);
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.DaysOfWeek, this.dayOfTheWeek);
 
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.DayOfWeekIndex, this.dayOfTheWeekIndex);
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.DayOfWeekIndex, this.dayOfTheWeekIndex);
 
-            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.Month,
-                    this.month);
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.Month, this.month);
         }
 
         /**
@@ -968,20 +928,20 @@ public abstract class Recurrence extends ComplexProperty
                 return true;
             }
             else {
-                if (reader.getLocalName().equals(XmlElementNames.DaysOfWeek)) {
+                String localName = reader.getLocalName();
+                if (localName.equals(XmlElementNames.DaysOfWeek)) {
 
-                    this.dayOfTheWeek = reader
-                            .readElementValue(DayOfTheWeek.class);
+                    this.dayOfTheWeek = reader.readElementValue(DayOfTheWeek.class);
                     return true;
                 }
-                else if (reader.getLocalName().equals(
+                else if (localName.equals(
                         XmlElementNames.DayOfWeekIndex)) {
 
                     this.dayOfTheWeekIndex = reader
                             .readElementValue(DayOfTheWeekIndex.class);
                     return true;
                 }
-                else if (reader.getLocalName().equals(XmlElementNames.Month)) {
+                else if (localName.equals(XmlElementNames.Month)) {
 
                     this.month = reader.readElementValue(Month.class);
                     return true;
@@ -999,7 +959,6 @@ public abstract class Recurrence extends ComplexProperty
         public RelativeYearlyPattern()
         {
             super();
-
         }
 
         /**
@@ -1056,7 +1015,6 @@ public abstract class Recurrence extends ComplexProperty
         public DayOfTheWeekIndex getDayOfTheWeekIndex()
                 throws ServiceValidationException
         {
-
             return this.getFieldValueOrThrowIfNull(DayOfTheWeekIndex.class,
                     this.dayOfTheWeekIndex, "DayOfTheWeekIndex");
         }
@@ -1069,7 +1027,6 @@ public abstract class Recurrence extends ComplexProperty
          */
         public void setDayOfTheWeekIndex(DayOfTheWeekIndex value)
         {
-
             if (this.canSetFieldValue(this.dayOfTheWeekIndex, value)) {
                 this.dayOfTheWeekIndex = value;
                 this.changed();
@@ -1085,7 +1042,6 @@ public abstract class Recurrence extends ComplexProperty
         public DayOfTheWeek getDayOfTheWeek()
                 throws ServiceValidationException
         {
-
             return this.getFieldValueOrThrowIfNull(DayOfTheWeek.class,
                     this.dayOfTheWeek, "DayOfTheWeek");
         }
@@ -1097,7 +1053,6 @@ public abstract class Recurrence extends ComplexProperty
          */
         public void setDayOfTheWeek(DayOfTheWeek value)
         {
-
             if (this.canSetFieldValue(this.dayOfTheWeek, value)) {
                 this.dayOfTheWeek = value;
                 this.changed();
@@ -1112,10 +1067,7 @@ public abstract class Recurrence extends ComplexProperty
          */
         public Month getMonth() throws ServiceValidationException
         {
-
-            return this.getFieldValueOrThrowIfNull(Month.class, this.month,
-                    "Month");
-
+            return this.getFieldValueOrThrowIfNull(Month.class, this.month, "Month");
         }
 
         /**
@@ -1125,7 +1077,6 @@ public abstract class Recurrence extends ComplexProperty
          */
         public void setMonth(Month value)
         {
-
             if (this.canSetFieldValue(this.month, value)) {
                 this.month = value;
                 this.changed();
@@ -1144,8 +1095,7 @@ public abstract class Recurrence extends ComplexProperty
         /**
          * The days of the week.
          */
-        private DayOfTheWeekCollection daysOfTheWeek =
-                new DayOfTheWeekCollection();
+        private DayOfTheWeekCollection daysOfTheWeek = new DayOfTheWeekCollection();
 
         private Calendar firstDayOfWeek;
 
@@ -1174,10 +1124,8 @@ public abstract class Recurrence extends ComplexProperty
         {
             super(startDate, interval);
 
-            ArrayList<DayOfTheWeek> toProcess = new ArrayList<DayOfTheWeek>(
-                    Arrays.asList(daysOfTheWeek));
-            Iterator<DayOfTheWeek> idaysOfTheWeek = toProcess.iterator();
-            this.daysOfTheWeek.addRange(idaysOfTheWeek);
+            List<DayOfTheWeek> toProcess = Arrays.asList(daysOfTheWeek);
+            this.daysOfTheWeek.addRange(toProcess.iterator());
         }
 
         /**
@@ -1214,20 +1162,13 @@ public abstract class Recurrence extends ComplexProperty
         {
             super.internalWritePropertiesToXml(writer);
 
-            this.getDaysOfTheWeek().writeToXml(writer,
-                    XmlElementNames.DaysOfWeek);
+            this.getDaysOfTheWeek().writeToXml(writer, XmlElementNames.DaysOfWeek);
             if (this.firstDayOfWeek != null) {
 
-                EwsUtilities
-                        .validatePropertyVersion((ExchangeService) writer.getService(), ExchangeVersion.Exchange2010_SP1,
-                                "FirstDayOfWeek");
+                EwsUtilities.validatePropertyVersion(writer.getService(), ExchangeVersion.Exchange2010_SP1, "FirstDayOfWeek");
 
-                writer.writeElementValue(
-                        XmlNamespace.Types,
-                        XmlElementNames.FirstDayOfWeek,
-                        this.firstDayOfWeek);
+                writer.writeElementValue(XmlNamespace.Types, XmlElementNames.FirstDayOfWeek, this.firstDayOfWeek);
             }
-
         }
 
         /**
@@ -1241,28 +1182,26 @@ public abstract class Recurrence extends ComplexProperty
         public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
                 throws Exception
         {
+            boolean result = false;
             if (super.tryReadElementFromXml(reader)) {
-                return true;
+                result = true;
             }
             else {
-                if (reader.getLocalName().equals(XmlElementNames.DaysOfWeek)) {
-
-                    this.getDaysOfTheWeek().loadFromXml(reader,
-                            reader.getLocalName());
-                    return true;
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.FirstDayOfWeek)) {
-                    this.firstDayOfWeek = reader.
-                            readElementValue(Calendar.class,
-                                    XmlNamespace.Types,
-                                    XmlElementNames.FirstDayOfWeek);
-                    return true;
-                }
-                else {
-
-                    return false;
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.DaysOfWeek:
+                        this.getDaysOfTheWeek().loadFromXml(reader, localName);
+                        result = true;
+                        break;
+                    case XmlElementNames.FirstDayOfWeek:
+                        this.firstDayOfWeek = reader.readElementValue(Calendar.class, XmlNamespace.Types, XmlElementNames.FirstDayOfWeek);
+                        result = true;
+                        break;
+                    default:
+                        break;
                 }
             }
+            return result;
         }
 
         /**
@@ -1337,7 +1276,6 @@ public abstract class Recurrence extends ComplexProperty
          */
         public WeeklyRegenerationPattern()
         {
-
             super();
         }
 
@@ -1352,7 +1290,6 @@ public abstract class Recurrence extends ComplexProperty
                 throws ArgumentOutOfRangeException
         {
             super(startDate, interval);
-
         }
 
         /**
@@ -1404,7 +1341,6 @@ public abstract class Recurrence extends ComplexProperty
         public YearlyPattern()
         {
             super();
-
         }
 
         /**
@@ -1446,11 +1382,9 @@ public abstract class Recurrence extends ComplexProperty
         {
             super.internalWritePropertiesToXml(writer);
 
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.DayOfMonth, this.getDayOfMonth());
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.DayOfMonth, this.getDayOfMonth());
 
-            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.Month,
-                    this.getMonth());
+            writer.writeElementValue(XmlNamespace.Types, XmlElementNames.Month, this.getMonth());
         }
 
         /**
@@ -1464,25 +1398,26 @@ public abstract class Recurrence extends ComplexProperty
         public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
                 throws Exception
         {
+            boolean result = false;
             if (super.tryReadElementFromXml(reader)) {
-                return true;
+                result = true;
             }
             else {
-                if (reader.getLocalName().equals(XmlElementNames.DayOfMonth)) {
-
-                    this.dayOfMonth = reader.readElementValue(int.class);
-                    return true;
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.Month)) {
-
-                    this.month = reader.readElementValue(Month.class);
-                    return true;
-                }
-                else {
-
-                    return false;
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.DayOfMonth:
+                        this.dayOfMonth = reader.readElementValue(int.class);
+                        result = true;
+                        break;
+                    case XmlElementNames.Month:
+                        this.month = reader.readElementValue(Month.class);
+                        result = true;
+                        break;
+                    default:
+                        break;
                 }
             }
+            return result;
         }
 
         /**
@@ -1513,8 +1448,7 @@ public abstract class Recurrence extends ComplexProperty
          */
         public Month getMonth() throws ServiceValidationException
         {
-            return this.getFieldValueOrThrowIfNull(Month.class, this.month,
-                    "Month");
+            return this.getFieldValueOrThrowIfNull(Month.class, this.month, "Month");
         }
 
         /**
@@ -1524,7 +1458,6 @@ public abstract class Recurrence extends ComplexProperty
          */
         public void setMonth(Month value)
         {
-
             if (this.canSetFieldValue(this.month, value)) {
                 this.month = value;
                 this.changed();
@@ -1540,10 +1473,7 @@ public abstract class Recurrence extends ComplexProperty
          */
         public int getDayOfMonth() throws ServiceValidationException
         {
-
-            return this.getFieldValueOrThrowIfNull(int.class, this.dayOfMonth,
-                    "DayOfMonth");
-
+            return this.getFieldValueOrThrowIfNull(int.class, this.dayOfMonth, "DayOfMonth");
         }
 
         /**
@@ -1556,7 +1486,6 @@ public abstract class Recurrence extends ComplexProperty
         public void setDayOfMonth(int value)
                 throws ArgumentOutOfRangeException
         {
-
             if (value < 1 || value > 31) {
                 throw new ArgumentOutOfRangeException("DayOfMonth", "DayOfMonth must be between 1 and 31.");
             }
@@ -1574,8 +1503,7 @@ public abstract class Recurrence extends ComplexProperty
      * each occurrence happens a specified number of years after the previous
      * one is completed.
      */
-    public final static class YearlyRegenerationPattern extends
-                                                        IntervalPattern
+    public final static class YearlyRegenerationPattern extends IntervalPattern
     {
 
         /**
@@ -1607,7 +1535,6 @@ public abstract class Recurrence extends ComplexProperty
         public YearlyRegenerationPattern()
         {
             super();
-
         }
 
         /**
@@ -1621,7 +1548,6 @@ public abstract class Recurrence extends ComplexProperty
                 throws ArgumentOutOfRangeException
         {
             super(startDate, interval);
-
         }
     }
 }

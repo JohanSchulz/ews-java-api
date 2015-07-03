@@ -51,8 +51,7 @@ public final class OutlookConfigurationSettings extends ConfigurationSettingsBas
                 public List<UserSettingName> createInstance()
                 {
 
-                    List<UserSettingName> results =
-                            new ArrayList<UserSettingName>();
+                    List<UserSettingName> results = new ArrayList<UserSettingName>();
                     for (UserSettingName userSettingName : OutlookUser.getAvailableUserSettings()) {
                         results.add(userSettingName);
                     }
@@ -102,8 +101,7 @@ public final class OutlookConfigurationSettings extends ConfigurationSettingsBas
     @Override
     public String getNamespace()
     {
-        return "http://schemas.microsoft.com/exchange/" +
-                "autodiscover/outlook/responseschema/2006a";
+        return "http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a";
     }
 
     /**
@@ -212,8 +210,7 @@ public final class OutlookConfigurationSettings extends ConfigurationSettingsBas
         // In English: find settings listed in requestedSettings that are not supported by the Legacy provider.
 
         //TODO need to check Iterable
-        List<UserSettingName> invalidSettingQuery =
-                new ArrayList<UserSettingName>();
+        List<UserSettingName> invalidSettingQuery = new ArrayList<UserSettingName>();
         for (UserSettingName userSettingName : requestedSettings) {
             if (!OutlookConfigurationSettings.isAvailableUserSetting(userSettingName)) {
                 invalidSettingQuery.add(userSettingName);

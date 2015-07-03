@@ -84,8 +84,7 @@ public final class CancelMeetingMessage extends
      */
     public MessageBody getBody() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                CancelMeetingMessageSchema.Body);
+        return getPropertyBag().getObjectFromPropertyDefinition(CancelMeetingMessageSchema.Body);
     }
 
     /**
@@ -96,8 +95,7 @@ public final class CancelMeetingMessage extends
      */
     public void setBody(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                CancelMeetingMessageSchema.Body, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(CancelMeetingMessageSchema.Body, value);
     }
 
 }

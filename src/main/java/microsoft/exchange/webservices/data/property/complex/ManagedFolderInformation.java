@@ -101,61 +101,48 @@ public final class ManagedFolderInformation extends ComplexProperty
     public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
             throws Exception
     {
-        if (reader.getLocalName().equalsIgnoreCase(XmlElementNames.CanDelete)) {
-            this.canDelete = reader.readValue(Boolean.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.CanRenameOrMove)) {
-            this.canRenameOrMove = reader.readValue(Boolean.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.MustDisplayComment)) {
-            this.mustDisplayComment = reader.readValue(Boolean.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.HasQuota)) {
-            this.hasQuota = reader.readValue(Boolean.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.IsManagedFoldersRoot)) {
-            this.isManagedFoldersRoot = reader.readValue(Boolean.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.ManagedFolderId)) {
-            this.managedFolderId = reader.readValue();
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.Comment)) {
-            OutParam<String> value = new OutParam<String>();
-            reader.tryReadValue(value);
-            this.comment = value.getParam();
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.StorageQuota)) {
-            this.storageQuota = reader.readValue(Integer.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.FolderSize)) {
-            this.folderSize = reader.readValue(Integer.class);
-            return true;
-        }
-        else if (reader.getLocalName().equalsIgnoreCase(
-                XmlElementNames.HomePage)) {
-            OutParam<String> value = new OutParam<String>();
-            reader.tryReadValue(value);
-            this.homePage = value.getParam();
-            return true;
-        }
-        else {
-            return false;
+        String localName = reader.getLocalName();
+        switch (localName) {
+            case XmlElementNames.CanDelete:
+                this.canDelete = reader.readValue(Boolean.class);
+                return true;
+            case XmlElementNames.CanRenameOrMove:
+                this.canRenameOrMove = reader.readValue(Boolean.class);
+                return true;
+            case XmlElementNames.MustDisplayComment:
+                this.mustDisplayComment = reader.readValue(Boolean.class);
+                return true;
+            case XmlElementNames.HasQuota:
+                this.hasQuota = reader.readValue(Boolean.class);
+                return true;
+            case XmlElementNames.IsManagedFoldersRoot:
+                this.isManagedFoldersRoot = reader.readValue(Boolean.class);
+                return true;
+            case XmlElementNames.ManagedFolderId:
+                this.managedFolderId = reader.readValue();
+                return true;
+            case XmlElementNames.Comment: {
+                OutParam<String> value = new OutParam<String>();
+                if (reader.tryReadValue(value)) {
+                    this.comment = value.getParam();
+                    return true;
+                }
+            }
+            case XmlElementNames.StorageQuota:
+                this.storageQuota = reader.readValue(Integer.class);
+                return true;
+            case XmlElementNames.FolderSize:
+                this.folderSize = reader.readValue(Integer.class);
+                return true;
+            case XmlElementNames.HomePage: {
+                OutParam<String> value = new OutParam<String>();
+                if (reader.tryReadValue(value)) {
+                    this.homePage = value.getParam();
+                    return true;
+                }
+            }
+            default:
+                return false;
         }
 
     }

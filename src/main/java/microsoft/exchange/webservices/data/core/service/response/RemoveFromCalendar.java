@@ -135,8 +135,7 @@ public class RemoveFromCalendar extends
                 ResponseObjectSchema.ReferenceItemId))
                 .assign(this.referenceItem.getId());
 
-        return this.getService().internalCreateResponseObject(this,
-                parentFolderId, messageDisposition);
+        return this.getService().internalCreateResponseObject(this, parentFolderId, messageDisposition);
     }
 
 }

@@ -115,8 +115,7 @@ public final class MessageBody extends ComplexProperty
     public void readAttributesFromXml(EwsServiceXmlReader reader)
             throws Exception
     {
-        this.bodyType = reader.readAttributeValue(BodyType.class,
-                XmlAttributeNames.BodyType);
+        this.bodyType = reader.readAttributeValue(BodyType.class, XmlAttributeNames.BodyType);
     }
 
     /**

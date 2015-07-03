@@ -119,14 +119,13 @@ public abstract class ResponseObject<TMessage extends EmailMessage> extends Serv
      * @return The list of item returned by EWS.
      * @throws Exception the exception
      */
-    protected List<Item> internalCreate(FolderId destinationFolderId,
-                                        MessageDisposition messageDisposition) throws Exception
+    protected List<Item> internalCreate(FolderId destinationFolderId, MessageDisposition messageDisposition)
+            throws Exception
     {
         ((ItemId) this.getPropertyBag().getObjectFromPropertyDefinition(
                 ResponseObjectSchema.ReferenceItemId))
                 .assign(this.referenceItem.getId());
-        return this.getService().internalCreateResponseObject(this,
-                destinationFolderId, messageDisposition);
+        return this.getService().internalCreateResponseObject(this, destinationFolderId, messageDisposition);
     }
 
     /**
@@ -140,8 +139,7 @@ public abstract class ResponseObject<TMessage extends EmailMessage> extends Serv
     public TMessage save(FolderId destinationFolderId) throws Exception
     {
         EwsUtilities.validateParam(destinationFolderId, "destinationFolderId");
-        return (TMessage) this.internalCreate(destinationFolderId,
-                MessageDisposition.SaveOnly).get(0);
+        return (TMessage) this.internalCreate(destinationFolderId, MessageDisposition.SaveOnly).get(0);
     }
 
     /**
@@ -155,9 +153,7 @@ public abstract class ResponseObject<TMessage extends EmailMessage> extends Serv
     public TMessage save(WellKnownFolderName destinationFolderName)
             throws Exception
     {
-        return (TMessage) this.internalCreate(
-                new FolderId(destinationFolderName),
-                MessageDisposition.SaveOnly).get(0);
+        return (TMessage) this.internalCreate(new FolderId(destinationFolderName), MessageDisposition.SaveOnly).get(0);
     }
 
     /**

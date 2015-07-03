@@ -23,7 +23,7 @@
 
 package microsoft.exchange.webservices.data;
 
-import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 
 /**
  * The Interface ISelfValidate.
@@ -34,7 +34,7 @@ public interface ISelfValidate
     /**
      * Validate.
      *
-     * @throws ServiceValidationException the service validation exception
+     * @throws ServiceLocalException the service validation exception
      */
-    void validate() throws ServiceValidationException, Exception;
+    void validate() throws Exception;
 }

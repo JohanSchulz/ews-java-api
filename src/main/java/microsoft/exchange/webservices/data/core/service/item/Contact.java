@@ -93,8 +93,8 @@ public class Contact extends Item
      * specified Id.
      * @throws Exception the exception
      */
-    public static Contact bind(ExchangeService service, ItemId id,
-                               PropertySet propertySet) throws Exception
+    public static Contact bind(ExchangeService service, ItemId id, PropertySet propertySet)
+            throws Exception
     {
         return service.bindToItem(Contact.class, id, propertySet);
     }
@@ -149,8 +149,7 @@ public class Contact extends Item
         EwsUtilities.validateMethodVersion(this.getService(), ExchangeVersion.Exchange2010, "SetContactPicture");
 
         internalRemoveContactPicture();
-        FileAttachment fileAttachment = getAttachments().addFileAttachment(
-                ContactPictureName, content);
+        FileAttachment fileAttachment = getAttachments().addFileAttachment(ContactPictureName, content);
         fileAttachment.setIsContactPhoto(true);
     }
 
@@ -162,12 +161,10 @@ public class Contact extends Item
      */
     public void setContactPicture(InputStream contentStream) throws Exception
     {
-        EwsUtilities.validateMethodVersion(this.getService(),
-                ExchangeVersion.Exchange2010, "SetContactPicture");
+        EwsUtilities.validateMethodVersion(this.getService(), ExchangeVersion.Exchange2010, "SetContactPicture");
 
         internalRemoveContactPicture();
-        FileAttachment fileAttachment = getAttachments().addFileAttachment(
-                ContactPictureName, contentStream);
+        FileAttachment fileAttachment = getAttachments().addFileAttachment(ContactPictureName, contentStream);
         fileAttachment.setIsContactPhoto(true);
     }
 
@@ -179,12 +176,10 @@ public class Contact extends Item
      */
     public void setContactPicture(String fileName) throws Exception
     {
-        EwsUtilities.validateMethodVersion(this.getService(),
-                ExchangeVersion.Exchange2010, "SetContactPicture");
+        EwsUtilities.validateMethodVersion(this.getService(), ExchangeVersion.Exchange2010, "SetContactPicture");
 
         internalRemoveContactPicture();
-        FileAttachment fileAttachment = getAttachments().addFileAttachment(
-                new File(fileName).getName(), fileName);
+        FileAttachment fileAttachment = getAttachments().addFileAttachment(new File(fileName).getName(), fileName);
         fileAttachment.setIsContactPhoto(true);
     }
 
@@ -197,8 +192,7 @@ public class Contact extends Item
     public FileAttachment getContactPictureAttachment()
             throws ServiceLocalException
     {
-        EwsUtilities.validateMethodVersion(this.getService(),
-                ExchangeVersion.Exchange2010, "GetContactPictureAttachment");
+        EwsUtilities.validateMethodVersion(this.getService(), ExchangeVersion.Exchange2010, "GetContactPictureAttachment");
 
         if (!this.getPropertyBag().isPropertyLoaded(ContactSchema.Attachments)) {
             throw new PropertyException("The attachment collection must be loaded.");
@@ -224,10 +218,10 @@ public class Contact extends Item
         // Iterates in reverse order to remove file attachments that have
         // IsContactPhoto set to true.
         for (int index = this.getAttachments().getCount() - 1; index >= 0; index--) {
-            FileAttachment fileAttachment = (FileAttachment) this
-                    .getAttachments().getPropertyAtIndex(index);
+            FileAttachment fileAttachment = (FileAttachment) this.getAttachments().getPropertyAtIndex(index);
             if (fileAttachment != null) {
                 if (fileAttachment.isContactPhoto()) {
+                    // TODO test if remove by index is faster
                     this.getAttachments().remove(fileAttachment);
                 }
             }
@@ -242,8 +236,7 @@ public class Contact extends Item
      */
     public void removeContactPicture() throws Exception
     {
-        EwsUtilities.validateMethodVersion(this.getService(),
-                ExchangeVersion.Exchange2010, "RemoveContactPicture");
+        EwsUtilities.validateMethodVersion(this.getService(), ExchangeVersion.Exchange2010, "RemoveContactPicture");
 
         if (!this.getPropertyBag().isPropertyLoaded(ContactSchema.Attachments)) {
             throw new PropertyException("The attachment collection must be loaded.");
@@ -263,15 +256,13 @@ public class Contact extends Item
     {
         super.validate();
 
-        Object fileAsMapping;
         OutParam<Object> outParam = new OutParam<Object>();
         if (this.tryGetProperty(ContactSchema.FileAsMapping, outParam)) {
-            fileAsMapping = outParam.getParam();
+            Object fileAsMapping = outParam.getParam();
             // FileAsMapping is extended by 5 new values in 2010 mode. Validate
             // that they are used according the version.
             EwsUtilities.validateEnumVersionValue(
-                    (FileAsMapping) fileAsMapping, this.getService()
-                            .getRequestedServerVersion());
+                    (FileAsMapping) fileAsMapping, this.getService().getRequestedServerVersion());
         }
     }
 
@@ -285,9 +276,7 @@ public class Contact extends Item
      */
     public String getFileAs() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.FileAs);
-
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.FileAs);
     }
 
     /**
@@ -298,8 +287,7 @@ public class Contact extends Item
      */
     public void setFileAs(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.FileAs, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.FileAs, value);
     }
 
     /**
@@ -322,8 +310,7 @@ public class Contact extends Item
      */
     public void setFileAs(FileAsMapping value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.FileAsMapping, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.FileAsMapping, value);
     }
 
     /**
@@ -334,8 +321,7 @@ public class Contact extends Item
      */
     public String getDisplayName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.DisplayName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.DisplayName);
     }
 
     /**
@@ -346,8 +332,7 @@ public class Contact extends Item
      */
     public void setDisplayName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.DisplayName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.DisplayName, value);
     }
 
     /**
@@ -358,8 +343,7 @@ public class Contact extends Item
      */
     public String getGivenName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.GivenName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.GivenName);
     }
 
     /**
@@ -370,8 +354,7 @@ public class Contact extends Item
      */
     public void setGivenName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.GivenName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.GivenName, value);
     }
 
     /**
@@ -382,8 +365,7 @@ public class Contact extends Item
      */
     public String getInitials() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Initials);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Initials);
     }
 
     /**
@@ -394,8 +376,7 @@ public class Contact extends Item
      */
     public void setInitials(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Initials, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Initials, value);
     }
 
     /**
@@ -406,8 +387,7 @@ public class Contact extends Item
      */
     public String getMiddleName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.MiddleName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.MiddleName);
     }
 
     /**
@@ -418,8 +398,7 @@ public class Contact extends Item
      */
     public void setMiddleName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.MiddleName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.MiddleName, value);
     }
 
     /**
@@ -430,8 +409,7 @@ public class Contact extends Item
      */
     public String getNickName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.NickName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.NickName);
     }
 
     /**
@@ -442,8 +420,7 @@ public class Contact extends Item
      */
     public void setNickName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.NickName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.NickName, value);
     }
 
     /**
@@ -454,8 +431,7 @@ public class Contact extends Item
      */
     public CompleteName getCompleteName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.CompleteName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.CompleteName);
     }
 
     /**
@@ -466,8 +442,7 @@ public class Contact extends Item
      */
     public String getCompanyName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.CompanyName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.CompanyName);
     }
 
     /**
@@ -478,8 +453,7 @@ public class Contact extends Item
      */
     public void setCompanyName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.CompanyName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.CompanyName, value);
     }
 
     /**
@@ -521,8 +495,7 @@ public class Contact extends Item
     public PhoneNumberDictionary getPhoneNumbers()
             throws ServiceLocalException
     {
-        return getPropertyBag()
-                .getObjectFromPropertyDefinition(ContactSchema.PhoneNumbers);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.PhoneNumbers);
     }
 
     /**
@@ -533,8 +506,7 @@ public class Contact extends Item
      */
     public String getAssistantName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.AssistantName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.AssistantName);
     }
 
     /**
@@ -545,8 +517,7 @@ public class Contact extends Item
      */
     public void setAssistantName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.AssistantName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.AssistantName, value);
     }
 
     /**
@@ -557,8 +528,7 @@ public class Contact extends Item
      */
     public Date getBirthday() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Birthday);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Birthday);
 
     }
 
@@ -570,8 +540,7 @@ public class Contact extends Item
      */
     public void setBirthday(Date value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Birthday, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Birthday, value);
     }
 
     /**
@@ -582,8 +551,7 @@ public class Contact extends Item
      */
     public String getBusinessHomePage() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.BusinessHomePage);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.BusinessHomePage);
 
     }
 
@@ -595,8 +563,7 @@ public class Contact extends Item
      */
     public void setBusinessHomePage(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.BusinessHomePage, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.BusinessHomePage, value);
     }
 
     /**
@@ -607,8 +574,7 @@ public class Contact extends Item
      */
     public StringList getChildren() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Children);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Children);
     }
 
     /**
@@ -619,8 +585,7 @@ public class Contact extends Item
      */
     public void setChildren(StringList value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Children, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Children, value);
     }
 
     /**
@@ -631,8 +596,7 @@ public class Contact extends Item
      */
     public StringList getCompanies() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Companies);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Companies);
     }
 
     /**
@@ -643,8 +607,7 @@ public class Contact extends Item
      */
     public void setCompanies(StringList value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Companies, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Companies, value);
     }
 
     /**
@@ -655,8 +618,7 @@ public class Contact extends Item
      */
     public ContactSource getContactSource() throws ServiceLocalException
     {
-        return getPropertyBag()
-                .getObjectFromPropertyDefinition(ContactSchema.ContactSource);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.ContactSource);
     }
 
     /**
@@ -667,8 +629,7 @@ public class Contact extends Item
      */
     public String getDepartment() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Department);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Department);
     }
 
     /**
@@ -679,8 +640,7 @@ public class Contact extends Item
      */
     public void setDepartment(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Department, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Department, value);
     }
 
     /**
@@ -691,8 +651,7 @@ public class Contact extends Item
      */
     public String getGeneration() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Generation);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Generation);
     }
 
     /**
@@ -703,8 +662,7 @@ public class Contact extends Item
      */
     public void setGeneration(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Generation, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Generation, value);
     }
 
     /**
@@ -728,8 +686,7 @@ public class Contact extends Item
      */
     public String getJobTitle() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.JobTitle);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.JobTitle);
     }
 
     /**
@@ -740,8 +697,7 @@ public class Contact extends Item
      */
     public void setJobTitle(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.JobTitle, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.JobTitle, value);
     }
 
     /**
@@ -752,8 +708,7 @@ public class Contact extends Item
      */
     public String getManager() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Manager);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Manager);
     }
 
     /**
@@ -764,8 +719,7 @@ public class Contact extends Item
      */
     public void setManager(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Manager, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Manager, value);
     }
 
     /**
@@ -776,8 +730,7 @@ public class Contact extends Item
      */
     public String getMileage() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Mileage);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Mileage);
     }
 
     /**
@@ -788,8 +741,7 @@ public class Contact extends Item
      */
     public void setMileage(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Mileage, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Mileage, value);
     }
 
     /**
@@ -800,8 +752,7 @@ public class Contact extends Item
      */
     public String getOfficeLocation() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.OfficeLocation);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.OfficeLocation);
     }
 
     /**
@@ -812,8 +763,7 @@ public class Contact extends Item
      */
     public void setOfficeLocation(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.OfficeLocation, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.OfficeLocation, value);
     }
 
     /**
@@ -827,8 +777,7 @@ public class Contact extends Item
     public PhysicalAddressIndex getPostalAddressIndex()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.PostalAddressIndex);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.PostalAddressIndex);
     }
 
     /**
@@ -840,8 +789,7 @@ public class Contact extends Item
     public void setPostalAddressIndex(PhysicalAddressIndex value)
             throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.PostalAddressIndex, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.PostalAddressIndex, value);
     }
 
     /**
@@ -852,8 +800,7 @@ public class Contact extends Item
      */
     public String getProfession() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Profession);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Profession);
     }
 
     /**
@@ -864,8 +811,7 @@ public class Contact extends Item
      */
     public void setProfession(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Profession, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Profession, value);
     }
 
     /**
@@ -876,8 +822,7 @@ public class Contact extends Item
      */
     public String getSpouseName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.SpouseName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.SpouseName);
     }
 
     /**
@@ -888,8 +833,7 @@ public class Contact extends Item
      */
     public void setSpouseName(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.SpouseName, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.SpouseName, value);
     }
 
     /**
@@ -900,8 +844,7 @@ public class Contact extends Item
      */
     public String getSurname() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.Surname);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.Surname);
     }
 
     /**
@@ -912,8 +855,7 @@ public class Contact extends Item
      */
     public void setSurname(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.Surname, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.Surname, value);
     }
 
     /**
@@ -924,8 +866,7 @@ public class Contact extends Item
      */
     public Date getWeddingAnniversary() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.WeddingAnniversary);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.WeddingAnniversary);
     }
 
     /**
@@ -936,8 +877,7 @@ public class Contact extends Item
      */
     public void setWeddingAnniversary(Date value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ContactSchema.WeddingAnniversary, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ContactSchema.WeddingAnniversary, value);
     }
 
     /**
@@ -949,8 +889,7 @@ public class Contact extends Item
      */
     public Boolean getHasPicture() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ContactSchema.HasPicture);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.HasPicture);
     }
 
     /**
@@ -1016,8 +955,7 @@ public class Contact extends Item
      */
     public byte[][] getUserSMIMECertificate() throws ServiceLocalException
     {
-        ByteArrayArray array = this.getPropertyBag()
-                .getObjectFromPropertyDefinition(ContactSchema.UserSMIMECertificate);
+        ByteArrayArray array = this.getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.UserSMIMECertificate);
         return array.getContent();
     }
 
@@ -1028,8 +966,7 @@ public class Contact extends Item
      */
     public byte[][] getMSExchangeCertificate() throws ServiceLocalException
     {
-        ByteArrayArray array = getPropertyBag()
-                .getObjectFromPropertyDefinition(ContactSchema.MSExchangeCertificate);
+        ByteArrayArray array = getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.MSExchangeCertificate);
         return array.getContent();
     }
 
@@ -1060,7 +997,6 @@ public class Contact extends Item
      */
     public EmailAddressCollection getDirectReports() throws ServiceLocalException
     {
-        return getPropertyBag()
-                .getObjectFromPropertyDefinition(ContactSchema.DirectReports);
+        return getPropertyBag().getObjectFromPropertyDefinition(ContactSchema.DirectReports);
     }
 }

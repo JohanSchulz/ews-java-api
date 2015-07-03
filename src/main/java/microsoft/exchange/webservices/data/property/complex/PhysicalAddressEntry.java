@@ -36,8 +36,7 @@ import java.util.List;
 /**
  * Represents an entry of an PhysicalAddressDictionary.
  */
-public final class PhysicalAddressEntry extends DictionaryEntryProperty<PhysicalAddressKey> implements
-                                                                                            IPropertyBagChangedDelegate<String>
+public final class PhysicalAddressEntry extends DictionaryEntryProperty<PhysicalAddressKey> implements IPropertyBagChangedDelegate<String>
 {
 
     /**
@@ -73,8 +72,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public String getStreet() throws Exception
     {
-        return (String) this.propertyBag
-                .getSimplePropertyBag(PhysicalAddressSchema.Street);
+        return (String) this.propertyBag.getSimplePropertyBag(PhysicalAddressSchema.Street);
     }
 
     /**
@@ -85,8 +83,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public void setStreet(String value) throws Exception
     {
-        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.Street,
-                value);
+        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.Street, value);
 
     }
 
@@ -98,8 +95,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public String getCity() throws Exception
     {
-        return (String) this.propertyBag
-                .getSimplePropertyBag(PhysicalAddressSchema.City);
+        return (String) this.propertyBag.getSimplePropertyBag(PhysicalAddressSchema.City);
     }
 
     /**
@@ -109,8 +105,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public void setCity(String value)
     {
-        this.propertyBag
-                .setSimplePropertyBag(PhysicalAddressSchema.City, value);
+        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.City, value);
     }
 
     /**
@@ -121,8 +116,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public String getState() throws Exception
     {
-        return (String) this.propertyBag
-                .getSimplePropertyBag(PhysicalAddressSchema.State);
+        return (String) this.propertyBag.getSimplePropertyBag(PhysicalAddressSchema.State);
     }
 
     /**
@@ -132,8 +126,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public void setState(String value)
     {
-        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.State,
-                value);
+        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.State, value);
     }
 
     /**
@@ -144,8 +137,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public String getCountryOrRegion() throws Exception
     {
-        return (String) this.propertyBag
-                .getSimplePropertyBag(PhysicalAddressSchema.CountryOrRegion);
+        return (String) this.propertyBag.getSimplePropertyBag(PhysicalAddressSchema.CountryOrRegion);
     }
 
     /**
@@ -155,8 +147,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public void setCountryOrRegion(String value)
     {
-        this.propertyBag.setSimplePropertyBag(
-                PhysicalAddressSchema.CountryOrRegion, value);
+        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.CountryOrRegion, value);
     }
 
     /**
@@ -166,8 +157,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public String getPostalCode()
     {
-        return (String) this.propertyBag
-                .getSimplePropertyBag(PhysicalAddressSchema.PostalCode);
+        return (String) this.propertyBag.getSimplePropertyBag(PhysicalAddressSchema.PostalCode);
     }
 
     /**
@@ -177,8 +167,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
      */
     public void setPostalCode(String value)
     {
-        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.PostalCode,
-                value);
+        this.propertyBag.setSimplePropertyBag(PhysicalAddressSchema.PostalCode, value);
     }
 
     /**
@@ -201,10 +190,8 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
     public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
             throws Exception
     {
-        if (PhysicalAddressSchema.getXmlElementNames().contains(
-                reader.getLocalName())) {
-            this.propertyBag.setSimplePropertyBag(reader.getLocalName(), reader
-                    .readElementValue());
+        if (PhysicalAddressSchema.getXmlElementNames().contains(reader.getLocalName())) {
+            this.propertyBag.setSimplePropertyBag(reader.getLocalName(), reader.readElementValue());
             return true;
         }
         else {
@@ -224,9 +211,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
             throws XMLStreamException, ServiceXmlSerializationException
     {
         for (String xmlElementName : PhysicalAddressSchema.getXmlElementNames()) {
-            writer.writeElementValue(XmlNamespace.Types, xmlElementName,
-                    this.propertyBag.getSimplePropertyBag(xmlElementName));
-
+            writer.writeElementValue(XmlNamespace.Types, xmlElementName, this.propertyBag.getSimplePropertyBag(xmlElementName));
         }
     }
 
@@ -256,25 +241,18 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
         }
 
         for (String xmlElementName : fieldsToSet) {
-            writer.writeStartElement(XmlNamespace.Types, ewsObject
-                    .getSetFieldXmlElementName());
+            writer.writeStartElement(XmlNamespace.Types, ewsObject.getSetFieldXmlElementName());
 
-            writer.writeStartElement(XmlNamespace.Types,
-                    XmlElementNames.IndexedFieldURI);
-            writer.writeAttributeValue(XmlAttributeNames.FieldURI,
-                    getFieldUri(xmlElementName));
-            writer.writeAttributeValue(XmlAttributeNames.FieldIndex, this
-                    .getKey().toString());
+            writer.writeStartElement(XmlNamespace.Types, XmlElementNames.IndexedFieldURI);
+            writer.writeAttributeValue(XmlAttributeNames.FieldURI, getFieldUri(xmlElementName));
+            writer.writeAttributeValue(XmlAttributeNames.FieldIndex, this.getKey().toString());
             writer.writeEndElement(); // IndexedFieldURI
 
-            writer.writeStartElement(XmlNamespace.Types, ewsObject
-                    .getXmlElementName());
-            writer.writeStartElement(XmlNamespace.Types,
-                    ownerDictionaryXmlElementName);
+            writer.writeStartElement(XmlNamespace.Types, ewsObject.getXmlElementName());
+            writer.writeStartElement(XmlNamespace.Types, ownerDictionaryXmlElementName);
             writer.writeStartElement(XmlNamespace.Types, XmlElementNames.Entry);
             this.writeAttributesToXml(writer);
-            writer.writeElementValue(XmlNamespace.Types, xmlElementName,
-                    this.propertyBag.getSimplePropertyBag(xmlElementName));
+            writer.writeElementValue(XmlNamespace.Types, xmlElementName, this.propertyBag.getSimplePropertyBag(xmlElementName));
             writer.writeEndElement(); // Entry
             writer.writeEndElement(); // ownerDictionaryXmlElementName
             writer.writeEndElement(); // ewsObject.GetXmlElementName()
@@ -283,8 +261,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
         }
 
         for (String xmlElementName : this.propertyBag.getRemovedItems()) {
-            this.internalWriteDeleteFieldToXml(writer, ewsObject,
-                    xmlElementName);
+            this.internalWriteDeleteFieldToXml(writer, ewsObject, xmlElementName);
         }
 
         return true;
@@ -305,8 +282,7 @@ public final class PhysicalAddressEntry extends DictionaryEntryProperty<Physical
             ServiceXmlSerializationException
     {
         for (String xmlElementName : PhysicalAddressSchema.getXmlElementNames()) {
-            this.internalWriteDeleteFieldToXml(writer, ewsObject,
-                    xmlElementName);
+            this.internalWriteDeleteFieldToXml(writer, ewsObject, xmlElementName);
         }
         return true;
     }

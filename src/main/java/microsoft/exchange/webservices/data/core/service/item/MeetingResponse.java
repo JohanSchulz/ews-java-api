@@ -49,8 +49,7 @@ public class MeetingResponse extends MeetingMessage
      * @param parentAttachment The parentAttachment
      * @throws Exception the exception
      */
-    public MeetingResponse(ItemAttachment parentAttachment)
-            throws Exception
+    public MeetingResponse(ItemAttachment parentAttachment) throws Exception
     {
         super(parentAttachment);
     }

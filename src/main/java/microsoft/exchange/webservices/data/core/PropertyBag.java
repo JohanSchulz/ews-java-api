@@ -256,17 +256,16 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      * @return true if property was retrieved
      * @throws ArgumentException on validation error
      */
-    public <T> boolean tryGetPropertyType(Class<T> cls, PropertyDefinition propertyDefinition,
-                                          OutParam<T> propertyValue) throws ArgumentException
+    public <T> boolean tryGetPropertyType(Class<T> cls, PropertyDefinition propertyDefinition, OutParam<T> propertyValue)
+            throws ServiceLocalException
     {
         // Verify that the type parameter and
-        //property definition's type are compatible.
+        // property definition's type are compatible.
         if (!cls.isAssignableFrom(propertyDefinition.getType())) {
             String errorMessage = String.format(
                     "Property definition type '%s' and type parameter '%s' aren't compatible.",
-                    propertyDefinition.getType().getSimpleName(),
-                    cls.getSimpleName());
-            throw new ArgumentException(errorMessage, "propertyDefinition");
+                    propertyDefinition.getType().getSimpleName(), cls.getSimpleName());
+            throw new ServiceLocalException(errorMessage);
         }
 
         OutParam<Object> value = new OutParam<Object>();
@@ -492,8 +491,9 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      * @param onlySummaryPropertiesRequested Indicates whether summary or full property were requested.
      * @throws Exception the exception
      */
-    public void loadFromXml(EwsServiceXmlReader reader, boolean clear, PropertySet requestedPropertySet,
-                            boolean onlySummaryPropertiesRequested) throws Exception
+    public void loadFromXml(
+            EwsServiceXmlReader reader, boolean clear, PropertySet requestedPropertySet, boolean onlySummaryPropertiesRequested)
+            throws Exception
     {
         if (clear) {
             this.clear();
@@ -513,12 +513,10 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
 
                 if (reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) {
                     OutParam<PropertyDefinition> propertyDefinitionOut = new OutParam<PropertyDefinition>();
-                    PropertyDefinition propertyDefinition;
 
                     if (this.getOwner().schema().tryGetPropertyDefinition(reader.getLocalName(), propertyDefinitionOut)) {
-                        propertyDefinition = propertyDefinitionOut.getParam();
-                        propertyDefinition.loadPropertyValueFromXml(reader,
-                                this);
+                        PropertyDefinition propertyDefinition = propertyDefinitionOut.getParam();
+                        propertyDefinition.loadPropertyValueFromXml(reader, this);
 
                         this.loadedProperties.add(propertyDefinition);
                     }
@@ -543,22 +541,16 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      */
     public void writeToXml(EwsServiceXmlWriter writer) throws Exception
     {
-        writer.writeStartElement(XmlNamespace.Types, this.getOwner()
-                .getXmlElementName());
+        writer.writeStartElement(XmlNamespace.Types, this.getOwner().getXmlElementName());
 
-        Iterator<PropertyDefinition> it = this.getOwner().getSchema()
-                .iterator();
-        while (it.hasNext()) {
-            PropertyDefinition propertyDefinition = it.next();
+        for (final PropertyDefinition propertyDefinition : this.getOwner().getSchema()) {
             // The following test should not be necessary since the property bag
-            // prevents
-            // property to be set if they don't have the CanSet flag, but it
+            // prevents property to be set if they don't have the CanSet flag, but it
             // doesn't hurt...
             if (propertyDefinition
                     .hasFlag(PropertyDefinitionFlags.CanSet, writer.getService().getRequestedServerVersion())) {
                 if (this.contains(propertyDefinition)) {
-                    propertyDefinition.writePropertyValueToXml(writer, this,
-                            false /* isUpdateOperation */);
+                    propertyDefinition.writePropertyValueToXml(writer, this, false /* isUpdateOperation */);
                 }
             }
         }
@@ -576,8 +568,7 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
     public void writeToXmlForUpdate(EwsServiceXmlWriter writer)
             throws Exception
     {
-        writer.writeStartElement(XmlNamespace.Types, this.getOwner()
-                .getChangeXmlElementName());
+        writer.writeStartElement(XmlNamespace.Types, this.getOwner().getChangeXmlElementName());
 
         this.getOwner().getId().writeToXml(writer);
 
@@ -591,12 +582,8 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
             this.writeSetUpdateToXml(writer, propertyDefinition);
         }
 
-        Iterator<Entry<PropertyDefinition, Object>> it = this.deletedProperties
-                .entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<PropertyDefinition, Object> property = it.next();
-            this.writeDeleteUpdateToXml(writer, property.getKey(), property
-                    .getValue());
+        for (final Entry<PropertyDefinition, Object> property : this.deletedProperties.entrySet()) {
+            this.writeDeleteUpdateToXml(writer, property.getKey(), property.getValue());
         }
 
         writer.writeEndElement();
@@ -612,8 +599,7 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      */
     public boolean getIsUpdateCallNecessary()
     {
-        List<PropertyDefinition> propertyDefinitions =
-                new ArrayList<PropertyDefinition>();
+        List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(this.addedProperties);
         propertyDefinitions.addAll(this.modifiedProperties);
         propertyDefinitions.addAll(this.deletedProperties.keySet());
@@ -650,8 +636,8 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      * @param propertyDefinition The property fro which to write the update.
      * @throws Exception the exception
      */
-    private void writeSetUpdateToXml(EwsServiceXmlWriter writer,
-                                     PropertyDefinition propertyDefinition) throws Exception
+    private void writeSetUpdateToXml(EwsServiceXmlWriter writer, PropertyDefinition propertyDefinition)
+            throws Exception
     {
         // The following test should not be necessary since the property bag
         // prevents
@@ -659,29 +645,22 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
         // it
         // doesn't hurt...
         if (propertyDefinition.hasFlag(PropertyDefinitionFlags.CanUpdate)) {
-            Object propertyValue = this
-                    .getObjectFromPropertyDefinition(propertyDefinition);
+            Object propertyValue = this.getObjectFromPropertyDefinition(propertyDefinition);
 
             boolean handled = false;
 
             if (propertyValue instanceof ICustomXmlUpdateSerializer) {
-                ICustomXmlUpdateSerializer updateSerializer =
-                        (ICustomXmlUpdateSerializer) propertyValue;
-                handled = updateSerializer.writeSetUpdateToXml(writer, this
-                        .getOwner(), propertyDefinition);
+                ICustomXmlUpdateSerializer updateSerializer = (ICustomXmlUpdateSerializer) propertyValue;
+                handled = updateSerializer.writeSetUpdateToXml(writer, this.getOwner(), propertyDefinition);
             }
 
             if (!handled) {
-                writer.writeStartElement(XmlNamespace.Types, this.getOwner()
-                        .getSetFieldXmlElementName());
+                writer.writeStartElement(XmlNamespace.Types, this.getOwner().getSetFieldXmlElementName());
 
                 propertyDefinition.writeToXml(writer);
 
-                writer.writeStartElement(XmlNamespace.Types, this.getOwner()
-                        .getXmlElementName());
-                propertyDefinition
-                        .writePropertyValueToXml(writer, this,
-                                true /* isUpdateOperation */);
+                writer.writeStartElement(XmlNamespace.Types, this.getOwner().getXmlElementName());
+                propertyDefinition.writePropertyValueToXml(writer, this, true /* isUpdateOperation */);
                 writer.writeEndElement();
 
                 writer.writeEndElement();
@@ -697,8 +676,8 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      * @param propertyValue      The current value of the property.
      * @throws Exception the exception
      */
-    private void writeDeleteUpdateToXml(EwsServiceXmlWriter writer,
-                                        PropertyDefinition propertyDefinition, Object propertyValue)
+    private void writeDeleteUpdateToXml(
+            EwsServiceXmlWriter writer, PropertyDefinition propertyDefinition, Object propertyValue)
             throws Exception
     {
         // The following test should not be necessary since the property bag
@@ -710,15 +689,12 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
             boolean handled = false;
 
             if (propertyValue instanceof ICustomXmlUpdateSerializer) {
-                ICustomXmlUpdateSerializer updateSerializer =
-                        (ICustomXmlUpdateSerializer) propertyValue;
-                handled = updateSerializer.writeDeleteUpdateToXml(writer, this
-                        .getOwner());
+                ICustomXmlUpdateSerializer updateSerializer = (ICustomXmlUpdateSerializer) propertyValue;
+                handled = updateSerializer.writeDeleteUpdateToXml(writer, this.getOwner());
             }
 
             if (!handled) {
-                writer.writeStartElement(XmlNamespace.Types, this.getOwner()
-                        .getDeleteFieldXmlElementName());
+                writer.writeStartElement(XmlNamespace.Types, this.getOwner().getDeleteFieldXmlElementName());
                 propertyDefinition.writeToXml(writer);
                 writer.writeEndElement();
             }
@@ -775,8 +751,7 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
     public <T> T getObjectFromPropertyDefinition(PropertyDefinition propertyDefinition)
             throws ServiceLocalException
     {
-        OutParam<ServiceLocalException> serviceExceptionOut =
-                new OutParam<ServiceLocalException>();
+        OutParam<ServiceLocalException> serviceExceptionOut = new OutParam<ServiceLocalException>();
         T propertyValue = getPropertyValueOrException(propertyDefinition, serviceExceptionOut);
 
         ServiceLocalException serviceException = serviceExceptionOut.getParam();
@@ -794,25 +769,17 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      * @throws Exception the exception
      */
     public void setObjectFromPropertyDefinition(PropertyDefinition propertyDefinition, Object object)
-            throws Exception
+            throws ServiceLocalException
     {
-        if (!EwsUtilities.isSupportedVersion(this.owner.getService().getRequestedServerVersion(),
-                propertyDefinition.getVersion())) {
-            throw new ServiceVersionException(String.format(
-                    "The property %s is valid only for Exchange %s or later versions.",
-                    propertyDefinition.getName(), propertyDefinition
-                            .getVersion()));
-        }
+        EwsUtilities.validatePropertyVersion(this.owner.getService(), propertyDefinition);
 
         // If the property bag is not in the loading state, we need to verify
-        // whether
-        // the property can actually be set or updated.
+        // whether the property can actually be set or updated.
         if (!this.loading) {
             // If the owner is new and if the property cannot be set, throw.
             if (this.owner.isNew()
                     && !propertyDefinition
-                    .hasFlag(PropertyDefinitionFlags.CanSet, this.getOwner()
-                            .getService().getRequestedServerVersion())) {
+                    .hasFlag(PropertyDefinitionFlags.CanSet, this.owner.getService().getRequestedServerVersion())) {
                 throw new ServiceObjectPropertyException("This property is read-only and can't be set.", propertyDefinition);
             }
 
@@ -821,26 +788,21 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
                 // (EWS doesn't support updating item attachments)
 
                 if ((this.owner instanceof Item)) {
-                    Item ownerItem = (Item) this.getOwner();
+                    Item ownerItem = (Item) this.owner;
                     if (ownerItem.isAttachment()) {
-                        throw new ServiceObjectPropertyException("Item attachments can't be updated.",
-                                propertyDefinition);
+                        throw new ServiceObjectPropertyException("Item attachments can't be updated.", propertyDefinition);
                     }
                 }
 
                 // If the property cannot be deleted, throw.
                 if (object == null
-                        && !propertyDefinition
-                        .hasFlag(PropertyDefinitionFlags.CanDelete)) {
-                    throw new ServiceObjectPropertyException("This property can't be deleted.",
-                            propertyDefinition);
+                        && !propertyDefinition.hasFlag(PropertyDefinitionFlags.CanDelete)) {
+                    throw new ServiceObjectPropertyException("This property can't be deleted.", propertyDefinition);
                 }
 
                 // If the property cannot be updated, throw.
-                if (!propertyDefinition
-                        .hasFlag(PropertyDefinitionFlags.CanUpdate)) {
-                    throw new ServiceObjectPropertyException("This property can't be updated.",
-                            propertyDefinition);
+                if (!propertyDefinition.hasFlag(PropertyDefinitionFlags.CanUpdate)) {
+                    throw new ServiceObjectPropertyException("This property can't be updated.", propertyDefinition);
                 }
             }
         }
@@ -850,8 +812,8 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
             this.deleteProperty(propertyDefinition);
         }
         else {
-            ComplexProperty complexProperty = null;
-            Object currentValue = null;
+            ComplexProperty complexProperty;
+            Object currentValue;
 
             if (this.properties.containsKey(propertyDefinition)) {
                 currentValue = this.properties.get(propertyDefinition);
@@ -869,16 +831,14 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
                 addToChangeList(propertyDefinition, this.modifiedProperties);
             }
             else {
-                // If the property value was not set, we have a newly set
-                // property.
+                // If the property value was not set, we have a newly set property.
                 if (!this.properties.containsKey(propertyDefinition)) {
                     addToChangeList(propertyDefinition, this.addedProperties);
                 }
                 else {
                     // The last case is that we have a modified property.
                     if (!this.modifiedProperties.contains(propertyDefinition)) {
-                        addToChangeList(propertyDefinition,
-                                this.modifiedProperties);
+                        addToChangeList(propertyDefinition, this.modifiedProperties);
                     }
                 }
             }
@@ -892,12 +852,6 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @seemicrosoft.exchange.webservices.ComplexPropertyChangedInterface#
-     * complexPropertyChanged(microsoft.exchange.webservices.ComplexProperty)
-     */
     @Override
     public void complexPropertyChanged(ComplexProperty complexProperty)
     {

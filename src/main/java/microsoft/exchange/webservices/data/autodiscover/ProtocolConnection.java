@@ -74,22 +74,20 @@ public final class ProtocolConnection
             reader.read();
 
             if (reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) {
-                if (reader.getLocalName().equals(
-                        XmlElementNames.EncryptionMethod)) {
-                    connection.setEncryptionMethod(reader
-                            .readElementValue(String.class));
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.Hostname)) {
-                    connection.setHostname(reader
-                            .readElementValue(String.class));
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.Port)) {
-                    connection.setPort(reader.readElementValue(int.class));
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.EncryptionMethod:
+                        connection.setEncryptionMethod(reader.readElementValue(String.class));
+                        break;
+                    case XmlElementNames.Hostname:
+                        connection.setHostname(reader.readElementValue(String.class));
+                        break;
+                    case XmlElementNames.Port:
+                        connection.setPort(reader.readElementValue(int.class));
+                        break;
                 }
             }
-        } while (!reader.isEndElement(XmlNamespace.Autodiscover,
-                XmlElementNames.ProtocolConnection));
+        } while (!reader.isEndElement(XmlNamespace.Autodiscover, XmlElementNames.ProtocolConnection));
 
         return connection;
     }

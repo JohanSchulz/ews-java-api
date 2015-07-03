@@ -104,21 +104,16 @@ public final class PostReply extends ServiceObject
     protected PostItem internalCreate(FolderId parentFolderId,
                                       MessageDisposition messageDisposition) throws Exception
     {
-        ((ItemId) this
-                .getObjectFromPropertyDefinition(
-                        ResponseObjectSchema.ReferenceItemId))
+        ((ItemId) this.getObjectFromPropertyDefinition(ResponseObjectSchema.ReferenceItemId))
                 .assign(this.referenceItem.getId());
 
-        List<Item> items = this.getService().internalCreateResponseObject(this,
-                parentFolderId, messageDisposition);
+        List<Item> items = this.getService().internalCreateResponseObject(this, parentFolderId, messageDisposition);
 
-        PostItem postItem = EwsUtilities.findFirstItemOfType(PostItem.class,
-                items);
+        PostItem postItem = EwsUtilities.findFirstItemOfType(PostItem.class, items);
 
         // This should never happen. If it does, we have a bug.
-        EwsUtilities
-                .ewsAssert(postItem != null, "PostReply.InternalCreate",
-                        "postItem is null. The CreateItem call did" + " not return the expected PostItem.");
+        EwsUtilities.ewsAssert(postItem != null, "PostReply.InternalCreate",
+                "postItem is null. The CreateItem call did not return the expected PostItem.");
 
         return postItem;
     }
@@ -201,8 +196,7 @@ public final class PostReply extends ServiceObject
      */
     public String getSubject() throws Exception
     {
-        return (String) this
-                .getObjectFromPropertyDefinition(EmailMessageSchema.Subject);
+        return (String) this.getObjectFromPropertyDefinition(EmailMessageSchema.Subject);
     }
 
     /**
@@ -213,8 +207,7 @@ public final class PostReply extends ServiceObject
      */
     public void setSubject(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.Subject, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.Subject, value);
     }
 
     /**
@@ -225,8 +218,7 @@ public final class PostReply extends ServiceObject
      */
     public MessageBody getBody() throws Exception
     {
-        return (MessageBody) this
-                .getObjectFromPropertyDefinition(ItemSchema.Body);
+        return (MessageBody) this.getObjectFromPropertyDefinition(ItemSchema.Body);
     }
 
     /**
@@ -237,8 +229,7 @@ public final class PostReply extends ServiceObject
      */
     public void setBody(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body,
-                value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body, value);
     }
 
     /**
@@ -250,9 +241,7 @@ public final class PostReply extends ServiceObject
      */
     public MessageBody getBodyPrefix() throws Exception
     {
-        return (MessageBody) this
-                .getObjectFromPropertyDefinition(
-                        ResponseObjectSchema.BodyPrefix);
+        return (MessageBody) this.getObjectFromPropertyDefinition(ResponseObjectSchema.BodyPrefix);
     }
 
     /**
@@ -263,8 +252,7 @@ public final class PostReply extends ServiceObject
      */
     public void setBodyPrefix(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ResponseObjectSchema.BodyPrefix, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ResponseObjectSchema.BodyPrefix, value);
     }
 
 }

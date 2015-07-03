@@ -49,7 +49,6 @@ import microsoft.exchange.webservices.data.property.definition.PropertyDefinitio
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.ListIterator;
 
 /**
  * Represents a generic item. Properties available on item are defined in the
@@ -218,8 +217,7 @@ public class Item extends ServiceObject
             affectedTaskOccurrences = this.getDefaultAffectedTaskOccurrences();
         }
 
-        this.getService().deleteItem(this.getId(), deleteMode,
-                sendCancellationsMode, affectedTaskOccurrences);
+        this.getService().deleteItem(this.getId(), deleteMode, sendCancellationsMode, affectedTaskOccurrences);
     }
 
     /**
@@ -232,7 +230,8 @@ public class Item extends ServiceObject
      */
     protected void internalCreate(FolderId parentFolderId,
                                   MessageDisposition messageDisposition,
-                                  SendInvitationsMode sendInvitationsMode) throws Exception
+                                  SendInvitationsMode sendInvitationsMode)
+            throws Exception
     {
         this.throwIfThisIsNotNew();
         this.throwIfThisIsAttachment();
@@ -242,8 +241,9 @@ public class Item extends ServiceObject
                     this,
                     parentFolderId,
                     messageDisposition,
-                    sendInvitationsMode != null ? sendInvitationsMode : this
-                            .getDefaultSendInvitationsMode());
+                    sendInvitationsMode != null
+                            ? sendInvitationsMode
+                            : this.getDefaultSendInvitationsMode());
 
             this.getAttachments().save();
         }
@@ -280,9 +280,9 @@ public class Item extends ServiceObject
                             parentFolderId,
                             conflictResolutionMode,
                             messageDisposition,
-                            sendInvitationsOrCancellationsMode != null ? sendInvitationsOrCancellationsMode
-                                    : this
-                                            .getDefaultSendInvitationsOrCancellationsMode());
+                            sendInvitationsOrCancellationsMode != null
+                                    ? sendInvitationsOrCancellationsMode
+                                    : this.getDefaultSendInvitationsOrCancellationsMode());
         }
         if (this.hasUnprocessedAttachmentChanges()) {
             // Validation of the item and its attachments occurs in
@@ -344,15 +344,15 @@ public class Item extends ServiceObject
      * @throws ServiceLocalException the service local exception
      * @throws Exception             the exception
      */
-    public void delete(DeleteMode deleteMode) throws ServiceLocalException,
-            Exception
+    public void delete(DeleteMode deleteMode)
+            throws ServiceLocalException, Exception
     {
         this.internalDelete(deleteMode, null, null);
     }
 
     /**
      * Saves this item in a specific folder. Calling this method results in at
-     * least one call to EWS. Mutliple calls to EWS might be made if attachments
+     * least one call to EWS. Multiple calls to EWS might be made if attachments
      * have been added.
      *
      * @param parentFolderId the parent folder id
@@ -366,7 +366,7 @@ public class Item extends ServiceObject
 
     /**
      * Saves this item in a specific folder. Calling this method results in at
-     * least one call to EWS. Mutliple calls to EWS might be made if attachments
+     * least one call to EWS. Multiple calls to EWS might be made if attachments
      * have been added.
      *
      * @param parentFolderName the parent folder name
@@ -374,14 +374,13 @@ public class Item extends ServiceObject
      */
     public void save(WellKnownFolderName parentFolderName) throws Exception
     {
-        this.internalCreate(new FolderId(parentFolderName),
-                MessageDisposition.SaveOnly, null);
+        save(new FolderId(parentFolderName));
     }
 
     /**
      * Saves this item in the default folder based on the item's type (for
      * example, an e-mail message is saved to the Drafts folder). Calling this
-     * method results in at least one call to EWS. Mutliple calls to EWS might
+     * method results in at least one call to EWS. Multiple calls to EWS might
      * be made if attachments have been added.
      *
      * @throws Exception the exception
@@ -393,7 +392,7 @@ public class Item extends ServiceObject
 
     /**
      * Applies the local changes that have been made to this item. Calling this
-     * method results in at least one call to EWS. Mutliple calls to EWS might
+     * method results in at least one call to EWS. Multiple calls to EWS might
      * be made if attachments have been added or removed.
      *
      * @param conflictResolutionMode the conflict resolution mode
@@ -403,8 +402,7 @@ public class Item extends ServiceObject
     public void update(ConflictResolutionMode conflictResolutionMode)
             throws ServiceResponseException, Exception
     {
-        this.internalUpdate(null /* parentFolder */, conflictResolutionMode,
-                MessageDisposition.SaveOnly, null);
+        this.internalUpdate(null /* parentFolder */, conflictResolutionMode, MessageDisposition.SaveOnly, null);
     }
 
     /**
@@ -483,12 +481,10 @@ public class Item extends ServiceObject
      * @param value                      the value
      * @throws Exception the exception
      */
-    public void setExtendedProperty(
-            ExtendedPropertyDefinition extendedPropertyDefinition, Object value)
+    public void setExtendedProperty(ExtendedPropertyDefinition extendedPropertyDefinition, Object value)
             throws Exception
     {
-        this.getExtendedProperties().setExtendedProperty(
-                extendedPropertyDefinition, value);
+        this.getExtendedProperties().setExtendedProperty(extendedPropertyDefinition, value);
     }
 
     /**
@@ -498,8 +494,7 @@ public class Item extends ServiceObject
      * @return True if property was removed.
      * @throws Exception the exception
      */
-    public boolean removeExtendedProperty(
-            ExtendedPropertyDefinition extendedPropertyDefinition)
+    public boolean removeExtendedProperty(ExtendedPropertyDefinition extendedPropertyDefinition)
             throws Exception
     {
         return this.getExtendedProperties().removeExtendedProperty(
@@ -541,12 +536,8 @@ public class Item extends ServiceObject
                 && EwsUtilities.isSupportedVersion(
                 this.getService().getRequestedServerVersion(), ExchangeVersion.Exchange2010_SP1)) {
 
-            ListIterator<Attachment> items = this.getAttachments().getItems()
-                    .listIterator();
-
-            while (items.hasNext()) {
-
-                ItemAttachment itemAttachment = (ItemAttachment) items.next();
+            for (final Attachment attachment : this.getAttachments().getItems()) {
+                ItemAttachment itemAttachment = (ItemAttachment) attachment;
 
                 if ((itemAttachment.getItem() != null)
                         && itemAttachment
@@ -589,7 +580,6 @@ public class Item extends ServiceObject
      */
     public boolean getIsNew() throws ServiceLocalException
     {
-
         // Item attachments don't have an Id, need to check whether the
         // parentAttachment is new or not.
         if (this.isAttachment()) {
@@ -608,8 +598,7 @@ public class Item extends ServiceObject
      */
     public ItemId getId() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                getIdPropertyDefinition());
+        return getPropertyBag().getObjectFromPropertyDefinition(getIdPropertyDefinition());
     }
 
     /**
@@ -620,8 +609,7 @@ public class Item extends ServiceObject
      */
     public MimeContent getMimeContent() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.MimeContent);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.MimeContent);
     }
 
     /**
@@ -632,8 +620,7 @@ public class Item extends ServiceObject
      */
     public void setMimeContent(MimeContent value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.MimeContent, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.MimeContent, value);
     }
 
     /**
@@ -644,8 +631,7 @@ public class Item extends ServiceObject
      */
     public FolderId getParentFolderId() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.ParentFolderId);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.ParentFolderId);
     }
 
     /**
@@ -656,8 +642,7 @@ public class Item extends ServiceObject
      */
     public Sensitivity getSensitivity() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.Sensitivity);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Sensitivity);
     }
 
     /**
@@ -668,8 +653,7 @@ public class Item extends ServiceObject
      */
     public void setSensitivity(Sensitivity value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.Sensitivity, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Sensitivity, value);
     }
 
     /**
@@ -680,8 +664,7 @@ public class Item extends ServiceObject
      */
     public AttachmentCollection getAttachments() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.Attachments);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Attachments);
     }
 
     /**
@@ -704,7 +687,7 @@ public class Item extends ServiceObject
      */
     public int getSize() throws ServiceLocalException
     {
-        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(ItemSchema.Size);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Size);
     }
 
     /**
@@ -715,8 +698,7 @@ public class Item extends ServiceObject
      */
     public StringList getCategories() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.Categories);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Categories);
     }
 
     /**
@@ -727,8 +709,7 @@ public class Item extends ServiceObject
      */
     public void setCategories(StringList value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.Categories, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Categories, value);
     }
 
     /**
@@ -739,8 +720,7 @@ public class Item extends ServiceObject
      */
     public String getCulture() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.Culture);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Culture);
     }
 
     /**
@@ -751,8 +731,7 @@ public class Item extends ServiceObject
      */
     public void setCulture(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.Culture, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Culture, value);
     }
 
     /**
@@ -763,8 +742,7 @@ public class Item extends ServiceObject
      */
     public Importance getImportance() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.Importance);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Importance);
     }
 
     /**
@@ -775,8 +753,7 @@ public class Item extends ServiceObject
      */
     public void setImportance(Importance value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.Importance, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Importance, value);
     }
 
     /**
@@ -787,8 +764,7 @@ public class Item extends ServiceObject
      */
     public String getInReplyTo() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.InReplyTo);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.InReplyTo);
     }
 
     /**
@@ -799,8 +775,7 @@ public class Item extends ServiceObject
      */
     public void setInReplyTo(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.InReplyTo, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.InReplyTo, value);
     }
 
     /**
@@ -812,7 +787,7 @@ public class Item extends ServiceObject
      */
     public boolean getIsSubmitted() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(ItemSchema.IsSubmitted);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.IsSubmitted);
     }
 
     /**
@@ -824,8 +799,7 @@ public class Item extends ServiceObject
      */
     public boolean getIsAssociated() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ItemSchema.IsAssociated);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.IsAssociated);
     }
 
     /**
@@ -837,8 +811,7 @@ public class Item extends ServiceObject
      */
     public boolean getIsDraft() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ItemSchema.IsDraft);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.IsDraft);
     }
 
     /**
@@ -862,8 +835,7 @@ public class Item extends ServiceObject
      */
     public boolean getIsResend() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ItemSchema.IsResend);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.IsResend);
     }
 
     /**
@@ -875,8 +847,7 @@ public class Item extends ServiceObject
      */
     public boolean getIsUnmodified() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ItemSchema.IsUnmodified);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.IsUnmodified);
     }
 
     /**
@@ -888,8 +859,7 @@ public class Item extends ServiceObject
     public InternetMessageHeaderCollection getInternetMessageHeaders()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.InternetMessageHeaders);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.InternetMessageHeaders);
     }
 
     /**
@@ -900,8 +870,7 @@ public class Item extends ServiceObject
      */
     public Date getDateTimeSent() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.DateTimeSent);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.DateTimeSent);
     }
 
     /**
@@ -912,8 +881,7 @@ public class Item extends ServiceObject
      */
     public Date getDateTimeCreated() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.DateTimeCreated);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.DateTimeCreated);
     }
 
     /**
@@ -926,8 +894,7 @@ public class Item extends ServiceObject
     public EnumSet<ResponseActions> getAllowedResponseActions()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.AllowedResponseActions);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.AllowedResponseActions);
     }
 
     /**
@@ -938,8 +905,7 @@ public class Item extends ServiceObject
      */
     public Date getReminderDueBy() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.ReminderDueBy);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.ReminderDueBy);
     }
 
     /**
@@ -950,8 +916,7 @@ public class Item extends ServiceObject
      */
     public void setReminderDueBy(Date value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.ReminderDueBy, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.ReminderDueBy, value);
     }
 
     /**
@@ -962,8 +927,7 @@ public class Item extends ServiceObject
      */
     public boolean getIsReminderSet() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ItemSchema.IsReminderSet);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.IsReminderSet);
     }
 
     /**
@@ -974,8 +938,7 @@ public class Item extends ServiceObject
      */
     public void setIsReminderSet(Boolean value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.IsReminderSet, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.IsReminderSet, value);
     }
 
     /**
@@ -987,8 +950,7 @@ public class Item extends ServiceObject
      */
     public int getReminderMinutesBeforeStart() throws ServiceLocalException
     {
-        return getPropertyBag().<Integer>getObjectFromPropertyDefinition(
-                ItemSchema.ReminderMinutesBeforeStart);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.ReminderMinutesBeforeStart);
     }
 
     /**
@@ -999,8 +961,7 @@ public class Item extends ServiceObject
      */
     public void setReminderMinutesBeforeStart(int value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.ReminderMinutesBeforeStart, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.ReminderMinutesBeforeStart, value);
     }
 
     /**
@@ -1011,8 +972,7 @@ public class Item extends ServiceObject
      */
     public String getDisplayCc() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.DisplayCc);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.DisplayCc);
     }
 
     /**
@@ -1023,8 +983,7 @@ public class Item extends ServiceObject
      */
     public String getDisplayTo() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.DisplayTo);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.DisplayTo);
     }
 
     /**
@@ -1035,8 +994,7 @@ public class Item extends ServiceObject
      */
     public boolean getHasAttachments() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                ItemSchema.HasAttachments);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.HasAttachments);
     }
 
     /**
@@ -1058,8 +1016,7 @@ public class Item extends ServiceObject
      */
     public void setBody(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body,
-                value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body, value);
     }
 
     /**
@@ -1070,8 +1027,7 @@ public class Item extends ServiceObject
      */
     public String getItemClass() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.ItemClass);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.ItemClass);
     }
 
     /**
@@ -1082,8 +1038,7 @@ public class Item extends ServiceObject
      */
     public void setItemClass(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.ItemClass, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.ItemClass, value);
     }
 
     /**
@@ -1105,8 +1060,7 @@ public class Item extends ServiceObject
      */
     public void setSubject(Object subject) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.Subject, subject);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Subject, subject);
     }
 
     /**
@@ -1117,8 +1071,7 @@ public class Item extends ServiceObject
      */
     public String getSubject() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.Subject);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.Subject);
     }
 
     /**
@@ -1131,8 +1084,7 @@ public class Item extends ServiceObject
     public String getWebClientReadFormQueryString()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.WebClientReadFormQueryString);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.WebClientReadFormQueryString);
     }
 
     /**
@@ -1145,8 +1097,7 @@ public class Item extends ServiceObject
     public String getWebClientEditFormQueryString()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.WebClientEditFormQueryString);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.WebClientEditFormQueryString);
     }
 
     /**
@@ -1159,8 +1110,7 @@ public class Item extends ServiceObject
     public ExtendedPropertyCollection getExtendedProperties()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ServiceObjectSchema.extendedProperties);
+        return getPropertyBag().getObjectFromPropertyDefinition(ServiceObjectSchema.extendedProperties);
     }
 
     /**
@@ -1173,8 +1123,7 @@ public class Item extends ServiceObject
     public EnumSet<EffectiveRights> getEffectiveRights()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.EffectiveRights);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.EffectiveRights);
     }
 
     /**
@@ -1185,8 +1134,7 @@ public class Item extends ServiceObject
      */
     public String getLastModifiedName() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.LastModifiedName);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.LastModifiedName);
     }
 
     /**
@@ -1197,8 +1145,7 @@ public class Item extends ServiceObject
      */
     public Date getLastModifiedTime() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.LastModifiedTime);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.LastModifiedTime);
     }
 
     /**
@@ -1209,8 +1156,7 @@ public class Item extends ServiceObject
      */
     public ConversationId getConversationId() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.ConversationId);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.ConversationId);
     }
 
     /**
@@ -1222,8 +1168,7 @@ public class Item extends ServiceObject
      */
     public UniqueBody getUniqueBody() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                ItemSchema.UniqueBody);
+        return getPropertyBag().getObjectFromPropertyDefinition(ItemSchema.UniqueBody);
     }
 
     /**

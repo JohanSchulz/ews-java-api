@@ -107,22 +107,21 @@ public final class MeetingTimeZone extends ComplexProperty
     public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
             throws Exception
     {
-        if (reader.getLocalName().equals(XmlElementNames.BaseOffset)) {
-            this.baseOffset = EwsUtilities.getXSDurationToTimeSpan(reader.readElementValue());
-            return true;
-        }
-        else if (reader.getLocalName().equals(XmlElementNames.Standard)) {
-            this.standard = new TimeChange();
-            this.standard.loadFromXml(reader, reader.getLocalName());
-            return true;
-        }
-        else if (reader.getLocalName().equals(XmlElementNames.Daylight)) {
-            this.daylight = new TimeChange();
-            this.daylight.loadFromXml(reader, reader.getLocalName());
-            return true;
-        }
-        else {
-            return false;
+        String localName = reader.getLocalName();
+        switch (localName) {
+            case XmlElementNames.BaseOffset:
+                this.baseOffset = EwsUtilities.getXSDurationToTimeSpan(reader.readElementValue());
+                return true;
+            case XmlElementNames.Standard:
+                this.standard = new TimeChange();
+                this.standard.loadFromXml(reader, localName);
+                return true;
+            case XmlElementNames.Daylight:
+                this.daylight = new TimeChange();
+                this.daylight.loadFromXml(reader, localName);
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -149,8 +148,7 @@ public final class MeetingTimeZone extends ComplexProperty
     public void writeAttributesToXml(EwsServiceXmlWriter writer)
             throws ServiceXmlSerializationException
     {
-        writer.writeAttributeValue(XmlAttributeNames.TimeZoneName, this
-                .getName());
+        writer.writeAttributeValue(XmlAttributeNames.TimeZoneName, this.getName());
     }
 
     /**
@@ -164,9 +162,10 @@ public final class MeetingTimeZone extends ComplexProperty
             throws Exception
     {
         if (this.baseOffset != null) {
-            writer.writeElementValue(XmlNamespace.Types,
-                    XmlElementNames.BaseOffset, EwsUtilities
-                            .getTimeSpanToXSDuration(this.getBaseOffset()));
+            writer.writeElementValue(
+                    XmlNamespace.Types,
+                    XmlElementNames.BaseOffset,
+                    EwsUtilities.getTimeSpanToXSDuration(this.getBaseOffset()));
         }
 
         if (this.getStandard() != null) {

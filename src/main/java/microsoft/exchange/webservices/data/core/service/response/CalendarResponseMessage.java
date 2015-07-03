@@ -76,8 +76,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public MessageBody getBody() throws Exception
     {
-        return (MessageBody) this
-                .getObjectFromPropertyDefinition(ItemSchema.Body);
+        return (MessageBody) this.getObjectFromPropertyDefinition(ItemSchema.Body);
     }
 
     /**
@@ -88,8 +87,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public void setBody(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body,
-                value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body, value);
     }
 
     /**
@@ -100,9 +98,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public EmailAddressCollection getToRecipients() throws Exception
     {
-        return (EmailAddressCollection) this
-                .getObjectFromPropertyDefinition(
-                        EmailMessageSchema.ToRecipients);
+        return (EmailAddressCollection) this.getObjectFromPropertyDefinition(EmailMessageSchema.ToRecipients);
     }
 
     /**
@@ -113,9 +109,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public EmailAddressCollection getCcRecipients() throws Exception
     {
-        return (EmailAddressCollection) this
-                .getObjectFromPropertyDefinition(
-                        EmailMessageSchema.CcRecipients);
+        return (EmailAddressCollection) this.getObjectFromPropertyDefinition(EmailMessageSchema.CcRecipients);
     }
 
     /**
@@ -126,9 +120,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public EmailAddressCollection getBccRecipients() throws Exception
     {
-        return (EmailAddressCollection) this
-                .getObjectFromPropertyDefinition(
-                        EmailMessageSchema.BccRecipients);
+        return (EmailAddressCollection) this.getObjectFromPropertyDefinition(EmailMessageSchema.BccRecipients);
     }
 
     /**
@@ -139,8 +131,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     protected String getItemClass() throws Exception
     {
-        return (String) this
-                .getObjectFromPropertyDefinition(ItemSchema.ItemClass);
+        return (String) this.getObjectFromPropertyDefinition(ItemSchema.ItemClass);
     }
 
     /**
@@ -151,8 +142,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     protected void setItemClass(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.ItemClass, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.ItemClass, value);
     }
 
     /**
@@ -163,8 +153,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public Sensitivity getSensitivity() throws Exception
     {
-        return (Sensitivity) this
-                .getObjectFromPropertyDefinition(ItemSchema.Sensitivity);
+        return (Sensitivity) this.getObjectFromPropertyDefinition(ItemSchema.Sensitivity);
     }
 
     /**
@@ -175,8 +164,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public void setSensitivity(Sensitivity value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ItemSchema.Sensitivity, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Sensitivity, value);
     }
 
     /**
@@ -187,8 +175,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public AttachmentCollection getAttachments() throws Exception
     {
-        return (AttachmentCollection) this
-                .getObjectFromPropertyDefinition(ItemSchema.Attachments);
+        return (AttachmentCollection) this.getObjectFromPropertyDefinition(ItemSchema.Attachments);
     }
 
     /**
@@ -200,9 +187,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
     protected InternetMessageHeaderCollection getInternetMessageHeaders()
             throws Exception
     {
-        return (InternetMessageHeaderCollection) this
-                .getObjectFromPropertyDefinition(
-                        ItemSchema.InternetMessageHeaders);
+        return (InternetMessageHeaderCollection) this.getObjectFromPropertyDefinition(ItemSchema.InternetMessageHeaders);
     }
 
     /**
@@ -213,8 +198,7 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public EmailAddress getSender() throws Exception
     {
-        return (EmailAddress) this
-                .getObjectFromPropertyDefinition(EmailMessageSchema.Sender);
+        return (EmailAddress) this.getObjectFromPropertyDefinition(EmailMessageSchema.Sender);
     }
 
     /**
@@ -225,7 +209,6 @@ public abstract class CalendarResponseMessage<TMessage extends EmailMessage>
      */
     public void setSender(EmailAddress value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.Sender, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.Sender, value);
     }
 }

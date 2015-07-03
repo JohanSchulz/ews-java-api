@@ -229,8 +229,7 @@ public class SimplePropertyBag<TKey> implements Iterable<HashMap<TKey, Object>>
     /**
      * Occurs when Changed.
      */
-    private List<IPropertyBagChangedDelegate<TKey>> onChange =
-            new ArrayList<IPropertyBagChangedDelegate<TKey>>();
+    private List<IPropertyBagChangedDelegate<TKey>> onChange = new ArrayList<IPropertyBagChangedDelegate<TKey>>();
 
     /**
      * Set event to happen when property changed.

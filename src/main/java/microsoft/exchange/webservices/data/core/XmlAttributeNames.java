@@ -133,14 +133,12 @@ public class XmlAttributeNames
     /**
      * The Constant AffectedTaskOccurrences.
      */
-    public static final String AffectedTaskOccurrences =
-            "AffectedTaskOccurrences";
+    public static final String AffectedTaskOccurrences = "AffectedTaskOccurrences";
 
     /**
      * The Constant SendMeetingCancellations.
      */
-    public static final String SendMeetingCancellations =
-            "SendMeetingCancellations";
+    public static final String SendMeetingCancellations = "SendMeetingCancellations";
 
     /**
      * The Constant FieldURI.
@@ -160,8 +158,7 @@ public class XmlAttributeNames
     /**
      * The Constant SendMeetingInvitationsOrCancellations.
      */
-    public static final String SendMeetingInvitationsOrCancellations =
-            "SendMeetingInvitationsOrCancellations";
+    public static final String SendMeetingInvitationsOrCancellations = "SendMeetingInvitationsOrCancellations";
 
     /**
      * The Constant CharacterSet.
@@ -176,8 +173,7 @@ public class XmlAttributeNames
     /**
      * The Constant SendMeetingInvitations.
      */
-    public static final String SendMeetingInvitations =
-            "SendMeetingInvitations";
+    public static final String SendMeetingInvitations = "SendMeetingInvitations";
 
     /**
      * The Constant Key.
@@ -197,8 +193,7 @@ public class XmlAttributeNames
     /**
      * The Constant DistinguishedPropertySetId.
      */
-    public static final String DistinguishedPropertySetId =
-            "DistinguishedPropertySetId";
+    public static final String DistinguishedPropertySetId = "DistinguishedPropertySetId";
 
     /**
      * The Constant PropertySetId.

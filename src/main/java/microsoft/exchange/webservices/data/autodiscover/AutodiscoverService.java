@@ -90,8 +90,7 @@ public class AutodiscoverService extends ExchangeServiceBase
     /**
      * The redirection url validation callback.
      */
-    private IAutodiscoverRedirectionUrl
-            redirectionUrlValidationCallback;
+    private IAutodiscoverRedirectionUrl redirectionUrlValidationCallback;
 
     /**
      * The dns client.
@@ -412,7 +411,7 @@ public class AutodiscoverService extends ExchangeServiceBase
                 return null;
             }
 
-            OutParam<URI> outParam = new OutParam<URI>();
+            OutParam<URI> outParam = new OutParam<>();
             if (tryGetRedirectionResponse(request, outParam)) {
                 return outParam.getParam();
             }
@@ -589,8 +588,7 @@ public class AutodiscoverService extends ExchangeServiceBase
                                             "Autodiscover service returned redirection URL '%s'.",
                                             settings.getRedirectTarget()));
 
-                            urls.add(currentUrlIndex, new URI(
-                                    settings.getRedirectTarget()));
+                            urls.add(currentUrlIndex, new URI(settings.getRedirectTarget()));
 
                             break;
                         }
@@ -642,9 +640,8 @@ public class AutodiscoverService extends ExchangeServiceBase
                         }
                         break;
                     default:
-                        EwsUtilities
-                                .ewsAssert(false, "Autodiscover.GetConfigurationSettings",
-                                        "An unexpected error has occured. This code path should never be reached.");
+                        EwsUtilities.ewsAssert(false, "Autodiscover.GetConfigurationSettings",
+                                "An unexpected error has occured. This code path should never be reached.");
                         break;
                 }
             } catch (XMLStreamException ex) {
@@ -1708,7 +1705,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      *
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService() throws ArgumentException
+    public AutodiscoverService() throws ServiceLocalException
     {
         this(ExchangeVersion.Exchange2010);
     }
@@ -1719,8 +1716,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param requestedServerVersion The requested server version
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService(ExchangeVersion requestedServerVersion)
-            throws ArgumentException
+    public AutodiscoverService(ExchangeVersion requestedServerVersion) throws ServiceLocalException
     {
         this(null, null, requestedServerVersion);
     }
@@ -1731,7 +1727,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param domain The domain that will be used to determine the URL of the service
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService(String domain) throws ArgumentException
+    public AutodiscoverService(String domain) throws ServiceLocalException
     {
         this(null, domain);
     }
@@ -1743,8 +1739,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param requestedServerVersion The requested server version
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService(String domain,
-                               ExchangeVersion requestedServerVersion) throws ArgumentException
+    public AutodiscoverService(String domain, ExchangeVersion requestedServerVersion) throws ServiceLocalException
     {
         this(null, domain, requestedServerVersion);
     }
@@ -1755,7 +1750,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param url The URL of the service
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService(URI url) throws ArgumentException
+    public AutodiscoverService(URI url) throws ServiceLocalException
     {
         this(url, url.getHost());
     }
@@ -1767,8 +1762,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param requestedServerVersion The requested server version
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService(URI url,
-                               ExchangeVersion requestedServerVersion) throws ArgumentException
+    public AutodiscoverService(URI url, ExchangeVersion requestedServerVersion) throws ServiceLocalException
     {
         this(url, url.getHost(), requestedServerVersion);
     }
@@ -1780,8 +1774,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param domain The domain that will be used to determine the URL of the service
      * @throws ArgumentException on validation error
      */
-    public AutodiscoverService(URI url, String domain)
-            throws ArgumentException
+    public AutodiscoverService(URI url, String domain) throws ServiceLocalException
     {
         this(url, domain, ExchangeVersion.Exchange2007_SP1);
         EwsUtilities.validateDomainNameAllowNull(domain, "domain");
@@ -1797,10 +1790,10 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param domain                 The domain that will be used to determine the URL of the
      *                               service.
      * @param requestedServerVersion The requested server version.
-     * @throws ArgumentException on validation error
+     * @throws ServiceLocalException on validation error
      */
-    public AutodiscoverService(URI url, String domain,
-                               ExchangeVersion requestedServerVersion) throws ArgumentException
+    public AutodiscoverService(URI url, String domain, ExchangeVersion requestedServerVersion)
+            throws ServiceLocalException
     {
         super(requestedServerVersion);
         EwsUtilities.validateDomainNameAllowNull(domain, "domain");
@@ -1961,7 +1954,7 @@ public class AutodiscoverService extends ExchangeServiceBase
      * @param value the new domain
      * @throws ArgumentException on validation error
      */
-    public void setDomain(String value) throws ArgumentException
+    public void setDomain(String value) throws ServiceLocalException
     {
         EwsUtilities.validateDomainNameAllowNull(value, "Domain");
 

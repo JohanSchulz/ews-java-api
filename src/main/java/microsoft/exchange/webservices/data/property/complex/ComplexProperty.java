@@ -29,7 +29,6 @@ import microsoft.exchange.webservices.data.core.EwsServiceXmlReader;
 import microsoft.exchange.webservices.data.core.EwsServiceXmlWriter;
 import microsoft.exchange.webservices.data.core.enumeration.attribute.EditorBrowsableState;
 import microsoft.exchange.webservices.data.core.enumeration.misc.XmlNamespace;
-import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlSerializationException;
 import microsoft.exchange.webservices.data.security.XmlNodeType;
 
 import java.util.ArrayList;
@@ -160,8 +159,10 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      *
      * @param reader The reader.
      *               True if element was read.
+     * @throws Exception
      */
-    public boolean tryReadElementFromXmlToPatch(EwsServiceXmlReader reader) throws Exception
+    public boolean tryReadElementFromXmlToPatch(EwsServiceXmlReader reader)
+            throws Exception
     {
         return false;
     }
@@ -170,10 +171,10 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      * Writes the attribute to XML.
      *
      * @param writer The writer.
-     * @throws ServiceXmlSerializationException the service xml serialization exception
+     * @throws Exception the service xml serialization exception
      */
     public void writeAttributesToXml(EwsServiceXmlWriter writer)
-            throws ServiceXmlSerializationException
+            throws Exception
     {
     }
 
@@ -196,33 +197,9 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      * @param xmlElementName Name of the XML element.
      * @throws Exception the exception
      */
-    public void loadFromXml(EwsServiceXmlReader reader, XmlNamespace xmlNamespace, String xmlElementName) throws Exception
+    public void loadFromXml(EwsServiceXmlReader reader, XmlNamespace xmlNamespace, String xmlElementName)
+            throws Exception
     {
-
-		/*reader.ensureCurrentNodeIsStartElement(xmlNamespace, xmlElementName);
-                this.readAttributesFromXml(reader);
-
-		if (!reader.isEmptyElement()) {
-			do {
-				reader.read();
-
-				switch (reader.getNodeType().nodeType) {
-				case XmlNodeType.START_ELEMENT:
-					if (!this.tryReadElementFromXml(reader)) {
-						reader.skipCurrentElement();
-					}
-					break;
-				case XmlNodeType.CHARACTERS:
-					this.readTextValueFromXml(reader);
-					break;
-				}
-			} while (!reader.isEndElement(xmlNamespace, xmlElementName));
-		} else {
-			// Adding this code to skip the END_ELEMENT of an Empty Element.
-			reader.read();
-			reader.isEndElement(xmlNamespace, xmlElementName);
-		} */
-
         this.internalLoadFromXml(reader, xmlNamespace, xmlElementName);
     }
 
@@ -233,7 +210,8 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      * @param xmlElementName Name of the XML element.
      * @throws Exception
      */
-    public void updateFromXml(EwsServiceXmlReader reader, String xmlElementName) throws Exception
+    public void updateFromXml(EwsServiceXmlReader reader, String xmlElementName)
+            throws Exception
     {
         this.updateFromXml(reader, this.getNamespace(), xmlElementName);
     }
@@ -244,13 +222,12 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      * @param reader         The reader.
      * @param xmlNamespace   The XML namespace.
      * @param xmlElementName Name of the XML element.
+     * @throws Exception
      */
-    public void updateFromXml(
-            EwsServiceXmlReader reader,
-            XmlNamespace xmlNamespace,
-            String xmlElementName) throws Exception
+    public void updateFromXml(EwsServiceXmlReader reader, XmlNamespace xmlNamespace, String xmlElementName)
+            throws Exception
     {
-        this.internalupdateLoadFromXml(reader, xmlNamespace, xmlElementName);
+        this.internalUpdateLoadFromXml(reader, xmlNamespace, xmlElementName);
     }
 
     /**
@@ -260,10 +237,8 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      * @param xmlNamespace   The Xml NameSpace.
      * @param xmlElementName The Xml ElementName
      */
-    private void internalLoadFromXml(
-            EwsServiceXmlReader reader,
-            XmlNamespace xmlNamespace,
-            String xmlElementName) throws Exception
+    private void internalLoadFromXml(EwsServiceXmlReader reader, XmlNamespace xmlNamespace, String xmlElementName)
+            throws Exception
     {
         reader.ensureCurrentNodeIsStartElement(xmlNamespace, xmlElementName);
 
@@ -292,10 +267,8 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
         }
     }
 
-    private void internalupdateLoadFromXml(
-            EwsServiceXmlReader reader,
-            XmlNamespace xmlNamespace,
-            String xmlElementName) throws Exception
+    private void internalUpdateLoadFromXml(EwsServiceXmlReader reader, XmlNamespace xmlNamespace, String xmlElementName)
+            throws Exception
     {
         reader.ensureCurrentNodeIsStartElement(xmlNamespace, xmlElementName);
 
@@ -340,7 +313,8 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
      * @param xmlElementName Name of the XML element.
      * @throws Exception the exception
      */
-    public void writeToXml(EwsServiceXmlWriter writer, XmlNamespace xmlNamespace, String xmlElementName) throws Exception
+    public void writeToXml(EwsServiceXmlWriter writer, XmlNamespace xmlNamespace, String xmlElementName)
+            throws Exception
     {
         writer.writeStartElement(xmlNamespace, xmlElementName);
         this.writeAttributesToXml(writer);
@@ -364,8 +338,7 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
     /**
      * Change events occur when property changed.
      */
-    private List<IComplexPropertyChangedDelegate> onChangeList =
-            new ArrayList<IComplexPropertyChangedDelegate>();
+    private List<IComplexPropertyChangedDelegate> onChangeList = new ArrayList<IComplexPropertyChangedDelegate>();
 
     /**
      * Set event to happen when property changed.
@@ -414,7 +387,8 @@ public abstract class ComplexProperty implements ISelfValidate, ComplexFunctionD
     {
     }
 
-    public Boolean func(EwsServiceXmlReader reader) throws Exception
+    public Boolean func(EwsServiceXmlReader reader)
+            throws Exception
     {
         return !this.tryReadElementFromXml(reader);
     }

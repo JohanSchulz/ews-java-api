@@ -71,6 +71,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import microsoft.exchange.webservices.data.sync.ChangeCollection;
 import microsoft.exchange.webservices.data.sync.FolderChange;
 import microsoft.exchange.webservices.data.sync.ItemChange;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -2766,34 +2767,27 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
             DeleteMode deleteType, Boolean isRead,
             ServiceErrorHandling errorHandlingMode) throws Exception
     {
-        EwsUtilities.ewsAssert(
-                actionType == ConversationActionType.Move || actionType == ConversationActionType.Delete
-                        || actionType == ConversationActionType.SetReadState || actionType == ConversationActionType.Copy,
+        EwsUtilities.ewsAssert(actionType == ConversationActionType.Move
+                        || actionType == ConversationActionType.Delete
+                        || actionType == ConversationActionType.SetReadState
+                        || actionType == ConversationActionType.Copy,
                 "ApplyConversationOneTimeAction", "Invalid actionType");
 
-        EwsUtilities.validateParamCollection(idTimePairs.iterator(),
-                "idTimePairs");
-        EwsUtilities.validateMethodVersion(this,
-                ExchangeVersion.Exchange2010_SP1, "ApplyConversationAction");
+        EwsUtilities.validateParamCollection(idTimePairs.iterator(), "idTimePairs");
+        EwsUtilities.validateMethodVersion(this, ExchangeVersion.Exchange2010_SP1, "ApplyConversationAction");
 
-        ApplyConversationActionRequest request = new ApplyConversationActionRequest(
-                this, errorHandlingMode);
+        ApplyConversationActionRequest request = new ApplyConversationActionRequest(this, errorHandlingMode);
 
         for (HashMap<ConversationId, Date> idTimePair : idTimePairs) {
             ConversationAction action = new ConversationAction();
 
+            ConversationId convId = idTimePair.keySet().iterator().next();
+
             action.setAction(actionType);
-            action.setConversationId(idTimePair.keySet().iterator().next());
-            action
-                    .setContextFolderId(contextFolderId != null ? new FolderIdWrapper(
-                            contextFolderId)
-                            : null);
-            action
-                    .setDestinationFolderId(destinationFolderId != null ? new FolderIdWrapper(
-                            destinationFolderId)
-                            : null);
-            action.setConversationLastSyncTime(idTimePair.values().iterator()
-                    .next());
+            action.setConversationId(convId);
+            action.setContextFolderId(contextFolderId != null ? new FolderIdWrapper(contextFolderId) : null);
+            action.setDestinationFolderId(destinationFolderId != null ? new FolderIdWrapper(destinationFolderId) : null);
+            action.setConversationLastSyncTime(idTimePair.get(convId));
             action.setIsRead(isRead);
             action.setDeleteType(deleteType);
 
@@ -2817,12 +2811,10 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> enableAlwaysCategorizeItemsInConversations(
-            Iterable<ConversationId> conversationId,
-            Iterable<String> categories, boolean processSynchronously)
+            Iterable<ConversationId> conversationId, Iterable<String> categories, boolean processSynchronously)
             throws Exception
     {
-        EwsUtilities.validateParamCollection(categories.iterator(),
-                "categories");
+        EwsUtilities.validateParamCollection(categories.iterator(), "categories");
         return this.applyConversationAction(
                 ConversationActionType.AlwaysCategorize, conversationId,
                 processSynchronously, new StringList(categories), false, null,
@@ -2841,8 +2833,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> disableAlwaysCategorizeItemsInConversations(
-            Iterable<ConversationId> conversationId,
-            boolean processSynchronously) throws Exception
+            Iterable<ConversationId> conversationId, boolean processSynchronously)
+            throws Exception
     {
         return this.applyConversationAction(
                 ConversationActionType.AlwaysCategorize, conversationId,
@@ -2863,8 +2855,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> enableAlwaysDeleteItemsInConversations(
-            Iterable<ConversationId> conversationId,
-            boolean processSynchronously) throws Exception
+            Iterable<ConversationId> conversationId, boolean processSynchronously)
+            throws Exception
     {
         return this.applyConversationAction(
                 ConversationActionType.AlwaysDelete, conversationId,
@@ -2885,8 +2877,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> disableAlwaysDeleteItemsInConversations(
-            Iterable<ConversationId> conversationId,
-            boolean processSynchronously) throws Exception
+            Iterable<ConversationId> conversationId, boolean processSynchronously)
+            throws Exception
     {
         return this.applyConversationAction(
                 ConversationActionType.AlwaysDelete, conversationId,
@@ -2909,8 +2901,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> enableAlwaysMoveItemsInConversations(
-            Iterable<ConversationId> conversationId,
-            FolderId destinationFolderId, boolean processSynchronously)
+            Iterable<ConversationId> conversationId, FolderId destinationFolderId, boolean processSynchronously)
             throws Exception
     {
         EwsUtilities.validateParam(destinationFolderId, "destinationFolderId");
@@ -2931,8 +2922,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> disableAlwaysMoveItemsInConversations(
-            Iterable<ConversationId> conversationIds,
-            boolean processSynchronously) throws Exception
+            Iterable<ConversationId> conversationIds, boolean processSynchronously)
+            throws Exception
     {
         return this.applyConversationAction(ConversationActionType.AlwaysMove,
                 conversationIds, processSynchronously, null, false, null,
@@ -2973,8 +2964,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> copyItemsInConversations(
-            Iterable<HashMap<ConversationId, Date>> idLastSyncTimePairs,
-            FolderId contextFolderId, FolderId destinationFolderId)
+            Iterable<HashMap<ConversationId, Date>> idLastSyncTimePairs, FolderId contextFolderId, FolderId destinationFolderId)
             throws Exception
     {
         EwsUtilities.validateParam(destinationFolderId, "destinationFolderId");
@@ -2997,8 +2987,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> deleteItemsInConversations(
-            Iterable<HashMap<ConversationId, Date>> idLastSyncTimePairs,
-            FolderId contextFolderId, DeleteMode deleteMode) throws Exception
+            Iterable<HashMap<ConversationId, Date>> idLastSyncTimePairs, FolderId contextFolderId, DeleteMode deleteMode)
+            throws Exception
     {
         return this.applyConversationOneTimeAction(
                 ConversationActionType.Delete, idLastSyncTimePairs,
@@ -3022,8 +3012,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception
      */
     public ServiceResponseCollection<ServiceResponse> setReadStateForItemsInConversations(
-            Iterable<HashMap<ConversationId, Date>> idLastSyncTimePairs,
-            FolderId contextFolderId, boolean isRead) throws Exception
+            Iterable<HashMap<ConversationId, Date>> idLastSyncTimePairs, FolderId contextFolderId, boolean isRead)
+            throws Exception
     {
         return this.applyConversationOneTimeAction(
                 ConversationActionType.SetReadState, idLastSyncTimePairs,
@@ -3045,8 +3035,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @throws Exception the exception
      */
     private ServiceResponseCollection<ConvertIdResponse> internalConvertIds(
-            Iterable<AlternateIdBase> ids, IdFormat destinationFormat,
-            ServiceErrorHandling errorHandling) throws Exception
+            Iterable<AlternateIdBase> ids, IdFormat destinationFormat, ServiceErrorHandling errorHandling)
+            throws Exception
     {
         EwsUtilities.validateParamCollection(ids.iterator(), "ids");
 
@@ -3074,8 +3064,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
     {
         EwsUtilities.validateParamCollection(ids.iterator(), "ids");
 
-        return this.internalConvertIds(ids, destinationFormat,
-                ServiceErrorHandling.ReturnErrors);
+        return this.internalConvertIds(ids, destinationFormat, ServiceErrorHandling.ReturnErrors);
     }
 
     /**
@@ -3086,17 +3075,16 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @return The converted Id.
      * @throws Exception the exception
      */
-    public AlternateIdBase convertId(AlternateIdBase id,
-                                     IdFormat destinationFormat) throws Exception
+    public AlternateIdBase convertId(AlternateIdBase id, IdFormat destinationFormat)
+            throws Exception
     {
         EwsUtilities.validateParam(id, "id");
 
         List<AlternateIdBase> alternateIdBaseArray = new ArrayList<AlternateIdBase>();
         alternateIdBaseArray.add(id);
 
-        ServiceResponseCollection<ConvertIdResponse> responses = this
-                .internalConvertIds(alternateIdBaseArray, destinationFormat,
-                        ServiceErrorHandling.ThrowOnError);
+        ServiceResponseCollection<ConvertIdResponse> responses =
+                this.internalConvertIds(alternateIdBaseArray, destinationFormat, ServiceErrorHandling.ThrowOnError);
 
         return responses.getResponseAtIndex(0).getConvertedId();
     }
@@ -3112,12 +3100,11 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * results of the operation.
      * @throws Exception the exception
      */
-    public Collection<DelegateUserResponse> addDelegates(Mailbox mailbox,
-                                                         MeetingRequestsDeliveryScope meetingRequestsDeliveryScope,
-                                                         DelegateUser... delegateUsers) throws Exception
+    public Collection<DelegateUserResponse> addDelegates(
+            Mailbox mailbox, MeetingRequestsDeliveryScope meetingRequestsDeliveryScope, DelegateUser... delegateUsers)
+            throws Exception
     {
-        return addDelegates(mailbox, meetingRequestsDeliveryScope,
-                Arrays.asList(delegateUsers));
+        return addDelegates(mailbox, meetingRequestsDeliveryScope, Arrays.asList(delegateUsers));
     }
 
     /**
@@ -3131,13 +3118,12 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * results of the operation.
      * @throws Exception the exception
      */
-    public Collection<DelegateUserResponse> addDelegates(Mailbox mailbox,
-                                                         MeetingRequestsDeliveryScope meetingRequestsDeliveryScope,
-                                                         Iterable<DelegateUser> delegateUsers) throws Exception
+    public Collection<DelegateUserResponse> addDelegates(
+            Mailbox mailbox, MeetingRequestsDeliveryScope meetingRequestsDeliveryScope, Iterable<DelegateUser> delegateUsers)
+            throws Exception
     {
         EwsUtilities.validateParam(mailbox, "mailbox");
-        EwsUtilities.validateParamCollection(delegateUsers.iterator(),
-                "delegateUsers");
+        EwsUtilities.validateParamCollection(delegateUsers.iterator(), "delegateUsers");
 
         AddDelegateRequest request = new AddDelegateRequest(this);
         request.setMailbox(mailbox);
@@ -3163,12 +3149,11 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * results of the operation.
      * @throws Exception the exception
      */
-    public Collection<DelegateUserResponse> updateDelegates(Mailbox mailbox,
-                                                            MeetingRequestsDeliveryScope meetingRequestsDeliveryScope,
-                                                            DelegateUser... delegateUsers) throws Exception
+    public Collection<DelegateUserResponse> updateDelegates(
+            Mailbox mailbox, MeetingRequestsDeliveryScope meetingRequestsDeliveryScope, DelegateUser... delegateUsers)
+            throws Exception
     {
-        return this.updateDelegates(mailbox, meetingRequestsDeliveryScope,
-                Arrays.asList(delegateUsers));
+        return this.updateDelegates(mailbox, meetingRequestsDeliveryScope, Arrays.asList(delegateUsers));
     }
 
     /**
@@ -3182,13 +3167,12 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * results of the operation.
      * @throws Exception the exception
      */
-    public Collection<DelegateUserResponse> updateDelegates(Mailbox mailbox,
-                                                            MeetingRequestsDeliveryScope meetingRequestsDeliveryScope,
-                                                            Iterable<DelegateUser> delegateUsers) throws Exception
+    public Collection<DelegateUserResponse> updateDelegates(
+            Mailbox mailbox, MeetingRequestsDeliveryScope meetingRequestsDeliveryScope, Iterable<DelegateUser> delegateUsers)
+            throws Exception
     {
         EwsUtilities.validateParam(mailbox, "mailbox");
-        EwsUtilities.validateParamCollection(delegateUsers.iterator(),
-                "delegateUsers");
+        EwsUtilities.validateParamCollection(delegateUsers.iterator(), "delegateUsers");
 
         UpdateDelegateRequest request = new UpdateDelegateRequest(this);
 
@@ -3215,8 +3199,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * results of the operation.
      * @throws Exception the exception
      */
-    public Collection<DelegateUserResponse> removeDelegates(Mailbox mailbox,
-                                                            UserId... userIds) throws Exception
+    public Collection<DelegateUserResponse> removeDelegates(Mailbox mailbox, UserId... userIds)
+            throws Exception
     {
         return removeDelegates(mailbox, Arrays.asList(userIds));
     }
@@ -3231,8 +3215,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * results of the operation.
      * @throws Exception the exception
      */
-    public Collection<DelegateUserResponse> removeDelegates(Mailbox mailbox,
-                                                            Iterable<UserId> userIds) throws Exception
+    public Collection<DelegateUserResponse> removeDelegates(Mailbox mailbox, Iterable<UserId> userIds)
+            throws Exception
     {
         EwsUtilities.validateParam(mailbox, "mailbox");
         EwsUtilities.validateParamCollection(userIds.iterator(), "userIds");
@@ -3260,8 +3244,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @return A GetDelegateResponse providing the results of the operation.
      * @throws Exception the exception
      */
-    public DelegateInformation getDelegates(Mailbox mailbox,
-                                            boolean includePermissions, UserId... userIds) throws Exception
+    public DelegateInformation getDelegates(Mailbox mailbox, boolean includePermissions, UserId... userIds)
+            throws Exception
     {
         return this.getDelegates(mailbox, includePermissions, Arrays.asList(userIds));
     }
@@ -3276,8 +3260,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @return A GetDelegateResponse providing the results of the operation.
      * @throws Exception the exception
      */
-    public DelegateInformation getDelegates(Mailbox mailbox,
-                                            boolean includePermissions, Iterable<UserId> userIds)
+    public DelegateInformation getDelegates(Mailbox mailbox, boolean includePermissions, Iterable<UserId> userIds)
             throws Exception
     {
         EwsUtilities.validateParam(mailbox, "mailbox");
@@ -3294,10 +3277,10 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
         request.setIncludePermissions(includePermissions);
 
         GetDelegateResponse response = request.execute();
-        DelegateInformation delegateInformation = new DelegateInformation(
-                (List<DelegateUserResponse>) response
-                        .getDelegateUserResponses(), response
-                .getMeetingRequestsDeliveryScope());
+        DelegateInformation delegateInformation =
+                new DelegateInformation(
+                        (List<DelegateUserResponse>) response.getDelegateUserResponses(),
+                        response.getMeetingRequestsDeliveryScope());
 
         return delegateInformation;
     }
@@ -3313,8 +3296,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
     {
         EwsUtilities.validateParam(userConfiguration, "userConfiguration");
 
-        CreateUserConfigurationRequest request = new CreateUserConfigurationRequest(
-                this);
+        CreateUserConfigurationRequest request = new CreateUserConfigurationRequest(this);
 
         request.setUserConfiguration(userConfiguration);
 
@@ -3334,8 +3316,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
         EwsUtilities.validateParam(name, "name");
         EwsUtilities.validateParam(parentFolderId, "parentFolderId");
 
-        DeleteUserConfigurationRequest request = new DeleteUserConfigurationRequest(
-                this);
+        DeleteUserConfigurationRequest request = new DeleteUserConfigurationRequest(this);
 
         request.setName(name);
         request.setParentFolderId(parentFolderId);
@@ -3351,8 +3332,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @return the user configuration
      * @throws Exception the exception
      */
-    public UserConfiguration getUserConfiguration(String name, FolderId parentFolderId,
-                                                  UserConfigurationProperties properties)
+    public UserConfiguration getUserConfiguration(
+            String name, FolderId parentFolderId, UserConfigurationProperties properties)
             throws Exception
     {
         EwsUtilities.validateParam(name, "name");
@@ -3374,14 +3355,14 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @param properties        the property
      * @throws Exception the exception
      */
-    public void loadPropertiesForUserConfiguration(UserConfiguration userConfiguration,
-                                                   UserConfigurationProperties properties) throws Exception
+    public void loadPropertiesForUserConfiguration(
+            UserConfiguration userConfiguration, UserConfigurationProperties properties)
+            throws Exception
     {
         EwsUtilities.ewsAssert(userConfiguration != null, "ExchangeService.LoadPropertiesForUserConfiguration",
                 "userConfiguration is null");
 
-        GetUserConfigurationRequest request = new GetUserConfigurationRequest(
-                this);
+        GetUserConfigurationRequest request = new GetUserConfigurationRequest(this);
 
         request.setUserConfiguration(userConfiguration);
         request.setProperties(EnumSet.of(properties));
@@ -3449,8 +3430,9 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @param removeOutlookRuleBlob Indicate whether or not to remove Outlook Rule Blob.
      * @throws Exception
      */
-    public void updateInboxRules(Iterable<RuleOperation> operations,
-                                 boolean removeOutlookRuleBlob) throws Exception
+    public void updateInboxRules(
+            Iterable<RuleOperation> operations, boolean removeOutlookRuleBlob)
+            throws Exception
     {
         UpdateInboxRulesRequest request = new UpdateInboxRulesRequest(this);
         request.setInboxRuleOperations(operations);
@@ -3469,8 +3451,8 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      *                              retrieved
      * @throws Exception
      */
-    public void updateInboxRules(Iterable<RuleOperation> operations,
-                                 boolean removeOutlookRuleBlob, String mailboxSmtpAddress)
+    public void updateInboxRules(
+            Iterable<RuleOperation> operations, boolean removeOutlookRuleBlob, String mailboxSmtpAddress)
             throws Exception
     {
         UpdateInboxRulesRequest request = new UpdateInboxRulesRequest(this);
@@ -3488,11 +3470,14 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @return Returns true.
      * @throws AutodiscoverLocalException the autodiscover local exception
      */
-    private boolean defaultAutodiscoverRedirectionUrlValidationCallback(
-            String redirectionUrl) throws AutodiscoverLocalException
+    private boolean defaultAutodiscoverRedirectionUrlValidationCallback(String redirectionUrl)
+            throws AutodiscoverLocalException
     {
-        throw new AutodiscoverLocalException(String.format(
-                "Autodiscover blocked a potentially insecure redirection to %s. To allow Autodiscover to follow the redirection, use the AutodiscoverUrl(string, AutodiscoverRedirectionUrlValidationCallback) overload.", redirectionUrl));
+        throw new AutodiscoverLocalException(
+                String.format("Autodiscover blocked a potentially insecure redirection to %s. " +
+                                "To allow Autodiscover to follow the redirection, use the " +
+                                "AutodiscoverUrl(string, AutodiscoverRedirectionUrlValidationCallback) overload.",
+                        redirectionUrl));
     }
 
     /**
@@ -3515,25 +3500,22 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @param validateRedirectionUrlCallback The callback used to validate redirection URL
      * @throws Exception the exception
      */
-    public void autodiscoverUrl(String emailAddress,
-                                IAutodiscoverRedirectionUrl validateRedirectionUrlCallback)
+    public void autodiscoverUrl(
+            String emailAddress, IAutodiscoverRedirectionUrl validateRedirectionUrlCallback)
             throws Exception
     {
         URI exchangeServiceUrl = null;
 
         if (ExchangeVersion.Exchange2007_SP1.compareTo(this.getRequestedServerVersion()) < 0) {
             try {
-                exchangeServiceUrl = this.getAutodiscoverUrl(emailAddress, this
-                                .getRequestedServerVersion(),
+                exchangeServiceUrl = this.getAutodiscoverUrl(emailAddress, this.getRequestedServerVersion(),
                         validateRedirectionUrlCallback);
-                this.setUrl(this
-                        .adjustServiceUriFromCredentials(exchangeServiceUrl));
+                this.setUrl(this.adjustServiceUriFromCredentials(exchangeServiceUrl));
                 return;
             } catch (AutodiscoverLocalException ex) {
 
-                this.traceMessage(TraceFlags.AutodiscoverResponse, String
-                        .format("Autodiscover service call "
-                                + "failed with error '%s'. "
+                this.traceMessage(TraceFlags.AutodiscoverResponse,
+                        String.format("Autodiscover service call failed with error '%s'. "
                                 + "Will try legacy service", ex.getMessage()));
 
             } catch (ServiceRemoteException ex) {
@@ -3544,18 +3526,15 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
                     throw new AccountIsLockedException(ex.getMessage(), exchangeServiceUrl, ex);
                 }
 
-                this.traceMessage(TraceFlags.AutodiscoverResponse, String
-                        .format("Autodiscover service call "
-                                + "failed with error '%s'. "
+                this.traceMessage(TraceFlags.AutodiscoverResponse,
+                        String.format("Autodiscover service call failed with error '%s'. "
                                 + "Will try legacy service", ex.getMessage()));
             }
         }
 
         // Try legacy Autodiscover provider
-
-        exchangeServiceUrl = this.getAutodiscoverUrl(emailAddress,
-                ExchangeVersion.Exchange2007_SP1,
-                validateRedirectionUrlCallback);
+        exchangeServiceUrl = this.getAutodiscoverUrl(
+                emailAddress, ExchangeVersion.Exchange2007_SP1, validateRedirectionUrlCallback);
 
         this.setUrl(this.adjustServiceUriFromCredentials(exchangeServiceUrl));
     }
@@ -3572,8 +3551,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
     private URI adjustServiceUriFromCredentials(URI uri)
             throws Exception
     {
-        return (this.getCredentials() != null) ? this.getCredentials()
-                .adjustUrl(uri) : uri;
+        return (this.getCredentials() != null) ? this.getCredentials().adjustUrl(uri) : uri;
     }
 
     /**
@@ -3585,35 +3563,30 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
      * @return the autodiscover url
      * @throws Exception the exception
      */
-    private URI getAutodiscoverUrl(String emailAddress,
-                                   ExchangeVersion requestedServerVersion,
-                                   IAutodiscoverRedirectionUrl validateRedirectionUrlCallback)
+    private URI getAutodiscoverUrl(
+            String emailAddress, ExchangeVersion requestedServerVersion,
+            IAutodiscoverRedirectionUrl validateRedirectionUrlCallback)
             throws Exception
     {
 
         AutodiscoverService autodiscoverService = new AutodiscoverService(this, requestedServerVersion);
         autodiscoverService.setWebProxy(getWebProxy());
 
-        autodiscoverService
-                .setRedirectionUrlValidationCallback(validateRedirectionUrlCallback);
+        autodiscoverService.setRedirectionUrlValidationCallback(validateRedirectionUrlCallback);
         autodiscoverService.setEnableScpLookup(this.getEnableScpLookup());
 
-        GetUserSettingsResponse response = autodiscoverService.getUserSettings(
-                emailAddress, UserSettingName.InternalEwsUrl,
-                UserSettingName.ExternalEwsUrl);
+        GetUserSettingsResponse response =
+                autodiscoverService.getUserSettings(emailAddress, UserSettingName.InternalEwsUrl, UserSettingName.ExternalEwsUrl);
 
         switch (response.getErrorCode()) {
             case NoError:
-                return this.getEwsUrlFromResponse(response, autodiscoverService
-                        .isExternal().TRUE);
+                return this.getEwsUrlFromResponse(response, autodiscoverService.isExternal().TRUE);
 
             case InvalidUser:
-                throw new ServiceRemoteException(String.format("Invalid user: '%s'",
-                        emailAddress));
+                throw new ServiceRemoteException(String.format("Invalid user: '%s'", emailAddress));
 
             case InvalidRequest:
-                throw new ServiceRemoteException(String.format("Invalid Autodiscover request: '%s'", response
-                        .getErrorMessage()));
+                throw new ServiceRemoteException(String.format("Invalid Autodiscover request: '%s'", response.getErrorMessage()));
 
             default:
                 this.traceMessage(TraceFlags.AutodiscoverConfiguration,
@@ -3636,19 +3609,16 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
         // Bug E14:82650 -- Either protocol
         // may be returned without a configured URL.
         OutParam<String> outParam = new OutParam<String>();
-        if ((isExternal && response.tryGetSettingValue(String.class,
-                UserSettingName.ExternalEwsUrl, outParam))) {
+        if ((isExternal && response.tryGetSettingValue(String.class, UserSettingName.ExternalEwsUrl, outParam))) {
             uriString = outParam.getParam();
             if (!(uriString == null || uriString.isEmpty())) {
                 return new URI(uriString);
             }
         }
-        if ((response.tryGetSettingValue(String.class,
-                UserSettingName.InternalEwsUrl, outParam) || response
-                .tryGetSettingValue(String.class,
-                        UserSettingName.ExternalEwsUrl, outParam))) {
+        if ((response.tryGetSettingValue(String.class, UserSettingName.InternalEwsUrl, outParam)
+                || response.tryGetSettingValue(String.class, UserSettingName.ExternalEwsUrl, outParam))) {
             uriString = outParam.getParam();
-            if (!(uriString == null || uriString.isEmpty())) {
+            if (StringUtils.isNotEmpty(uriString)) {
                 return new URI(uriString);
             }
         }
@@ -3769,8 +3739,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
     @Override
     public void processHttpErrorResponse(HttpWebRequest httpWebResponse, Exception webException) throws Exception
     {
-        this.internalProcessHttpErrorResponse(httpWebResponse, webException,
-                TraceFlags.EwsResponseHttpHeaders, TraceFlags.EwsResponse);
+        this.internalProcessHttpErrorResponse(httpWebResponse, webException, TraceFlags.EwsResponseHttpHeaders, TraceFlags.EwsResponse);
     }
 
     // Properties
@@ -3993,8 +3962,7 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
             timeZoneList.add(timeZoneDefinition);
             TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
             timeZoneDefinition.id = timeZone.getID();
-            timeZoneDefinition.name = timeZone.getDisplayName(timeZone
-                    .inDaylightTime(today), TimeZone.LONG);
+            timeZoneDefinition.name = timeZone.getDisplayName(timeZone.inDaylightTime(today), TimeZone.LONG);
         }
 
         return timeZoneList;
@@ -4066,11 +4034,10 @@ public class ExchangeService extends ExchangeServiceBase implements IAutodiscove
 	 * @seemicrosoft.exchange.webservices.AutodiscoverRedirectionUrlInterface#
 	 * autodiscoverRedirectionUrlValidationCallback(java.lang.String)
 	 */
-    public boolean autodiscoverRedirectionUrlValidationCallback(
-            String redirectionUrl) throws AutodiscoverLocalException
+    public boolean autodiscoverRedirectionUrlValidationCallback(String redirectionUrl)
+            throws AutodiscoverLocalException
     {
         return defaultAutodiscoverRedirectionUrlValidationCallback(redirectionUrl);
-
     }
 
 }

@@ -42,8 +42,7 @@ import java.util.List;
 /**
  * Represents a collection of DayOfTheWeek values.
  */
-public final class DayOfTheWeekCollection extends ComplexProperty implements
-                                                                  Iterable<DayOfTheWeek>
+public final class DayOfTheWeekCollection extends ComplexProperty implements Iterable<DayOfTheWeek>
 {
 
     /**

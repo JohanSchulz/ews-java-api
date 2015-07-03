@@ -94,22 +94,18 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     protected String getXmlElementNameOverride()
     {
-
-        if (this.responseType == ResponseMessageType.Reply) {
-            return XmlElementNames.ReplyToItem;
+        switch (this.responseType) {
+            case Reply:
+                return XmlElementNames.ReplyToItem;
+            case ReplyAll:
+                return XmlElementNames.ReplyAllToItem;
+            case Forward:
+                return XmlElementNames.ForwardItem;
+            default:
+                EwsUtilities.ewsAssert(false, "ResponseMessage.GetXmlElementNameOverride",
+                        "An unexpected value for responseType could not be handled.");
+                return null; // Because the compiler wants it
         }
-        else if (this.responseType == ResponseMessageType.ReplyAll) {
-            return XmlElementNames.ReplyAllToItem;
-        }
-        else if (this.responseType == ResponseMessageType.Forward) {
-            return XmlElementNames.ForwardItem;
-        }
-        else {
-            EwsUtilities.ewsAssert(false, "ResponseMessage.GetXmlElementNameOverride",
-                    "An unexpected value for responseType could not be handled.");
-            return null; // Because the compiler wants it
-        }
-
     }
 
     /**
@@ -130,8 +126,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public MessageBody getBody() throws Exception
     {
-        return (MessageBody) this
-                .getObjectFromPropertyDefinition(ItemSchema.Body);
+        return (MessageBody) this.getObjectFromPropertyDefinition(ItemSchema.Body);
     }
 
     /**
@@ -142,8 +137,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public void setBody(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body,
-                value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Body, value);
     }
 
     /**
@@ -154,9 +148,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public EmailAddressCollection getToRecipients() throws Exception
     {
-        return (EmailAddressCollection) this
-                .getObjectFromPropertyDefinition(
-                        EmailMessageSchema.ToRecipients);
+        return (EmailAddressCollection) this.getObjectFromPropertyDefinition(EmailMessageSchema.ToRecipients);
     }
 
     /**
@@ -167,9 +159,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public EmailAddressCollection getCcRecipients() throws Exception
     {
-        return (EmailAddressCollection) this
-                .getObjectFromPropertyDefinition(
-                        EmailMessageSchema.CcRecipients);
+        return (EmailAddressCollection) this.getObjectFromPropertyDefinition(EmailMessageSchema.CcRecipients);
     }
 
     /**
@@ -180,9 +170,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public EmailAddressCollection getBccRecipients() throws Exception
     {
-        return (EmailAddressCollection) this
-                .getObjectFromPropertyDefinition(
-                        EmailMessageSchema.BccRecipients);
+        return (EmailAddressCollection) this.getObjectFromPropertyDefinition(EmailMessageSchema.BccRecipients);
     }
 
     /**
@@ -193,8 +181,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public String getSubject() throws Exception
     {
-        return (String) this
-                .getObjectFromPropertyDefinition(EmailMessageSchema.Subject);
+        return (String) this.getObjectFromPropertyDefinition(EmailMessageSchema.Subject);
     }
 
     /**
@@ -205,8 +192,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public void setSubject(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.Subject, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.Subject, value);
     }
 
     /**
@@ -218,9 +204,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public MessageBody getBodyPrefix() throws Exception
     {
-        return (MessageBody) this
-                .getObjectFromPropertyDefinition(
-                        ResponseObjectSchema.BodyPrefix);
+        return (MessageBody) this.getObjectFromPropertyDefinition(ResponseObjectSchema.BodyPrefix);
     }
 
     /**
@@ -231,8 +215,7 @@ public final class ResponseMessage extends ResponseObject<EmailMessage>
      */
     public void setBodyPrefix(MessageBody value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                ResponseObjectSchema.BodyPrefix, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(ResponseObjectSchema.BodyPrefix, value);
     }
 
 }

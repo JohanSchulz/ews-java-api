@@ -41,6 +41,7 @@ import microsoft.exchange.webservices.data.property.complex.ServiceId;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinitionBase;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,8 +89,7 @@ public abstract class ServiceObject
      * @throws InvalidOperationException the invalid operation exception
      * @throws ServiceLocalException     the service local exception
      */
-    public void throwIfThisIsNew() throws InvalidOperationException,
-            ServiceLocalException
+    public void throwIfThisIsNew() throws InvalidOperationException, ServiceLocalException
     {
         if (this.isNew()) {
             throw new InvalidOperationException(
@@ -103,12 +103,12 @@ public abstract class ServiceObject
      * @throws InvalidOperationException the invalid operation exception
      * @throws ServiceLocalException     the service local exception
      */
-    protected void throwIfThisIsNotNew() throws InvalidOperationException,
-            ServiceLocalException
+    protected void throwIfThisIsNotNew() throws InvalidOperationException, ServiceLocalException
     {
         if (!this.isNew()) {
             throw new InvalidOperationException(
-                    "This operation can't be performed because this service object already has an ID. To update this service object, use the Update() method instead.");
+                    "This operation can't be performed because this service object already has an ID. " +
+                            "To update this service object, use the Update() method instead.");
         }
     }
 
@@ -136,23 +136,23 @@ public abstract class ServiceObject
      */
     public String getXmlElementName()
     {
-        if (this.isNullOrEmpty(this.xmlElementName)) {
+        if (StringUtils.isEmpty(this.xmlElementName)) {
             this.xmlElementName = this.getXmlElementNameOverride();
-            if (this.isNullOrEmpty(this.xmlElementName)) {
+            if (StringUtils.isEmpty(this.xmlElementName)) {
                 synchronized (this.lockObject) {
-
-                    ServiceObjectDefinition annotation = this.getClass()
-                            .getAnnotation(ServiceObjectDefinition.class);
+                    ServiceObjectDefinition annotation = this.getClass().getAnnotation(ServiceObjectDefinition.class);
                     if (null != annotation) {
                         this.xmlElementName = annotation.xmlElementName();
                     }
                 }
             }
         }
-        EwsUtilities
-                .ewsAssert(!isNullOrEmpty(this.xmlElementName), "EwsObject.GetXmlElementName", String
-                        .format("The class %s does not have an " + "associated XML element name.",
-                                this.getClass().getName()));
+        EwsUtilities.ewsAssert(
+                StringUtils.isNotEmpty(this.xmlElementName),
+                "EwsObject.GetXmlElementName",
+                String.format(
+                        "The class %s does not have an associated XML element name.",
+                        this.getClass().getName()));
 
         return this.xmlElementName;
     }
@@ -194,11 +194,9 @@ public abstract class ServiceObject
      *
      * @param isUpdateOperation the is update operation
      * @return boolean
-     * @throws ServiceLocalException
      * @throws Exception
      */
-    protected boolean getIsTimeZoneHeaderRequired(boolean isUpdateOperation)
-            throws ServiceLocalException, Exception
+    protected boolean getIsTimeZoneHeaderRequired(boolean isUpdateOperation) throws Exception
     {
         return false;
     }
@@ -233,8 +231,7 @@ public abstract class ServiceObject
     protected ServiceObject(ExchangeService service) throws Exception
     {
         EwsUtilities.validateParam(service, "service");
-        EwsUtilities.validateServiceObjectVersion(this, service
-                .getRequestedServerVersion());
+        EwsUtilities.validateServiceObjectVersion(this, service.getRequestedServerVersion());
         this.service = service;
         this.propertyBag = new PropertyBag(this);
     }
@@ -272,14 +269,8 @@ public abstract class ServiceObject
      */
     public void loadFromXml(EwsServiceXmlReader reader, boolean clearPropertyBag) throws Exception
     {
-
-        this.getPropertyBag().loadFromXml(reader, clearPropertyBag,
-                null, // propertySet
-                false); // summaryPropertiesOnly
-
+        this.getPropertyBag().loadFromXml(reader, clearPropertyBag, null, false);
     }
-
-    // / Validates this instance.
 
     /**
      * Validate.
@@ -291,8 +282,6 @@ public abstract class ServiceObject
         this.getPropertyBag().validate();
     }
 
-    // / Loads service object from XML.
-
     /**
      * Load from xml.
      *
@@ -303,11 +292,11 @@ public abstract class ServiceObject
      * @throws Exception the exception
      */
     public void loadFromXml(EwsServiceXmlReader reader, boolean clearPropertyBag,
-                            PropertySet requestedPropertySet, boolean summaryPropertiesOnly) throws Exception
+                            PropertySet requestedPropertySet, boolean summaryPropertiesOnly)
+            throws Exception
     {
 
-        this.getPropertyBag().loadFromXml(reader, clearPropertyBag,
-                requestedPropertySet, summaryPropertiesOnly);
+        this.getPropertyBag().loadFromXml(reader, clearPropertyBag, requestedPropertySet, summaryPropertiesOnly);
 
     }
 
@@ -430,9 +419,10 @@ public abstract class ServiceObject
             }
             else {
                 // E14:226103 -- Other subclasses of PropertyDefinitionBase are not supported.
-                throw new UnsupportedOperationException(String.format(
-                        "This operation isn't supported for property definition type %s.",
-                        propertyDefinition.getType().getName()));
+                throw new UnsupportedOperationException(
+                        String.format(
+                                "This operation isn't supported for property definition type %s.",
+                                propertyDefinition.getType().getName()));
             }
         }
     }
@@ -449,8 +439,7 @@ public abstract class ServiceObject
                                                  ExtendedPropertyDefinition propertyDefinition,
                                                  OutParam<T> propertyValue) throws Exception
     {
-        ExtendedPropertyCollection propertyCollection = this
-                .getExtendedProperties();
+        ExtendedPropertyCollection propertyCollection = this.getExtendedProperties();
 
         if ((propertyCollection != null) &&
                 propertyCollection.tryGetValue(cls, propertyDefinition, propertyValue)) {
@@ -516,10 +505,8 @@ public abstract class ServiceObject
             throws Exception
     {
 
-        Collection<PropertyDefinitionBase> propDefs =
-                new ArrayList<PropertyDefinitionBase>();
-        for (PropertyDefinition propDef : this.getPropertyBag().getProperties()
-                .keySet()) {
+        Collection<PropertyDefinitionBase> propDefs = new ArrayList<PropertyDefinitionBase>();
+        for (PropertyDefinition propDef : this.getPropertyBag().getProperties().keySet()) {
             propDefs.add(propDef);
         }
 
@@ -574,11 +561,9 @@ public abstract class ServiceObject
      */
     public ServiceId getId() throws ServiceLocalException
     {
-        PropertyDefinition idPropertyDefinition = this
-                .getIdPropertyDefinition();
+        PropertyDefinition idPropertyDefinition = this.getIdPropertyDefinition();
 
         OutParam<Object> serviceId = new OutParam<Object>();
-
         if (idPropertyDefinition != null) {
             this.getPropertyBag().tryGetValue(idPropertyDefinition, serviceId);
         }
@@ -586,9 +571,8 @@ public abstract class ServiceObject
         return (ServiceId) serviceId.getParam();
     }
 
-    // / Indicates whether this object is a real store item, or if it's a local
-    // object
-    // / that has yet to be saved.
+    // Indicates whether this object is a real store item, or if it's a local object
+    // that has yet to be saved.
 
     /**
      * Checks if is new.
@@ -598,11 +582,9 @@ public abstract class ServiceObject
      */
     public boolean isNew() throws ServiceLocalException
     {
-
         ServiceId id = this.getId();
 
         return id == null ? true : !id.isValid();
-
     }
 
     // / Gets a value indicating whether the object has been modified and should
@@ -616,7 +598,6 @@ public abstract class ServiceObject
     public boolean isDirty()
     {
         return this.getPropertyBag().getIsDirty();
-
     }
 
     // Gets the extended property collection.
@@ -634,30 +615,16 @@ public abstract class ServiceObject
     }
 
     /**
-     * Checks is the string is null or empty.
-     *
-     * @param namespacePrefix the namespace prefix
-     * @return true, if is null or empty
-     */
-    private boolean isNullOrEmpty(String namespacePrefix)
-    {
-        return (namespacePrefix == null || namespacePrefix.isEmpty());
-
-    }
-
-    /**
      * The on change.
      */
-    private List<IServiceObjectChangedDelegate> onChange =
-            new ArrayList<IServiceObjectChangedDelegate>();
+    private List<IServiceObjectChangedDelegate> onChange = new ArrayList<IServiceObjectChangedDelegate>();
 
     /**
      * Adds the service object changed event.
      *
      * @param change the change
      */
-    public void addServiceObjectChangedEvent(
-            IServiceObjectChangedDelegate change)
+    public void addServiceObjectChangedEvent(IServiceObjectChangedDelegate change)
     {
         this.onChange.add(change);
     }
@@ -667,8 +634,7 @@ public abstract class ServiceObject
      *
      * @param change the change
      */
-    public void removeServiceObjectChangedEvent(
-            IServiceObjectChangedDelegate change)
+    public void removeServiceObjectChangedEvent(IServiceObjectChangedDelegate change)
     {
         this.onChange.remove(change);
     }

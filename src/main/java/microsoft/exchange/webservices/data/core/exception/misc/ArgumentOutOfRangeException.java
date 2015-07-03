@@ -51,7 +51,6 @@ public class ArgumentOutOfRangeException extends Exception
     public ArgumentOutOfRangeException(final String arg0)
     {
         super(arg0);
-
     }
 
     /**

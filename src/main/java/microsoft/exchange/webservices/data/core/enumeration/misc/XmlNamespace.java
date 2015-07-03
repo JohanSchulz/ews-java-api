@@ -42,8 +42,7 @@ public enum XmlNamespace
     /**
      * The Messages.
      */
-    Messages(EwsUtilities.EwsMessagesNamespacePrefix,
-            EwsUtilities.EwsMessagesNamespace),
+    Messages(EwsUtilities.EwsMessagesNamespacePrefix, EwsUtilities.EwsMessagesNamespace),
 
     /**
      * The Types.
@@ -53,8 +52,7 @@ public enum XmlNamespace
     /**
      * The Errors.
      */
-    Errors(EwsUtilities.EwsErrorsNamespacePrefix,
-            EwsUtilities.EwsErrorsNamespace),
+    Errors(EwsUtilities.EwsErrorsNamespacePrefix, EwsUtilities.EwsErrorsNamespace),
 
     /**
      * The Soap.
@@ -64,8 +62,7 @@ public enum XmlNamespace
     /**
      * The Soap12.
      */
-    Soap12(EwsUtilities.EwsSoapNamespacePrefix,
-            EwsUtilities.EwsSoap12Namespace),
+    Soap12(EwsUtilities.EwsSoapNamespacePrefix, EwsUtilities.EwsSoap12Namespace),
 
     /**
      * The Xml schema instance.

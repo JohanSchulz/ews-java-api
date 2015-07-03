@@ -23,7 +23,6 @@
 
 package microsoft.exchange.webservices.data.autodiscover.request;
 
-import microsoft.exchange.webservices.data.EWSConstants;
 import microsoft.exchange.webservices.data.autodiscover.AutodiscoverService;
 import microsoft.exchange.webservices.data.autodiscover.enumeration.AutodiscoverErrorCode;
 import microsoft.exchange.webservices.data.autodiscover.exception.AutodiscoverResponseException;
@@ -41,6 +40,7 @@ import microsoft.exchange.webservices.data.core.request.HttpWebRequest;
 import microsoft.exchange.webservices.data.core.response.ServiceResponse;
 import microsoft.exchange.webservices.data.misc.SoapFaultDetails;
 import microsoft.exchange.webservices.data.security.XmlNodeType;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -119,21 +119,16 @@ public abstract class AutodiscoverRequest
         HttpWebRequest request = null;
         try {
             request = this.service.prepareHttpWebRequestForUrl(this.url);
-            this.service.traceHttpRequestHeaders(
-                    TraceFlags.AutodiscoverRequestHttpHeaders, request);
+            this.service.traceHttpRequestHeaders(TraceFlags.AutodiscoverRequestHttpHeaders, request);
 
-            boolean needSignature = this.getService().getCredentials() != null
-                    && this.getService().getCredentials().isNeedSignature();
-            boolean needTrace = this.getService().isTraceEnabledFor(
-                    TraceFlags.AutodiscoverRequest);
+            boolean needSignature = this.service.getCredentials() != null
+                    && this.service.getCredentials().isNeedSignature();
 
             OutputStream urlOutStream = request.getOutputStream();
-            // OutputStreamWriter out = new OutputStreamWriter(request
-            // .getOutputStream());
+            // OutputStreamWriter out = new OutputStreamWriter(request.getOutputStream());
 
             ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
-            EwsServiceXmlWriter writer = new EwsServiceXmlWriter(this
-                    .getService(), memoryStream);
+            EwsServiceXmlWriter writer = new EwsServiceXmlWriter(this.getService(), memoryStream);
             writer.setRequireWSSecurityUtilityNamespace(needSignature);
             this.writeSoapRequest(this.url, writer);
 
@@ -141,7 +136,7 @@ public abstract class AutodiscoverRequest
                 this.service.getCredentials().sign(memoryStream);
             }
 
-            if (needTrace) {
+            if (this.service.isTraceEnabledFor(TraceFlags.AutodiscoverRequest)) {
                 memoryStream.flush();
                 this.service.traceXml(TraceFlags.AutodiscoverRequest,
                         memoryStream);
@@ -194,10 +189,8 @@ public abstract class AutodiscoverRequest
                         XmlElementNames.SOAPEnvelopeElementName);
             }
             else if ((ewsXmlReader.getNodeType().getNodeType() != XmlNodeType.START_ELEMENT)
-                    || (!ewsXmlReader.getLocalName().equals(
-                    XmlElementNames.SOAPEnvelopeElementName))
-                    || (!ewsXmlReader.getNamespaceUri().equals(
-                    EwsUtilities.getNamespaceUri(XmlNamespace.Soap)))) {
+                    || (!ewsXmlReader.getLocalName().equals(XmlElementNames.SOAPEnvelopeElementName))
+                    || (!ewsXmlReader.getNamespaceUri().equals(EwsUtilities.EwsSoapNamespace))) {
                 throw new ServiceXmlDeserializationException("The Autodiscover service response was invalid.");
             }
 
@@ -205,8 +198,7 @@ public abstract class AutodiscoverRequest
 
             AutodiscoverResponse response = this.readSoapBody(ewsXmlReader);
 
-            ewsXmlReader.readEndElement(XmlNamespace.Soap,
-                    XmlElementNames.SOAPEnvelopeElementName);
+            ewsXmlReader.readEndElement(XmlNamespace.Soap, XmlElementNames.SOAPEnvelopeElementName);
 
             if (response.getErrorCode() == AutodiscoverErrorCode.NoError) {
                 return response;
@@ -233,13 +225,10 @@ public abstract class AutodiscoverRequest
 
             if (null != request && request.getResponseCode() == 7) {
                 if (AutodiscoverRequest.isRedirectionResponse(request)) {
-                    this.service
-                            .processHttpResponseHeaders(
-                                    TraceFlags.AutodiscoverResponseHttpHeaders,
-                                    request);
+                    this.service.processHttpResponseHeaders(
+                            TraceFlags.AutodiscoverResponseHttpHeaders, request);
 
-                    AutodiscoverResponse response = this
-                            .createRedirectionResponse(request);
+                    AutodiscoverResponse response = this.createRedirectionResponse(request);
                     if (response != null) {
                         return response;
                     }
@@ -273,13 +262,9 @@ public abstract class AutodiscoverRequest
         if (null != req) {
             try {
                 if (500 == req.getResponseCode()) {
-                    if (this.service
-                            .isTraceEnabledFor(
-                                    TraceFlags.AutodiscoverRequest)) {
-                        ByteArrayOutputStream memoryStream =
-                                new ByteArrayOutputStream();
-                        InputStream serviceResponseStream = AutodiscoverRequest
-                                .getResponseStream(req);
+                    if (this.service.isTraceEnabledFor(TraceFlags.AutodiscoverRequest)) {
+                        ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
+                        InputStream serviceResponseStream = AutodiscoverRequest.getResponseStream(req);
                         while (true) {
                             int data = serviceResponseStream.read();
                             if (-1 == data) {
@@ -292,24 +277,19 @@ public abstract class AutodiscoverRequest
                         memoryStream.flush();
                         serviceResponseStream.close();
                         this.service.traceResponse(req, memoryStream);
-                        ByteArrayInputStream memoryStreamIn =
-                                new ByteArrayInputStream(
-                                        memoryStream.toByteArray());
+                        ByteArrayInputStream memoryStreamIn = new ByteArrayInputStream(memoryStream.toByteArray());
                         EwsXmlReader reader = new EwsXmlReader(memoryStreamIn);
-                        this.readSoapFault(reader);
+                        this.readSoapFault(reader); // read into mem buf
                         memoryStream.close();
                     }
                     else {
-                        InputStream serviceResponseStream = AutodiscoverRequest
-                                .getResponseStream(req);
-                        EwsXmlReader reader = new EwsXmlReader(
-                                serviceResponseStream);
+                        InputStream serviceResponseStream = AutodiscoverRequest.getResponseStream(req);
+                        EwsXmlReader reader = new EwsXmlReader(serviceResponseStream);
                         SoapFaultDetails soapFaultDetails = this.readSoapFault(reader);
                         serviceResponseStream.close();
 
                         if (soapFaultDetails != null) {
-                            throw new ServiceResponseException(
-                                    new ServiceResponse(soapFaultDetails));
+                            throw new ServiceResponseException(new ServiceResponse(soapFaultDetails));
                         }
                     }
                 }
@@ -336,49 +316,43 @@ public abstract class AutodiscoverRequest
             IOException, EWSHttpException
     {
         String location = httpWebResponse.getResponseHeaderField("Location");
-        if (!(location == null || location.isEmpty())) {
+        if (StringUtils.isNotEmpty(location)) {
             try {
                 URI redirectionUri = new URI(location);
                 String scheme = redirectionUri.getScheme();
 
-                if (scheme.equalsIgnoreCase(EWSConstants.HTTP_SCHEME)
-                        || scheme.equalsIgnoreCase(EWSConstants.HTTPS_SCHEME)) {
+                if (EwsUtilities.isSupportedProtocol(scheme)) {
                     AutodiscoverResponse response = this.createServiceResponse();
                     response.setErrorCode(AutodiscoverErrorCode.RedirectUrl);
                     response.setRedirectionUrl(redirectionUri);
                     return response;
                 }
 
-                this.service
-                        .traceMessage(
-                                TraceFlags.AutodiscoverConfiguration,
-                                String
-                                        .format(
-                                                "Invalid redirection" +
-                                                        " URL '%s' " +
-                                                        "returned by Autodiscover " +
-                                                        "service.",
-                                                redirectionUri.toString()));
+                this.service.traceMessage(
+                        TraceFlags.AutodiscoverConfiguration,
+                        String.format(
+                                "Invalid redirection" +
+                                        " URL '%s' " +
+                                        "returned by Autodiscover " +
+                                        "service.",
+                                redirectionUri.toString()));
 
             } catch (URISyntaxException ex) {
-                this.service
-                        .traceMessage(
-                                TraceFlags.AutodiscoverConfiguration,
-                                String
-                                        .format(
-                                                "Invalid redirection " +
-                                                        "location '%s' " +
-                                                        "returned by Autodiscover " +
-                                                        "service.",
-                                                location));
+                this.service.traceMessage(
+                        TraceFlags.AutodiscoverConfiguration,
+                        String.format(
+                                "Invalid redirection " +
+                                        "location '%s' " +
+                                        "returned by Autodiscover " +
+                                        "service.",
+                                location));
             }
         }
         else {
-            this.service
-                    .traceMessage(
-                            TraceFlags.AutodiscoverConfiguration,
-                            "Redirection response returned by Autodiscover " +
-                                    "service without redirection location.");
+            this.service.traceMessage(
+                    TraceFlags.AutodiscoverConfiguration,
+                    "Redirection response returned by Autodiscover " +
+                            "service without redirection location.");
         }
 
         return null;
@@ -401,16 +375,14 @@ public abstract class AutodiscoverRequest
                 reader.read();
             }
             if (!reader.isStartElement()
-                    || (!reader.getLocalName().equals(
-                    XmlElementNames.SOAPEnvelopeElementName))) {
+                    || (!reader.getLocalName().equals(XmlElementNames.SOAPEnvelopeElementName))) {
                 return null;
             }
 
             // Get the namespace URI from the envelope element and use it for
             // the rest of the parsing.
             // If it's not 1.1 or 1.2, we can't continue.
-            XmlNamespace soapNamespace = EwsUtilities
-                    .getNamespaceFromUri(reader.getNamespaceUri());
+            XmlNamespace soapNamespace = EwsUtilities.getNamespaceFromUri(reader.getNamespaceUri());
             if (soapNamespace == XmlNamespace.NotSpecified) {
                 return null;
             }
@@ -418,35 +390,28 @@ public abstract class AutodiscoverRequest
             reader.read();
 
             // Skip SOAP header.
-            if (reader.isStartElement(soapNamespace,
-                    XmlElementNames.SOAPHeaderElementName)) {
+            if (reader.isStartElement(soapNamespace, XmlElementNames.SOAPHeaderElementName)) {
                 do {
                     reader.read();
-                } while (!reader.isEndElement(soapNamespace,
-                        XmlElementNames.SOAPHeaderElementName));
+                } while (!reader.isEndElement(soapNamespace, XmlElementNames.SOAPHeaderElementName));
 
                 // Queue up the next read
                 reader.read();
             }
 
             // Parse the fault element contained within the SOAP body.
-            if (reader.isStartElement(soapNamespace,
-                    XmlElementNames.SOAPBodyElementName)) {
+            if (reader.isStartElement(soapNamespace, XmlElementNames.SOAPBodyElementName)) {
                 do {
                     reader.read();
 
                     // Parse Fault element
-                    if (reader.isStartElement(soapNamespace,
-                            XmlElementNames.SOAPFaultElementName)) {
-                        soapFaultDetails = SoapFaultDetails.parse(reader,
-                                soapNamespace);
+                    if (reader.isStartElement(soapNamespace, XmlElementNames.SOAPFaultElementName)) {
+                        soapFaultDetails = SoapFaultDetails.parse(reader, soapNamespace);
                     }
-                } while (!reader.isEndElement(soapNamespace,
-                        XmlElementNames.SOAPBodyElementName));
+                } while (!reader.isEndElement(soapNamespace, XmlElementNames.SOAPBodyElementName));
             }
 
-            reader.readEndElement(soapNamespace,
-                    XmlElementNames.SOAPEnvelopeElementName);
+            reader.readEndElement(soapNamespace, XmlElementNames.SOAPEnvelopeElementName);
         } catch (Exception e) {
             // If response doesn't contain a valid SOAP fault, just ignore
             // exception and
@@ -475,11 +440,10 @@ public abstract class AutodiscoverRequest
                     EwsUtilities.WSSecurityUtilityNamespace);
         }
         writer.writeStartDocument();
-        writer.writeStartElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPEnvelopeElementName);
-        writer.writeAttributeValue("xmlns", EwsUtilities
-                .getNamespacePrefix(XmlNamespace.Soap), EwsUtilities
-                .getNamespaceUri(XmlNamespace.Soap));
+        writer.writeStartElement(XmlNamespace.Soap, XmlElementNames.SOAPEnvelopeElementName);
+        writer.writeAttributeValue("xmlns",
+                EwsUtilities.getNamespacePrefix(XmlNamespace.Soap),
+                EwsUtilities.getNamespaceUri(XmlNamespace.Soap));
         writer.writeAttributeValue("xmlns",
                 EwsUtilities.AutodiscoverSoapNamespacePrefix,
                 EwsUtilities.AutodiscoverSoapNamespace);
@@ -490,37 +454,31 @@ public abstract class AutodiscoverRequest
                 EwsUtilities.EwsXmlSchemaInstanceNamespacePrefix,
                 EwsUtilities.EwsXmlSchemaInstanceNamespace);
 
-        writer.writeStartElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPHeaderElementName);
+        writer.writeStartElement(XmlNamespace.Soap, XmlElementNames.SOAPHeaderElementName);
 
         if (this.service.getCredentials() != null) {
-            this.service.getCredentials().emitExtraSoapHeaderNamespaceAliases(
-                    writer.getInternalWriter());
+            this.service.getCredentials().emitExtraSoapHeaderNamespaceAliases(writer.getInternalWriter());
         }
 
         writer.writeElementValue(XmlNamespace.Autodiscover,
-                XmlElementNames.RequestedServerVersion, this.service
-                        .getRequestedServerVersion().toString());
+                XmlElementNames.RequestedServerVersion, this.service.getRequestedServerVersion().toString());
 
         writer.writeElementValue(XmlNamespace.WSAddressing,
                 XmlElementNames.Action, this.getWsAddressingActionName());
 
-        writer.writeElementValue(XmlNamespace.WSAddressing, XmlElementNames.To,
-                requestUrl.toString());
+        writer.writeElementValue(XmlNamespace.WSAddressing, XmlElementNames.To, requestUrl.toString());
 
         this.writeExtraCustomSoapHeadersToXml(writer);
 
         if (this.service.getCredentials() != null) {
-            this.service.getCredentials().serializeWSSecurityHeaders(
-                    writer.getInternalWriter());
+            this.service.getCredentials().serializeWSSecurityHeaders(writer.getInternalWriter());
         }
 
         this.service.doOnSerializeCustomSoapHeaders(writer.getInternalWriter());
 
         writer.writeEndElement(); // soap:Header
 
-        writer.writeStartElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPBodyElementName);
+        writer.writeStartElement(XmlNamespace.Soap, XmlElementNames.SOAPBodyElementName);
 
         this.writeBodyToXml(writer);
 
@@ -555,8 +513,7 @@ public abstract class AutodiscoverRequest
     protected void writeBodyToXml(EwsServiceXmlWriter writer)
             throws ServiceXmlSerializationException, XMLStreamException
     {
-        writer.writeStartElement(XmlNamespace.Autodiscover, this
-                .getRequestXmlElementName());
+        writer.writeStartElement(XmlNamespace.Autodiscover, this.getRequestXmlElementName());
 
         this.writeAttributesToXml(writer);
         this.writeElementsToXml(writer);
@@ -604,14 +561,12 @@ public abstract class AutodiscoverRequest
      */
     protected void readSoapHeaders(EwsXmlReader reader) throws Exception
     {
-        reader.readStartElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPHeaderElementName);
+        reader.readStartElement(XmlNamespace.Soap, XmlElementNames.SOAPHeaderElementName);
         do {
             reader.read();
 
             this.readSoapHeader(reader);
-        } while (!reader.isEndElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPHeaderElementName));
+        } while (!reader.isEndElement(XmlNamespace.Soap, XmlElementNames.SOAPHeaderElementName));
     }
 
     /**
@@ -623,8 +578,7 @@ public abstract class AutodiscoverRequest
     protected void readSoapHeader(EwsXmlReader reader) throws Exception
     {
         // Is this the ServerVersionInfo?
-        if (reader.isStartElement(XmlNamespace.Autodiscover,
-                XmlElementNames.ServerVersionInfo)) {
+        if (reader.isStartElement(XmlNamespace.Autodiscover, XmlElementNames.ServerVersionInfo)) {
             this.service.setServerInfo(this.readServerVersionInfo(reader));
         }
     }
@@ -644,32 +598,26 @@ public abstract class AutodiscoverRequest
             reader.read();
 
             if (reader.isStartElement()) {
-                if (reader.getLocalName().equals(XmlElementNames.MajorVersion)) {
-                    serverInfo.setMajorVersion(reader
-                            .readElementValue(Integer.class));
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.MinorVersion)) {
-                    serverInfo.setMinorVersion(reader
-                            .readElementValue(Integer.class));
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.MajorBuildNumber)) {
-                    serverInfo.setMajorBuildNumber(reader
-                            .readElementValue(Integer.class));
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.MinorBuildNumber)) {
-                    serverInfo.setMinorBuildNumber(reader
-                            .readElementValue(Integer.class));
-                }
-                else if (reader.getLocalName()
-                        .equals(XmlElementNames.Version)) {
-                    serverInfo.setVersionString(reader.readElementValue());
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.MajorVersion:
+                        serverInfo.setMajorVersion(reader.readElementValue(Integer.class));
+                        break;
+                    case XmlElementNames.MinorVersion:
+                        serverInfo.setMinorVersion(reader.readElementValue(Integer.class));
+                        break;
+                    case XmlElementNames.MajorBuildNumber:
+                        serverInfo.setMajorBuildNumber(reader.readElementValue(Integer.class));
+                        break;
+                    case XmlElementNames.MinorBuildNumber:
+                        serverInfo.setMinorBuildNumber(reader.readElementValue(Integer.class));
+                        break;
+                    case XmlElementNames.Version:
+                        serverInfo.setVersionString(reader.readElementValue());
+                        break;
                 }
             }
-        } while (!reader.isEndElement(XmlNamespace.Autodiscover,
-                XmlElementNames.ServerVersionInfo));
+        } while (!reader.isEndElement(XmlNamespace.Autodiscover, XmlElementNames.ServerVersionInfo));
 
         return serverInfo;
     }
@@ -683,11 +631,9 @@ public abstract class AutodiscoverRequest
      */
     protected AutodiscoverResponse readSoapBody(EwsXmlReader reader) throws Exception
     {
-        reader.readStartElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPBodyElementName);
+        reader.readStartElement(XmlNamespace.Soap, XmlElementNames.SOAPBodyElementName);
         AutodiscoverResponse responses = this.loadFromXml(reader);
-        reader.readEndElement(XmlNamespace.Soap,
-                XmlElementNames.SOAPBodyElementName);
+        reader.readEndElement(XmlNamespace.Soap, XmlElementNames.SOAPBodyElementName);
         return responses;
     }
 

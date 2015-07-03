@@ -84,8 +84,7 @@ class AutodiscoverDnsClient
     {
         String domainToMatch = AutoDiscoverSrvPrefix + domain;
 
-        DnsSrvRecord dnsSrvRecord = this
-                .findBestMatchingSrvRecord(domainToMatch);
+        DnsSrvRecord dnsSrvRecord = this.findBestMatchingSrvRecord(domainToMatch);
 
         if ((dnsSrvRecord == null) || dnsSrvRecord.getNameTarget() == null ||
                 dnsSrvRecord.getNameTarget().isEmpty()) {

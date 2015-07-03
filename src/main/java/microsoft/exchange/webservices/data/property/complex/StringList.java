@@ -118,8 +118,7 @@ public class StringList extends ComplexProperty implements Iterable<String>
             throws ServiceXmlSerializationException, XMLStreamException
     {
         for (String item : this.items) {
-            writer.writeStartElement(XmlNamespace.Types,
-                    this.itemXmlElementName);
+            writer.writeStartElement(XmlNamespace.Types, this.itemXmlElementName);
             writer.writeValue(item, this.itemXmlElementName);
             writer.writeEndElement();
         }

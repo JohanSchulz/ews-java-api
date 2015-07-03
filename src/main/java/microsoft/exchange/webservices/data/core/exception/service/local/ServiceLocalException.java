@@ -64,4 +64,27 @@ public class ServiceLocalException extends Exception
         super(message, innerException);
     }
 
+    /**
+     * ServiceLocalException Constructor.
+     *
+     * @param messageFormat the message
+     * @param fmtArgs       Format arguments
+     */
+    public ServiceLocalException(String messageFormat, Object... fmtArgs)
+    {
+        super(String.format(messageFormat, fmtArgs));
+    }
+
+    /**
+     * ServiceLocalException Constructor.
+     *
+     * @param messageFormat  the message
+     * @param innerException the inner exception
+     * @param fmtArgs        Format arguments
+     */
+    public ServiceLocalException(String messageFormat, Exception innerException, Object... fmtArgs)
+    {
+        super(String.format(messageFormat, fmtArgs), innerException);
+    }
+
 }

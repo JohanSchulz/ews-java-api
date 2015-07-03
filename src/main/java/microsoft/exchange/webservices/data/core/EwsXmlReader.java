@@ -24,6 +24,7 @@
 package microsoft.exchange.webservices.data.core;
 
 import microsoft.exchange.webservices.data.core.enumeration.misc.XmlNamespace;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlDeserializationException;
 import microsoft.exchange.webservices.data.misc.OutParam;
 import microsoft.exchange.webservices.data.security.XmlNodeType;
@@ -39,6 +40,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.*;
 import java.io.*;
+import java.text.ParseException;
 
 /**
  * Defines the EwsXmlReader class.
@@ -118,8 +120,8 @@ public class EwsXmlReader
      * @param nodeType     Type of the node
      * @throws Exception the exception
      */
-    private void internalReadElement(XmlNamespace xmlNamespace,
-                                     String localName, XmlNodeType nodeType) throws Exception
+    private void internalReadElement(XmlNamespace xmlNamespace, String localName, XmlNodeType nodeType)
+            throws Exception
     {
 
         if (xmlNamespace == XmlNamespace.NotSpecified) {
@@ -128,19 +130,13 @@ public class EwsXmlReader
         else {
             this.read(nodeType);
 
-            if ((!this.getLocalName().equals(localName)) ||
-                    (!this.getNamespaceUri().equals(EwsUtilities
-                            .getNamespaceUri(xmlNamespace)))) {
+            if ((!this.getLocalName().equals(localName))
+                    || (!this.getNamespaceUri().equals(EwsUtilities.getNamespaceUri(xmlNamespace)))) {
                 throw new ServiceXmlDeserializationException(
-                        String
-                                .format(
-                                        "An element node '%s:%s' of the type %s was expected, but node '%s' of type %s was found.",
-                                        EwsUtilities
-                                                .getNamespacePrefix(
-                                                        xmlNamespace),
-                                        localName, nodeType.toString(), this
-                                                .getName(), this.getNodeType()
-                                                .toString()));
+                        String.format("An element node '%s:%s' of the type %s was expected, but node '%s' of type %s was found.",
+                                EwsUtilities.getNamespacePrefix(xmlNamespace),
+                                localName, nodeType.toString(), this.getName(),
+                                this.getNodeType().toString()));
             }
         }
     }
@@ -153,8 +149,8 @@ public class EwsXmlReader
      * @param nodeType        Type of the node
      * @throws Exception the exception
      */
-    private void internalReadElement(String namespacePrefix, String localName,
-                                     XmlNodeType nodeType) throws Exception
+    private void internalReadElement(String namespacePrefix, String localName, XmlNodeType nodeType)
+            throws Exception
     {
         read(nodeType);
 
@@ -162,8 +158,7 @@ public class EwsXmlReader
                 (!this.getNamespacePrefix().equals(namespacePrefix))) {
             throw new ServiceXmlDeserializationException(String.format(
                     "An element node '%s:%s' of the type %s was expected, but node '%s' of type %s was found.", namespacePrefix, localName,
-                    nodeType.toString(), this.getName(), this.getNodeType()
-                            .toString()));
+                    nodeType.toString(), this.getName(), this.getNodeType().toString()));
         }
     }
 
@@ -173,8 +168,7 @@ public class EwsXmlReader
      * @throws ServiceXmlDeserializationException the service xml deserialization exception
      * @throws XMLStreamException                 the XML stream exception
      */
-    public void read() throws ServiceXmlDeserializationException,
-            XMLStreamException
+    public void read() throws ServiceXmlDeserializationException, XMLStreamException
     {
         read(false);
     }
@@ -186,8 +180,7 @@ public class EwsXmlReader
      * @throws ServiceXmlDeserializationException the service xml deserialization exception
      * @throws XMLStreamException                 the XML stream exception
      */
-    private void read(boolean keepWhiteSpace) throws ServiceXmlDeserializationException,
-            XMLStreamException
+    private void read(boolean keepWhiteSpace) throws ServiceXmlDeserializationException, XMLStreamException
     {
         // The caller to EwsXmlReader.Read expects
         // that there's another node to
@@ -201,8 +194,7 @@ public class EwsXmlReader
                 if (event.getEventType() == XMLStreamConstants.CHARACTERS) {
                     Characters characters = (Characters) event;
                     if (!keepWhiteSpace) {
-                        if (characters.isIgnorableWhiteSpace()
-                                || characters.isWhiteSpace()) {
+                        if (characters.isIgnorableWhiteSpace() || characters.isWhiteSpace()) {
                             continue;
                         }
                     }
@@ -224,9 +216,10 @@ public class EwsXmlReader
     {
         this.read();
         if (!this.getNodeType().equals(nodeType)) {
-            throw new ServiceXmlDeserializationException(String
-                    .format("The expected XML node type was %s, but the actual type is %s.", nodeType, this
-                            .getNodeType()));
+            throw new ServiceXmlDeserializationException(
+                    String.format(
+                            "The expected XML node type was %s, but the actual type is %s.",
+                            nodeType, this.getNodeType()));
         }
     }
 
@@ -235,9 +228,9 @@ public class EwsXmlReader
      *
      * @param qName QName of the attribute
      * @return Attribute Value
-     * @throws Exception thrown if attribute value can not be read
+     * @throws ServiceXmlDeserializationException thrown if attribute value can not be read
      */
-    private String readAttributeValue(QName qName) throws Exception
+    private String readAttributeValue(QName qName) throws ServiceXmlDeserializationException
     {
         if (this.presentEvent.isStartElement()) {
             StartElement startElement = this.presentEvent.asStartElement();
@@ -250,9 +243,8 @@ public class EwsXmlReader
             }
         }
         else {
-            String errMsg = String.format("Could not fetch attribute %s", qName
-                    .toString());
-            throw new Exception(errMsg);
+            String errMsg = String.format("Could not fetch attribute %s", qName.toString());
+            throw new ServiceXmlDeserializationException(errMsg);
         }
     }
 
@@ -264,15 +256,14 @@ public class EwsXmlReader
      * @return Attribute Value
      * @throws Exception the exception
      */
-    public String readAttributeValue(XmlNamespace xmlNamespace,
-                                     String attributeName) throws Exception
+    public String readAttributeValue(XmlNamespace xmlNamespace, String attributeName)
+            throws ServiceXmlDeserializationException
     {
         if (xmlNamespace == XmlNamespace.NotSpecified) {
             return this.readAttributeValue(attributeName);
         }
         else {
-            QName qName = new QName(EwsUtilities.getNamespaceUri(xmlNamespace),
-                    attributeName);
+            QName qName = new QName(EwsUtilities.getNamespaceUri(xmlNamespace), attributeName);
             return readAttributeValue(qName);
         }
     }
@@ -282,9 +273,9 @@ public class EwsXmlReader
      *
      * @param attributeName Name of the attribute
      * @return Attribute value.
-     * @throws Exception the exception
+     * @throws ServiceXmlDeserializationException the exception
      */
-    public String readAttributeValue(String attributeName) throws Exception
+    public String readAttributeValue(String attributeName) throws ServiceXmlDeserializationException
     {
         QName qName = new QName(attributeName);
         return readAttributeValue(qName);
@@ -300,7 +291,7 @@ public class EwsXmlReader
      * @throws Exception the exception
      */
     public <T> T readAttributeValue(Class<T> cls, String attributeName)
-            throws Exception
+            throws ParseException, ServiceXmlDeserializationException
     {
         return EwsUtilities.parse(cls, this.readAttributeValue(attributeName));
     }
@@ -315,7 +306,7 @@ public class EwsXmlReader
      * @throws Exception the exception
      */
     public <T> T readNullableAttributeValue(Class<T> cls, String attributeName)
-            throws Exception
+            throws ParseException, ServiceXmlDeserializationException
     {
         String attributeValue = this.readAttributeValue(attributeName);
         if (attributeValue == null) {
@@ -423,16 +414,20 @@ public class EwsXmlReader
      * @param <T> the generic type
      * @param cls the cls
      * @return T
-     * @throws Exception the exception
+     * @throws ServiceLocalException the exception
      */
-    public <T> T readElementValue(Class<T> cls) throws Exception
+    public <T> T readElementValue(Class<T> cls) throws ServiceLocalException
     {
         this.ensureCurrentNodeIsStartElement();
 
         T value = null;
 
-        if (!this.isEmptyElement()) {
-            value = this.readValue(cls);
+        try {
+            if (!this.isEmptyElement()) {
+                value = this.readValue(cls);
+            }
+        } catch (ParseException | XMLStreamException | ServiceXmlDeserializationException e) {
+            throw new ServiceLocalException("EwsXmlReader.readElementValue", e);
         }
 
         return value;
@@ -447,8 +442,7 @@ public class EwsXmlReader
      * @throws XMLStreamException                 the XML stream exception
      * @throws ServiceXmlDeserializationException the service xml deserialization exception
      */
-    public String readValue() throws XMLStreamException,
-            ServiceXmlDeserializationException
+    public String readValue() throws XMLStreamException, ServiceXmlDeserializationException
     {
         return readValue(false);
     }
@@ -463,8 +457,7 @@ public class EwsXmlReader
      * @throws XMLStreamException                 the XML stream exception
      * @throws ServiceXmlDeserializationException the service xml deserialization exception
      */
-    public String readValue(boolean keepWhiteSpace) throws XMLStreamException,
-            ServiceXmlDeserializationException
+    public String readValue(boolean keepWhiteSpace) throws XMLStreamException, ServiceXmlDeserializationException
     {
         if (this.presentEvent.isStartElement()) {
             // Go to next event and check for Characters event
@@ -474,8 +467,8 @@ public class EwsXmlReader
                 do {
                     if (this.getNodeType().nodeType == XmlNodeType.CHARACTERS) {
                         Characters characters = (Characters) this.presentEvent;
-                        if (keepWhiteSpace || (!characters.isIgnorableWhiteSpace()
-                                && !characters.isWhiteSpace())) {
+                        if (keepWhiteSpace ||
+                                (!characters.isIgnorableWhiteSpace() && !characters.isWhiteSpace())) {
                             final String charactersData = characters.getData();
                             if (charactersData != null && !charactersData.isEmpty()) {
                                 elementValue.append(charactersData);
@@ -486,15 +479,20 @@ public class EwsXmlReader
                 } while (!this.presentEvent.isEndElement());
                 // Characters chars = this.presentEvent.asCharacters();
                 // String elementValue = chars.getData();
-                // Advance to next event post Characters (ideally it will be End
-                // Element)
+                // Advance to next event post Characters (ideally it will be EndElement)
+
                 // this.read();
                 return elementValue.toString();
             }
             else {
-                throw new ServiceXmlDeserializationException(
-                        getReadValueErrMsg("Could not find " + XmlNodeType.getString(XmlNodeType.CHARACTERS))
-                );
+                // @FIX  https://github.com/OfficeDev/ews-java-api/issues/337
+                if (this.presentEvent.isEndElement()) {
+                    return "";
+                }
+                else {
+                    throw new ServiceXmlDeserializationException(
+                            getReadValueErrMsg("Could not find " + XmlNodeType.getString(XmlNodeType.CHARACTERS)));
+                }
             }
         }
         else if (this.presentEvent.getEventType() == XmlNodeType.CHARACTERS
@@ -508,8 +506,8 @@ public class EwsXmlReader
                 this.read(keepWhiteSpace);
                 if (this.getNodeType().nodeType == XmlNodeType.CHARACTERS) {
                     Characters characters = (Characters) this.presentEvent;
-                    if (keepWhiteSpace || (!characters.isIgnorableWhiteSpace()
-                            && !characters.isWhiteSpace())) {
+                    if (keepWhiteSpace
+                            || (!characters.isIgnorableWhiteSpace() && !characters.isWhiteSpace())) {
                         final String charactersData = characters.getData();
                         if (charactersData != null && !charactersData.isEmpty()) {
                             data.append(charactersData);
@@ -517,6 +515,7 @@ public class EwsXmlReader
                     }
                 }
             } while (!this.presentEvent.isEndElement());
+
             return data.toString();// this.presentEvent. = new XMLEvent();
             /*
              * } else { Characters chars = this.presentEvent.asCharacters();
@@ -568,7 +567,7 @@ public class EwsXmlReader
      * @return T
      * @throws Exception the exception
      */
-    public <T> T readValue(Class<T> cls) throws Exception
+    public <T> T readValue(Class<T> cls) throws ParseException, XMLStreamException, ServiceXmlDeserializationException
     {
         return EwsUtilities.parse(cls, this.readValue());
     }
@@ -582,8 +581,7 @@ public class EwsXmlReader
      * @throws IOException                        signals that an I/O exception has occurred
      */
     public byte[] readBase64ElementValue()
-            throws ServiceXmlDeserializationException, XMLStreamException,
-            IOException
+            throws ServiceXmlDeserializationException, XMLStreamException, IOException
     {
         this.ensureCurrentNodeIsStartElement();
 
@@ -639,8 +637,7 @@ public class EwsXmlReader
     public void readStartElement(XmlNamespace xmlNamespace, String localName)
             throws Exception
     {
-        this.internalReadElement(xmlNamespace, localName, new XmlNodeType(
-                XmlNodeType.START_ELEMENT));
+        this.internalReadElement(xmlNamespace, localName, new XmlNodeType(XmlNodeType.START_ELEMENT));
     }
 
     /**
@@ -769,7 +766,7 @@ public class EwsXmlReader
 
         boolean isEndElement = false;
         /*
-		 * if(localName.equals("Body")) { return true; } else
+         * if(localName.equals("Body")) { return true; } else
 		 */
         if (this.presentEvent.isEndElement()) {
             EndElement endElement = this.presentEvent.asEndElement();
@@ -848,15 +845,13 @@ public class EwsXmlReader
      * @param localName    the local name
      * @throws ServiceXmlDeserializationException the service xml deserialization exception
      */
-    public void ensureCurrentNodeIsStartElement(XmlNamespace xmlNamespace,
-                                                String localName) throws ServiceXmlDeserializationException
+    public void ensureCurrentNodeIsStartElement(XmlNamespace xmlNamespace, String localName)
+            throws ServiceXmlDeserializationException
     {
-
         if (!this.isStartElement(xmlNamespace, localName)) {
             throw new ServiceXmlDeserializationException(
-                    String
-                            .format("The element '%s' in namespace '%s' wasn't found at the current position.",
-                                    localName, xmlNamespace));
+                    String.format("The element '%s' in namespace '%s' wasn't found at the current position.",
+                            localName, xmlNamespace));
         }
     }
 
@@ -868,8 +863,7 @@ public class EwsXmlReader
     public void ensureCurrentNodeIsStartElement()
             throws ServiceXmlDeserializationException
     {
-        XmlNodeType presentNodeType = new XmlNodeType(this.presentEvent
-                .getEventType());
+        XmlNodeType presentNodeType = new XmlNodeType(this.presentEvent.getEventType());
         if (!this.presentEvent.isStartElement()) {
             throw new ServiceXmlDeserializationException(String.format(
                     "The start element was expected, but node '%s' of type %s was found.",
@@ -884,12 +878,12 @@ public class EwsXmlReader
      * @param localName    the local name
      * @throws Exception the exception
      */
-    public void ensureCurrentNodeIsEndElement(XmlNamespace xmlNamespace,
-                                              String localName) throws Exception
+    public void ensureCurrentNodeIsEndElement(XmlNamespace xmlNamespace, String localName)
+            throws ServiceXmlDeserializationException, XMLStreamException
     {
         if (!this.isEndElement(xmlNamespace, localName)) {
-            if (!(this.isStartElement(xmlNamespace, localName) && this
-                    .isEmptyElement())) {
+            if (!(this.isStartElement(xmlNamespace, localName)
+                    && this.isEmptyElement())) {
                 throw new ServiceXmlDeserializationException(
                         String
                                 .format("The element '%s' in namespace '%s' wasn't found at the current position.",

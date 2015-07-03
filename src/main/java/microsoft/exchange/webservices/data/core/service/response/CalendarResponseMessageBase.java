@@ -70,8 +70,7 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
     {
         EwsUtilities.validateParam(destinationFolderId, "destinationFolderId");
 
-        return new CalendarActionResults(this.internalCreate(
-                destinationFolderId, MessageDisposition.SaveOnly));
+        return new CalendarActionResults(this.internalCreate(destinationFolderId, MessageDisposition.SaveOnly));
     }
 
     /**
@@ -83,11 +82,10 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
      * were created or modified as a results of this operation.
      * @throws Exception the exception
      */
-    public CalendarActionResults calendarSave(
-            WellKnownFolderName destinationFolderName) throws Exception
+    public CalendarActionResults calendarSave(WellKnownFolderName destinationFolderName)
+            throws Exception
     {
-        return new CalendarActionResults(this.internalCreate(new FolderId(
-                destinationFolderName), MessageDisposition.SaveOnly));
+        return calendarSave(new FolderId(destinationFolderName));
     }
 
     /**
@@ -100,8 +98,7 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
      */
     public CalendarActionResults calendarSave() throws Exception
     {
-        return new CalendarActionResults(this.internalCreate(null,
-                MessageDisposition.SaveOnly));
+        return new CalendarActionResults(this.internalCreate(null, MessageDisposition.SaveOnly));
     }
 
     /**
@@ -112,10 +109,10 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
      * were created or modified as a results of this operation.
      * @throws Exception the exception
      */
-    public CalendarActionResults calendarSend() throws Exception
+    public CalendarActionResults calendarSend()
+            throws Exception
     {
-        return new CalendarActionResults(this.internalCreate(null,
-                MessageDisposition.SendOnly));
+        return new CalendarActionResults(this.internalCreate(null, MessageDisposition.SendOnly));
     }
 
     /**
@@ -128,12 +125,11 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
      * @throws Exception the exception
      */
 
-    public CalendarActionResults calendarSendAndSaveCopy(
-            FolderId destinationFolderId) throws Exception
+    public CalendarActionResults calendarSendAndSaveCopy(FolderId destinationFolderId)
+            throws Exception
     {
         EwsUtilities.validateParam(destinationFolderId, "destinationFolderId");
-        return new CalendarActionResults(this.internalCreate(
-                destinationFolderId, MessageDisposition.SendAndSaveCopy));
+        return new CalendarActionResults(this.internalCreate(destinationFolderId, MessageDisposition.SendAndSaveCopy));
     }
 
     /**
@@ -145,11 +141,10 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
      * were created or modified as a results of this operation.
      * @throws Exception the exception
      */
-    public CalendarActionResults calendarSendAndSaveCopy(
-            WellKnownFolderName destinationFolderName) throws Exception
+    public CalendarActionResults calendarSendAndSaveCopy(WellKnownFolderName destinationFolderName)
+            throws Exception
     {
-        return new CalendarActionResults(this.internalCreate(new FolderId(
-                destinationFolderName), MessageDisposition.SendAndSaveCopy));
+        return calendarSendAndSaveCopy(new FolderId(destinationFolderName));
     }
 
     /**
@@ -162,8 +157,7 @@ public abstract class CalendarResponseMessageBase<TMessage extends EmailMessage>
      */
     public CalendarActionResults calendarSendAndSaveCopy() throws Exception
     {
-        return new CalendarActionResults(this.internalCreate(null,
-                MessageDisposition.SendAndSaveCopy));
+        return new CalendarActionResults(this.internalCreate(null, MessageDisposition.SendAndSaveCopy));
     }
 
 }

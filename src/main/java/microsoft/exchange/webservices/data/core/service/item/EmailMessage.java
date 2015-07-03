@@ -91,7 +91,6 @@ public class EmailMessage extends Item
                                     PropertySet propertySet) throws Exception
     {
         return service.bindToItem(EmailMessage.class, id, propertySet);
-
     }
 
     /**
@@ -107,8 +106,7 @@ public class EmailMessage extends Item
     public static EmailMessage bind(ExchangeService service, ItemId id)
             throws Exception
     {
-        return EmailMessage.bind(service, id, PropertySet
-                .getFirstClassProperties());
+        return EmailMessage.bind(service, id, PropertySet.getFirstClassProperties());
     }
 
     /**
@@ -141,8 +139,8 @@ public class EmailMessage extends Item
      * @param messageDisposition The message disposition.
      * @throws Exception the exception
      */
-    private void internalSend(FolderId parentFolderId,
-                              MessageDisposition messageDisposition) throws Exception
+    private void internalSend(FolderId parentFolderId, MessageDisposition messageDisposition)
+            throws Exception
     {
         this.throwIfThisIsAttachment();
 
@@ -168,9 +166,7 @@ public class EmailMessage extends Item
             this.getAttachments().save();
 
             if (this.getPropertyBag().getIsUpdateCallNecessary()) {
-                this.internalUpdate(parentFolderId,
-                        ConflictResolutionMode.AutoResolve, messageDisposition,
-                        null);
+                this.internalUpdate(parentFolderId, ConflictResolutionMode.AutoResolve, messageDisposition, null);
             }
             else {
                 this.getService().sendItem(this, parentFolderId);
@@ -196,8 +192,9 @@ public class EmailMessage extends Item
         this.throwIfThisIsNew();
 
         return new ResponseMessage(this,
-                replyAll ? ResponseMessageType.ReplyAll :
-                        ResponseMessageType.Reply);
+                replyAll
+                        ? ResponseMessageType.ReplyAll
+                        : ResponseMessageType.Reply);
     }
 
     /**
@@ -250,14 +247,13 @@ public class EmailMessage extends Item
      * @param toRecipients the to recipients
      * @throws Exception the exception
      */
-    public void forward(MessageBody bodyPrefix,
-                        Iterable<EmailAddress> toRecipients) throws Exception
+    public void forward(MessageBody bodyPrefix, Iterable<EmailAddress> toRecipients)
+            throws Exception
     {
         ResponseMessage responseMessage = this.createForward();
 
         responseMessage.setBodyPrefix(bodyPrefix);
-        responseMessage.getToRecipients()
-                .addEmailRange(toRecipients.iterator());
+        responseMessage.getToRecipients().addEmailRange(toRecipients.iterator());
 
         responseMessage.sendAndSaveCopy();
     }
@@ -285,8 +281,7 @@ public class EmailMessage extends Item
     public void sendAndSaveCopy(FolderId destinationFolderId) throws Exception
     {
         EwsUtilities.validateParam(destinationFolderId, "destinationFolderId");
-        this.internalSend(destinationFolderId,
-                MessageDisposition.SendAndSaveCopy);
+        this.internalSend(destinationFolderId, MessageDisposition.SendAndSaveCopy);
     }
 
     /**
@@ -301,8 +296,7 @@ public class EmailMessage extends Item
     public void sendAndSaveCopy(WellKnownFolderName destinationFolderName)
             throws Exception
     {
-        this.internalSend(new FolderId(destinationFolderName),
-                MessageDisposition.SendAndSaveCopy);
+        sendAndSaveCopy(new FolderId(destinationFolderName));
     }
 
     /**
@@ -315,8 +309,7 @@ public class EmailMessage extends Item
      */
     public void sendAndSaveCopy() throws Exception
     {
-        this.internalSend(new FolderId(WellKnownFolderName.SentItems),
-                MessageDisposition.SendAndSaveCopy);
+        sendAndSaveCopy(new FolderId(WellKnownFolderName.SentItems));
     }
 
     /**
@@ -340,8 +333,7 @@ public class EmailMessage extends Item
     public EmailAddressCollection getToRecipients()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.ToRecipients);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.ToRecipients);
     }
 
     /**
@@ -353,8 +345,7 @@ public class EmailMessage extends Item
     public EmailAddressCollection getBccRecipients()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.BccRecipients);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.BccRecipients);
     }
 
     /**
@@ -366,8 +357,7 @@ public class EmailMessage extends Item
     public EmailAddressCollection getCcRecipients()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.CcRecipients);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.CcRecipients);
     }
 
     /**
@@ -378,8 +368,7 @@ public class EmailMessage extends Item
      */
     public String getConversationTopic() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.ConversationTopic);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.ConversationTopic);
     }
 
     /**
@@ -390,8 +379,7 @@ public class EmailMessage extends Item
      */
     public byte[] getConversationIndex() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.ConversationIndex);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.ConversationIndex);
     }
 
     /**
@@ -402,8 +390,7 @@ public class EmailMessage extends Item
      */
     public EmailAddress getFrom() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.From);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.From);
     }
 
     /**
@@ -414,8 +401,7 @@ public class EmailMessage extends Item
      */
     public void setFrom(EmailAddress value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.From, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.From, value);
     }
 
     /**
@@ -445,8 +431,7 @@ public class EmailMessage extends Item
      */
     public void setIsAssociated(boolean value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.IsAssociated, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.IsAssociated, value);
     }
 
     /**
@@ -459,8 +444,7 @@ public class EmailMessage extends Item
     public Boolean getIsDeliveryReceiptRequested()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.IsDeliveryReceiptRequested);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.IsDeliveryReceiptRequested);
     }
 
     /**
@@ -471,8 +455,7 @@ public class EmailMessage extends Item
      */
     public void setIsDeliveryReceiptRequested(Boolean value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.IsDeliveryReceiptRequested, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.IsDeliveryReceiptRequested, value);
     }
 
     /**
@@ -483,8 +466,7 @@ public class EmailMessage extends Item
      */
     public Boolean getIsRead() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.IsRead);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.IsRead);
     }
 
     /**
@@ -495,8 +477,7 @@ public class EmailMessage extends Item
      */
     public void setIsRead(Boolean value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.IsRead, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.IsRead, value);
     }
 
     /**
@@ -508,8 +489,7 @@ public class EmailMessage extends Item
      */
     public Boolean getIsReadReceiptRequested() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.IsReadReceiptRequested);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.IsReadReceiptRequested);
     }
 
     /**
@@ -520,8 +500,7 @@ public class EmailMessage extends Item
      */
     public void setIsReadReceiptRequested(Boolean value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.IsReadReceiptRequested, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.IsReadReceiptRequested, value);
     }
 
     /**
@@ -533,8 +512,7 @@ public class EmailMessage extends Item
      */
     public Boolean getIsResponseRequested() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.IsResponseRequested);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.IsResponseRequested);
     }
 
     /**
@@ -545,8 +523,7 @@ public class EmailMessage extends Item
      */
     public void setIsResponseRequested(Boolean value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.IsResponseRequested, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.IsResponseRequested, value);
     }
 
     /**
@@ -557,8 +534,7 @@ public class EmailMessage extends Item
      */
     public String getInternetMessageId() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.InternetMessageId);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.InternetMessageId);
     }
 
     /**
@@ -569,8 +545,7 @@ public class EmailMessage extends Item
      */
     public String getReferences() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.References);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.References);
     }
 
     /**
@@ -581,8 +556,7 @@ public class EmailMessage extends Item
      */
     public void setReferences(String value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.References, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.References, value);
     }
 
     /**
@@ -593,8 +567,7 @@ public class EmailMessage extends Item
      */
     public EmailAddressCollection getReplyTo() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.ReplyTo);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.ReplyTo);
     }
 
     /**
@@ -605,8 +578,7 @@ public class EmailMessage extends Item
      */
     public EmailAddress getSender() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.Sender);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.Sender);
     }
 
     /**
@@ -617,8 +589,7 @@ public class EmailMessage extends Item
      */
     public void setSender(EmailAddress value) throws Exception
     {
-        this.getPropertyBag().setObjectFromPropertyDefinition(
-                EmailMessageSchema.Sender, value);
+        this.getPropertyBag().setObjectFromPropertyDefinition(EmailMessageSchema.Sender, value);
     }
 
     /**
@@ -629,8 +600,7 @@ public class EmailMessage extends Item
      */
     public EmailAddress getReceivedBy() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.ReceivedBy);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.ReceivedBy);
     }
 
     /**
@@ -641,7 +611,6 @@ public class EmailMessage extends Item
      */
     public EmailAddress getReceivedRepresenting() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                EmailMessageSchema.ReceivedRepresenting);
+        return getPropertyBag().getObjectFromPropertyDefinition(EmailMessageSchema.ReceivedRepresenting);
     }
 }

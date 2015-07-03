@@ -102,14 +102,12 @@ public class XmlElementNames
     /**
      * The Constant FractionalPageItemView.
      */
-    public static final String FractionalPageItemView =
-            "FractionalPageItemView";
+    public static final String FractionalPageItemView = "FractionalPageItemView";
 
     /**
      * The Constant FractionalPageFolderView.
      */
-    public static final String FractionalPageFolderView =
-            "FractionalPageFolderView";
+    public static final String FractionalPageFolderView = "FractionalPageFolderView";
 
     /**
      * The Constant ResponseCode.
@@ -239,8 +237,7 @@ public class XmlElementNames
     /**
      * The Constant IsDeliveryReceiptRequested.
      */
-    public static final String IsDeliveryReceiptRequested =
-            "IsDeliveryReceiptRequested";
+    public static final String IsDeliveryReceiptRequested = "IsDeliveryReceiptRequested";
 
     /**
      * The Constant IsRead.
@@ -250,8 +247,7 @@ public class XmlElementNames
     /**
      * The Constant IsReadReceiptRequested.
      */
-    public static final String IsReadReceiptRequested =
-            "IsReadReceiptRequested";
+    public static final String IsReadReceiptRequested = "IsReadReceiptRequested";
 
     /**
      * The Constant IsResponseRequested.
@@ -386,8 +382,7 @@ public class XmlElementNames
     /**
      * The Constant InternetMessageHeaders.
      */
-    public static final String InternetMessageHeaders =
-            "InternetMessageHeaders";
+    public static final String InternetMessageHeaders = "InternetMessageHeaders";
 
     /**
      * The Constant DateTimeSent.
@@ -417,8 +412,7 @@ public class XmlElementNames
     /**
      * The Constant ReminderMinutesBeforeStart.
      */
-    public static final String ReminderMinutesBeforeStart =
-            "ReminderMinutesBeforeStart";
+    public static final String ReminderMinutesBeforeStart = "ReminderMinutesBeforeStart";
 
     /**
      * The Constant DisplayCc.
@@ -708,8 +702,7 @@ public class XmlElementNames
     /**
      * The Constant ConflictingMeetingCount.
      */
-    public static final String ConflictingMeetingCount =
-            "ConflictingMeetingCount";
+    public static final String ConflictingMeetingCount = "ConflictingMeetingCount";
 
     /**
      * The Constant AdjacentMeetingCount.
@@ -744,8 +737,7 @@ public class XmlElementNames
     /**
      * The Constant AppointmentSequenceNumber.
      */
-    public static final String AppointmentSequenceNumber =
-            "AppointmentSequenceNumber";
+    public static final String AppointmentSequenceNumber = "AppointmentSequenceNumber";
 
     /**
      * The Constant AppointmentState.
@@ -845,26 +837,22 @@ public class XmlElementNames
     /**
      * The Constant RelativeYearlyRecurrence.
      */
-    public static final String RelativeYearlyRecurrence =
-            "RelativeYearlyRecurrence";
+    public static final String RelativeYearlyRecurrence = "RelativeYearlyRecurrence";
 
     /**
      * The Constant AbsoluteYearlyRecurrence.
      */
-    public static final String AbsoluteYearlyRecurrence =
-            "AbsoluteYearlyRecurrence";
+    public static final String AbsoluteYearlyRecurrence = "AbsoluteYearlyRecurrence";
 
     /**
      * The Constant RelativeMonthlyRecurrence.
      */
-    public static final String RelativeMonthlyRecurrence =
-            "RelativeMonthlyRecurrence";
+    public static final String RelativeMonthlyRecurrence = "RelativeMonthlyRecurrence";
 
     /**
      * The Constant AbsoluteMonthlyRecurrence.
      */
-    public static final String AbsoluteMonthlyRecurrence =
-            "AbsoluteMonthlyRecurrence";
+    public static final String AbsoluteMonthlyRecurrence = "AbsoluteMonthlyRecurrence";
 
     /**
      * The Constant WeeklyRecurrence.
@@ -969,8 +957,7 @@ public class XmlElementNames
     /**
      * The Constant AssociatedCalendarItemId.
      */
-    public static final String AssociatedCalendarItemId =
-            "AssociatedCalendarItemId";
+    public static final String AssociatedCalendarItemId = "AssociatedCalendarItemId";
 
     /**
      * The Constant IsDelegated.

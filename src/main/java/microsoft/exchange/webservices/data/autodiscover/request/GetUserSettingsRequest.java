@@ -23,6 +23,7 @@
 
 package microsoft.exchange.webservices.data.autodiscover.request;
 
+import microsoft.exchange.webservices.data.EWSConstants;
 import microsoft.exchange.webservices.data.autodiscover.AutodiscoverService;
 import microsoft.exchange.webservices.data.autodiscover.enumeration.AutodiscoverErrorCode;
 import microsoft.exchange.webservices.data.autodiscover.enumeration.UserSettingName;
@@ -46,9 +47,8 @@ public class GetUserSettingsRequest extends AutodiscoverRequest
     /**
      * Action Uri of Autodiscover.GetUserSettings method.
      */
-    private static final String GetUserSettingsActionUri = EwsUtilities.
-            AutodiscoverSoapNamespace +
-            "/Autodiscover/GetUserSettings";
+    private static final String GetUserSettingsActionUri =
+            EwsUtilities.AutodiscoverSoapNamespace + "/Autodiscover/GetUserSettings";
 
     private List<String> smtpAddresses;
     private List<UserSettingName> settings;
@@ -87,7 +87,7 @@ public class GetUserSettingsRequest extends AutodiscoverRequest
         this.expectPartnerToken = expectPartnerToken;
 
         // make an explicit https check.
-        if (expectPartnerToken && !url.getScheme().equalsIgnoreCase("https")) {
+        if (expectPartnerToken && !url.getScheme().equalsIgnoreCase(EWSConstants.HTTPS_SCHEME)) {
             throw new ServiceValidationException("Https is required.");
         }
     }
@@ -105,11 +105,11 @@ public class GetUserSettingsRequest extends AutodiscoverRequest
         EwsUtilities.validateParam(this.getSmtpAddresses(), "smtpAddresses");
         EwsUtilities.validateParam(this.getSettings(), "settings");
 
-        if (this.getSettings().size() == 0) {
+        if (this.getSettings().isEmpty()) {
             throw new ServiceValidationException("At least one setting must be requested.");
         }
 
-        if (this.getSmtpAddresses().size() == 0) {
+        if (this.getSmtpAddresses().isEmpty()) {
             throw new ServiceValidationException("At least one SMTP address must be requested.");
         }
 
@@ -128,9 +128,7 @@ public class GetUserSettingsRequest extends AutodiscoverRequest
      */
     public GetUserSettingsResponseCollection execute() throws Exception
     {
-        GetUserSettingsResponseCollection responses =
-                (GetUserSettingsResponseCollection) this
-                        .internalExecute();
+        GetUserSettingsResponseCollection responses = (GetUserSettingsResponseCollection) this.internalExecute();
         if (responses.getErrorCode() == AutodiscoverErrorCode.NoError) {
             this.postProcessResponses(responses);
         }
@@ -148,8 +146,7 @@ public class GetUserSettingsRequest extends AutodiscoverRequest
         // Note:The response collection may not include all of the requested
         // users if the request has been throttled.
         for (int index = 0; index < responses.getCount(); index++) {
-            responses.getResponses().get(index).setSmtpAddress(
-                    this.getSmtpAddresses().get(index));
+            responses.getResponses().get(index).setSmtpAddress(this.getSmtpAddresses().get(index));
         }
     }
 

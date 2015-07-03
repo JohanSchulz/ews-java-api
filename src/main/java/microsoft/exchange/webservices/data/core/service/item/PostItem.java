@@ -87,8 +87,7 @@ public final class PostItem extends Item
      * the specified Id.
      * @throws Exception the exception
      */
-    public static PostItem bind(ExchangeService service, ItemId id,
-                                PropertySet propertySet) throws Exception
+    public static PostItem bind(ExchangeService service, ItemId id, PropertySet propertySet) throws Exception
     {
         return service.bindToItem(PostItem.class, id, propertySet);
     }
@@ -103,11 +102,9 @@ public final class PostItem extends Item
      * the specified Id.
      * @throws Exception the exception
      */
-    public static PostItem bind(ExchangeService service, ItemId id)
-            throws Exception
+    public static PostItem bind(ExchangeService service, ItemId id) throws Exception
     {
-        return PostItem
-                .bind(service, id, PropertySet.getFirstClassProperties());
+        return PostItem.bind(service, id, PropertySet.getFirstClassProperties());
     }
 
     /**

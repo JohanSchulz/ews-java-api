@@ -25,6 +25,7 @@ package microsoft.exchange.webservices.data.credential;
 
 import microsoft.exchange.webservices.data.core.EwsUtilities;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentNullException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.request.HttpWebRequest;
 
 import java.net.URISyntaxException;
@@ -39,13 +40,12 @@ public final class TokenCredentials extends WSSecurityBasedCredentials
      * Initializes a new instance of the TokenCredentials class.
      *
      * @param securityToken The token.
-     * @throws ArgumentNullException the argument null exception
+     * @throws Exception the validation exception
      */
     public TokenCredentials(String securityToken) throws Exception
     {
         super(securityToken);
         EwsUtilities.validateParam(securityToken, "securityToken");
-
     }
 
     /**
@@ -56,8 +56,7 @@ public final class TokenCredentials extends WSSecurityBasedCredentials
      * @throws java.net.URISyntaxException the uRI syntax exception
      */
     @Override
-    public void prepareWebRequest(HttpWebRequest request)
-            throws URISyntaxException
+    public void prepareWebRequest(HttpWebRequest request) throws URISyntaxException
     {
         this.setEwsUrl(request.getUrl().toURI());
     }

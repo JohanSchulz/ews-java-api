@@ -29,7 +29,6 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion
 import microsoft.exchange.webservices.data.core.enumeration.misc.error.ServiceError;
 import microsoft.exchange.webservices.data.core.enumeration.service.ServiceResult;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
-import microsoft.exchange.webservices.data.core.exception.misc.ArgumentNullException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceResponseException;
@@ -424,31 +423,27 @@ public final class StreamingSubscriptionConnection implements Closeable,
      * Handles the service response object.
      *
      * @param response The response.
-     * @throws ArgumentException
+     * @throws Exception
      */
-    private void handleServiceResponseObject(Object response)
-            throws ArgumentException
+    private void handleServiceResponseObject(Object response) throws Exception
     {
+        EwsUtilities.validateParam(response, "GetStreamingEventsResponse");
         GetStreamingEventsResponse gseResponse = (GetStreamingEventsResponse) response;
 
-        if (gseResponse == null) {
-            throw new ArgumentNullException("GetStreamingEventsResponse must not be null",
-                    "GetStreamingEventsResponse");
-        }
-        else {
-            if (gseResponse.getResult() == ServiceResult.Success
-                    || gseResponse.getResult() == ServiceResult.Warning) {
-                if (gseResponse.getResults().getNotifications().size() > 0) {
+        switch (gseResponse.getResult()) {
+            case Success:
+            case Warning:
+                if (!gseResponse.getResults().getNotifications().isEmpty()) {
                     // We got notification; dole them out.
                     this.issueNotificationEvents(gseResponse);
                 }
                 else {
-                    // // This was just a heartbeat, nothing to do here.
+                    // This was just a heartbeat, nothing to do here.
                 }
-            }
-            else if (gseResponse.getResult() == ServiceResult.Error) {
+                break;
+            case Error:
                 if (gseResponse.getErrorSubscriptionIds() == null
-                        || gseResponse.getErrorSubscriptionIds().size() == 0) {
+                        || !gseResponse.getErrorSubscriptionIds().isEmpty()) {
                     // General error
                     this.issueGeneralFailure(gseResponse);
                 }
@@ -456,7 +451,7 @@ public final class StreamingSubscriptionConnection implements Closeable,
                     // subscription-specific errors
                     this.issueSubscriptionFailures(gseResponse);
                 }
-            }
+                break;
         }
     }
 
@@ -465,27 +460,22 @@ public final class StreamingSubscriptionConnection implements Closeable,
      *
      * @param gseResponse The GetStreamingEvents response.
      */
-    private void issueSubscriptionFailures(
-            GetStreamingEventsResponse gseResponse)
+    private void issueSubscriptionFailures(GetStreamingEventsResponse gseResponse)
     {
-        ServiceResponseException exception = new ServiceResponseException(
-                gseResponse);
+        ServiceResponseException exception = new ServiceResponseException(gseResponse);
 
         for (String id : gseResponse.getErrorSubscriptionIds()) {
             StreamingSubscription subscription = null;
 
             synchronized (this) {
-                // Client can do any good or bad things in the below event
-                // handler
+                // Client can do any good or bad things in the below event handler
                 if (this.subscriptions != null
                         && this.subscriptions.containsKey(id)) {
                     subscription = this.subscriptions.get(id);
                 }
-
             }
             if (subscription != null) {
-                SubscriptionErrorEventArgs eventArgs = new SubscriptionErrorEventArgs(
-                        subscription, exception);
+                SubscriptionErrorEventArgs eventArgs = new SubscriptionErrorEventArgs(subscription, exception);
 
                 if (!onSubscriptionError.isEmpty()) {
                     for (ISubscriptionErrorDelegate subError : onSubscriptionError) {
@@ -494,8 +484,7 @@ public final class StreamingSubscriptionConnection implements Closeable,
                 }
             }
             if (gseResponse.getErrorCode() != ServiceError.ErrorMissedNotificationEvents) {
-                // Client can do any good or bad things in the above event
-                // handler
+                // Client can do any good or bad things in the above event handler
                 synchronized (this) {
                     if (this.subscriptions != null
                             && this.subscriptions.containsKey(id)) {
@@ -591,14 +580,13 @@ public final class StreamingSubscriptionConnection implements Closeable,
     }
 
     @Override
-    public void handleResponseObject(Object response) throws ArgumentException
+    public void handleResponseObject(Object response) throws Exception
     {
         this.handleServiceResponseObject(response);
     }
 
     @Override
-    public void hangingRequestDisconnectHandler(Object sender,
-                                                HangingRequestDisconnectEventArgs args)
+    public void hangingRequestDisconnectHandler(Object sender, HangingRequestDisconnectEventArgs args)
     {
         this.onRequestDisconnect(sender, args);
     }

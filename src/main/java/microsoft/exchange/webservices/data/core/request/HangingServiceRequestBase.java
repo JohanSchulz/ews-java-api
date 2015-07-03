@@ -30,6 +30,7 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.HangingRequestD
 import microsoft.exchange.webservices.data.core.enumeration.misc.TraceFlags;
 import microsoft.exchange.webservices.data.core.exception.http.EWSHttpException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceVersionException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlDeserializationException;
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
@@ -64,14 +65,13 @@ public abstract class HangingServiceRequestBase<T> extends ServiceRequestBase<T>
 
     public interface IHandleResponseObject
     {
-
         /**
          * Callback delegate to handle asynchronous response.
          *
          * @param response Response received from the server
-         * @throws ArgumentException
+         * @throws Exception
          */
-        void handleResponseObject(Object response) throws ArgumentException;
+        void handleResponseObject(Object response) throws Exception;
     }
 
 

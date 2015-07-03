@@ -88,23 +88,17 @@ public final class PropertySet implements ISelfValidate,
      * Maps BasePropertySet values to EWS's BaseShape values.
      */
     private static LazyMember<Map<BasePropertySet, String>> defaultPropertySetMap =
-            new LazyMember<Map<BasePropertySet, String>>(new
-                                                                 ILazyMember<Map<BasePropertySet, String>>()
-                                                                 {
-                                                                     @Override
-                                                                     public Map<BasePropertySet, String> createInstance()
-                                                                     {
-                                                                         Map<BasePropertySet, String> result = new
-                                                                                 HashMap<BasePropertySet, String>();
-                                                                         result.put(BasePropertySet.IdOnly,
-                                                                                 BasePropertySet.IdOnly
-                                                                                         .getBaseShapeValue());
-                                                                         result.put(BasePropertySet.FirstClassProperties,
-                                                                                 BasePropertySet.FirstClassProperties
-                                                                                         .getBaseShapeValue());
-                                                                         return result;
-                                                                     }
-                                                                 });
+            new LazyMember<Map<BasePropertySet, String>>(new ILazyMember<Map<BasePropertySet, String>>()
+            {
+                @Override
+                public Map<BasePropertySet, String> createInstance()
+                {
+                    Map<BasePropertySet, String> result = new HashMap<BasePropertySet, String>();
+                    result.put(BasePropertySet.IdOnly, BasePropertySet.IdOnly.getBaseShapeValue());
+                    result.put(BasePropertySet.FirstClassProperties, BasePropertySet.FirstClassProperties.getBaseShapeValue());
+                    return result;
+                }
+            });
     /**
      * The base property set this property set is based upon.
      */
@@ -113,8 +107,7 @@ public final class PropertySet implements ISelfValidate,
     /**
      * The list of additional property included in this property set.
      */
-    private List<PropertyDefinitionBase> additionalProperties = new
-            ArrayList<PropertyDefinitionBase>();
+    private List<PropertyDefinitionBase> additionalProperties = new ArrayList<PropertyDefinitionBase>();
 
     /**
      * The requested body type for get and find operations. If null, the
@@ -147,8 +140,7 @@ public final class PropertySet implements ISelfValidate,
      *                             classes (for example, EmailMessageSchema.Subject,
      *                             AppointmentSchema.Start, ContactSchema.GivenName, etc.)
      */
-    public PropertySet(BasePropertySet basePropertySet,
-                       PropertyDefinitionBase... additionalProperties)
+    public PropertySet(BasePropertySet basePropertySet, PropertyDefinitionBase... additionalProperties)
     {
         this.basePropertySet = basePropertySet;
         if (null != additionalProperties) {
@@ -165,8 +157,7 @@ public final class PropertySet implements ISelfValidate,
      *                             classes (for example, EmailMessageSchema.Subject,
      *                             AppointmentSchema.Start, ContactSchema.GivenName, etc.)
      */
-    public PropertySet(BasePropertySet basePropertySet,
-                       Iterator<PropertyDefinitionBase> additionalProperties)
+    public PropertySet(BasePropertySet basePropertySet, Iterator<PropertyDefinitionBase> additionalProperties)
     {
         this.basePropertySet = basePropertySet;
         if (null != additionalProperties) {
@@ -230,8 +221,7 @@ public final class PropertySet implements ISelfValidate,
      * @param basePropertySet The BasePropertySet value to convert from.
      * @return A PropertySet instance based on the specified base property set.
      */
-    public static PropertySet getPropertySetFromBasePropertySet(BasePropertySet
-                                                                        basePropertySet)
+    public static PropertySet getPropertySetFromBasePropertySet(BasePropertySet basePropertySet)
     {
         return new PropertySet(basePropertySet);
     }
@@ -243,7 +233,8 @@ public final class PropertySet implements ISelfValidate,
      * @param property The property to add.
      * @throws Exception the exception
      */
-    public void add(PropertyDefinitionBase property) throws Exception
+    public void add(PropertyDefinitionBase property)
+            throws Exception
     {
         this.throwIfReadonly();
         EwsUtilities.validateParam(property, "property");
@@ -266,9 +257,8 @@ public final class PropertySet implements ISelfValidate,
         Iterator<PropertyDefinitionBase> property = properties.iterator();
         EwsUtilities.validateParamCollection(property, "property");
 
-        for (Iterator<PropertyDefinitionBase> it = properties.iterator(); it
-                .hasNext(); ) {
-            this.add(it.next());
+        for (PropertyDefinitionBase property1 : properties) {
+            this.add(property1);
         }
     }
 
@@ -287,8 +277,7 @@ public final class PropertySet implements ISelfValidate,
      * @param basePropertySet The base property set.
      * @return PropertySet
      */
-    private static PropertySet createReadonlyPropertySet(
-            BasePropertySet basePropertySet)
+    private static PropertySet createReadonlyPropertySet(BasePropertySet basePropertySet)
     {
         PropertySet propertySet = new PropertySet(basePropertySet);
         propertySet.isReadOnly = true;
@@ -470,16 +459,13 @@ public final class PropertySet implements ISelfValidate,
      * @throws XMLStreamException               the XML stream exception
      * @throws ServiceXmlSerializationException the service xml serialization exception
      */
-    public static void writeAdditionalPropertiesToXml(EwsServiceXmlWriter writer,
-                                                      Iterator<PropertyDefinitionBase> propertyDefinitions)
+    public static void writeAdditionalPropertiesToXml(EwsServiceXmlWriter writer, Iterator<PropertyDefinitionBase> propertyDefinitions)
             throws XMLStreamException, ServiceXmlSerializationException
     {
-        writer.writeStartElement(XmlNamespace.Types,
-                XmlElementNames.AdditionalProperties);
+        writer.writeStartElement(XmlNamespace.Types, XmlElementNames.AdditionalProperties);
 
         while (propertyDefinitions.hasNext()) {
-            PropertyDefinitionBase propertyDefinition = propertyDefinitions
-                    .next();
+            PropertyDefinitionBase propertyDefinition = propertyDefinitions.next();
             propertyDefinition.writeToXml(writer);
         }
 
@@ -521,10 +507,11 @@ public final class PropertySet implements ISelfValidate,
                 EwsUtilities.validatePropertyVersion(request.getService(), propertyDefinition.getVersion(), propertyDefinition.getName());
 
                 if (summaryPropertiesOnly &&
-                        !propertyDefinition.hasFlag(
-                                PropertyDefinitionFlags.CanFind, requestedServerVersion)) {
-                    throw new ServiceValidationException(String.format("The property %s can't be used in %s request.",
-                            propertyDefinition.getName(), request.getXmlElementName()));
+                        !propertyDefinition.hasFlag(PropertyDefinitionFlags.CanFind, requestedServerVersion)) {
+                    throw new ServiceValidationException(
+                            String.format(
+                                    "The property %s can't be used in %s request.",
+                                    propertyDefinition.getName(), request.getXmlElementName()));
                 }
             }
         }
@@ -549,27 +536,26 @@ public final class PropertySet implements ISelfValidate,
     {
         writer.writeStartElement(
                 XmlNamespace.Messages,
-                serviceObjectType == ServiceObjectType.Item ?
-                        XmlElementNames.ItemShape
+                serviceObjectType == ServiceObjectType.Item
+                        ? XmlElementNames.ItemShape
                         : XmlElementNames.FolderShape);
 
         writer.writeElementValue(XmlNamespace.Types, XmlElementNames.BaseShape, this.getBasePropertySet().getBaseShapeValue());
 
         if (serviceObjectType == ServiceObjectType.Item) {
             if (this.getRequestedBodyType() != null) {
-                writer.writeElementValue(XmlNamespace.Types, XmlElementNames.BodyType, this.getRequestedBodyType());
+                writer.writeElementValue(
+                        XmlNamespace.Types, XmlElementNames.BodyType, this.getRequestedBodyType());
             }
 
             if (this.getFilterHtmlContent() != null) {
-                writer.writeElementValue(XmlNamespace.Types,
-                        XmlElementNames.FilterHtmlContent, this.getFilterHtmlContent());
-            }
-            if ((this.getConvertHtmlCodePageToUTF8() != null) &&
-                    writer.getService().getRequestedServerVersion().compareTo(ExchangeVersion.Exchange2010_SP1) >= 0) {
                 writer.writeElementValue(
-                        XmlNamespace.Types,
-                        XmlElementNames.ConvertHtmlCodePageToUTF8,
-                        this.getConvertHtmlCodePageToUTF8());
+                        XmlNamespace.Types, XmlElementNames.FilterHtmlContent, this.getFilterHtmlContent());
+            }
+            if ((this.getConvertHtmlCodePageToUTF8() != null)
+                    && writer.getService().getRequestedServerVersion().compareTo(ExchangeVersion.Exchange2010_SP1) >= 0) {
+                writer.writeElementValue(
+                        XmlNamespace.Types, XmlElementNames.ConvertHtmlCodePageToUTF8, this.getConvertHtmlCodePageToUTF8());
             }
         }
 

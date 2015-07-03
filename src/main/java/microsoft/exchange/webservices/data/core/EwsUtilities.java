@@ -38,7 +38,6 @@ import microsoft.exchange.webservices.data.core.enumeration.service.FileAsMappin
 import microsoft.exchange.webservices.data.core.enumeration.service.MeetingRequestsDeliveryScope;
 import microsoft.exchange.webservices.data.core.exception.http.EWSHttpException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
-import microsoft.exchange.webservices.data.core.exception.misc.ArgumentNullException;
 import microsoft.exchange.webservices.data.core.exception.misc.FormatException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
@@ -51,6 +50,8 @@ import microsoft.exchange.webservices.data.core.service.ServiceObjectInfo;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.misc.TimeSpan;
 import microsoft.exchange.webservices.data.property.complex.ItemAttachment;
+import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -268,18 +269,12 @@ public final class EwsUtilities
                         public Map<Class<?>, Map<String, ExchangeVersion>>
                         createInstance()
                         {
-                            Map<Class<?>, Map<String, ExchangeVersion>> enumDicts =
-                                    new HashMap<Class<?>, Map<String, ExchangeVersion>>();
-                            enumDicts.put(WellKnownFolderName.class,
-                                    buildEnumDict(WellKnownFolderName.class));
-                            enumDicts.put(ItemTraversal.class,
-                                    buildEnumDict(ItemTraversal.class));
-                            enumDicts.put(FileAsMapping.class,
-                                    buildEnumDict(FileAsMapping.class));
-                            enumDicts.put(EventType.class,
-                                    buildEnumDict(EventType.class));
-                            enumDicts.put(MeetingRequestsDeliveryScope.class,
-                                    buildEnumDict(MeetingRequestsDeliveryScope.class));
+                            Map<Class<?>, Map<String, ExchangeVersion>> enumDicts = new HashMap<Class<?>, Map<String, ExchangeVersion>>();
+                            enumDicts.put(WellKnownFolderName.class, buildEnumDict(WellKnownFolderName.class));
+                            enumDicts.put(ItemTraversal.class, buildEnumDict(ItemTraversal.class));
+                            enumDicts.put(FileAsMapping.class, buildEnumDict(FileAsMapping.class));
+                            enumDicts.put(EventType.class, buildEnumDict(EventType.class));
+                            enumDicts.put(MeetingRequestsDeliveryScope.class, buildEnumDict(MeetingRequestsDeliveryScope.class));
                             return enumDicts;
                         }
                     });
@@ -294,16 +289,11 @@ public final class EwsUtilities
                         @Override
                         public Map<Class<?>, Map<String, String>> createInstance()
                         {
-                            Map<Class<?>, Map<String, String>> enumDicts =
-                                    new HashMap<Class<?>, Map<String, String>>();
-                            enumDicts.put(EventType.class,
-                                    buildSchemaToEnumDict(EventType.class));
-                            enumDicts.put(MailboxType.class,
-                                    buildSchemaToEnumDict(MailboxType.class));
-                            enumDicts.put(FileAsMapping.class,
-                                    buildSchemaToEnumDict(FileAsMapping.class));
-                            enumDicts.put(RuleProperty.class,
-                                    buildSchemaToEnumDict(RuleProperty.class));
+                            Map<Class<?>, Map<String, String>> enumDicts = new HashMap<Class<?>, Map<String, String>>();
+                            enumDicts.put(EventType.class, buildSchemaToEnumDict(EventType.class));
+                            enumDicts.put(MailboxType.class, buildSchemaToEnumDict(MailboxType.class));
+                            enumDicts.put(FileAsMapping.class, buildSchemaToEnumDict(FileAsMapping.class));
+                            enumDicts.put(RuleProperty.class, buildSchemaToEnumDict(RuleProperty.class));
                             return enumDicts;
 
                         }
@@ -320,16 +310,11 @@ public final class EwsUtilities
                         @Override
                         public Map<Class<?>, Map<String, String>> createInstance()
                         {
-                            Map<Class<?>, Map<String, String>> enumDicts =
-                                    new HashMap<Class<?>, Map<String, String>>();
-                            enumDicts.put(EventType.class,
-                                    buildEnumToSchemaDict(EventType.class));
-                            enumDicts.put(MailboxType.class,
-                                    buildEnumToSchemaDict(MailboxType.class));
-                            enumDicts.put(FileAsMapping.class,
-                                    buildEnumToSchemaDict(FileAsMapping.class));
-                            enumDicts.put(RuleProperty.class,
-                                    buildEnumToSchemaDict(RuleProperty.class));
+                            Map<Class<?>, Map<String, String>> enumDicts = new HashMap<Class<?>, Map<String, String>>();
+                            enumDicts.put(EventType.class, buildEnumToSchemaDict(EventType.class));
+                            enumDicts.put(MailboxType.class, buildEnumToSchemaDict(MailboxType.class));
+                            enumDicts.put(FileAsMapping.class, buildEnumToSchemaDict(FileAsMapping.class));
+                            enumDicts.put(RuleProperty.class, buildEnumToSchemaDict(RuleProperty.class));
                             return enumDicts;
                         }
                     });
@@ -385,35 +370,27 @@ public final class EwsUtilities
      */
     public static XmlNamespace getNamespaceFromUri(String namespaceUri)
     {
-        if (EwsErrorsNamespace.equals(namespaceUri)) {
-            return XmlNamespace.Errors;
-        }
-        else if (EwsTypesNamespace.equals(namespaceUri)) {
-            return XmlNamespace.Types;
-        }
-        else if (EwsMessagesNamespace.equals(namespaceUri)) {
-            return XmlNamespace.Messages;
-        }
-        else if (EwsSoapNamespace.equals(namespaceUri)) {
-            return XmlNamespace.Soap;
-        }
-        else if (EwsSoap12Namespace.equals(namespaceUri)) {
-            return XmlNamespace.Soap12;
-        }
-        else if (EwsXmlSchemaInstanceNamespace.equals(namespaceUri)) {
-            return XmlNamespace.XmlSchemaInstance;
-        }
-        else if (PassportSoapFaultNamespace.equals(namespaceUri)) {
-            return XmlNamespace.PassportSoapFault;
-        }
-        else if (WSTrustFebruary2005Namespace.equals(namespaceUri)) {
-            return XmlNamespace.WSTrustFebruary2005;
-        }
-        else if (WSAddressingNamespace.equals(namespaceUri)) {
-            return XmlNamespace.WSAddressing;
-        }
-        else {
-            return XmlNamespace.NotSpecified;
+        switch (namespaceUri) {
+            case EwsErrorsNamespace:
+                return XmlNamespace.Errors;
+            case EwsTypesNamespace:
+                return XmlNamespace.Types;
+            case EwsMessagesNamespace:
+                return XmlNamespace.Messages;
+            case EwsSoapNamespace:
+                return XmlNamespace.Soap;
+            case EwsSoap12Namespace:
+                return XmlNamespace.Soap12;
+            case EwsXmlSchemaInstanceNamespace:
+                return XmlNamespace.XmlSchemaInstance;
+            case PassportSoapFaultNamespace:
+                return XmlNamespace.PassportSoapFault;
+            case WSTrustFebruary2005Namespace:
+                return XmlNamespace.WSTrustFebruary2005;
+            case WSAddressingNamespace:
+                return XmlNamespace.WSAddressing;
+            default:
+                return XmlNamespace.NotSpecified;
         }
     }
 
@@ -1133,14 +1110,14 @@ public final class EwsUtilities
             try {
                 selfValidate.validate();
             } catch (ServiceValidationException e) {
-                throw new Exception(String.format("%s %s", "Validation failed.", paramName), e);
+                throw new ServiceLocalException(String.format("%s %s", "Validation failed.", paramName), e);
             }
         }
 
         if (param instanceof ServiceObject) {
             ServiceObject ewsObject = (ServiceObject) param;
             if (ewsObject.isNew()) {
-                throw new Exception(String.format("%s %s", "This service object doesn't have an ID.", paramName));
+                throw new ServiceLocalException(String.format("%s %s", "This service object doesn't have an ID.", paramName));
             }
         }
     }
@@ -1152,7 +1129,8 @@ public final class EwsUtilities
      * @param paramName Name of the param.
      * @throws Exception the exception
      */
-    public static void validateParam(Object param, String paramName) throws Exception
+    public static void validateParam(Object param, String paramName)
+            throws Exception
     {
         boolean isValid;
 
@@ -1165,8 +1143,7 @@ public final class EwsUtilities
         }
 
         if (!isValid) {
-            throw new Exception(String.format("Argument %s not valid",
-                    paramName));
+            throw new ServiceLocalException(String.format("Argument %s not valid", paramName));
         }
         validateParamAllowNull(param, paramName);
     }
@@ -1208,25 +1185,15 @@ public final class EwsUtilities
      * @param param     The string parameter.
      * @param paramName Name of the parameter.
      * @throws ArgumentException
-     * @throws ServiceLocalException
+     * @throws Exception
      */
-    public static void validateNonBlankStringParamAllowNull(String param,
-                                                            String paramName) throws ArgumentException, ServiceLocalException
+    public static void validateNonBlankStringParamAllowNull(String param, String paramName)
+            throws Exception
     {
-        if (param != null) {
-            // Non-empty string has at least one character
-            //which is *not* a whitespace character
-            if (param.length() == countMatchingChars(param,
-                    new IPredicate<Character>()
-                    {
-                        @Override
-                        public boolean predicate(Character obj)
-                        {
-                            return Character.isWhitespace(obj);
-                        }
-                    })) {
-                throw new ArgumentException("The string argument contains only white space characters.", paramName);
-            }
+        // Non-empty string has at least one character
+        //which is *not* a whitespace character
+        if (StringUtils.isBlank(param)) {
+            throw new ServiceLocalException("The value for %s contains only white space characters.", paramName);
         }
     }
 
@@ -1237,17 +1204,12 @@ public final class EwsUtilities
      *
      * @param param     The string parameter.
      * @param paramName Name of the parameter.
-     * @throws ArgumentNullException
-     * @throws ArgumentException
-     * @throws ServiceLocalException
+     * @throws Exception
      */
-    public static void validateNonBlankStringParam(String param,
-                                                   String paramName) throws ArgumentNullException, ArgumentException, ServiceLocalException
+    public static void validateNonBlankStringParam(String param, String paramName)
+            throws Exception
     {
-        if (param == null) {
-            throw new ArgumentNullException(paramName);
-        }
-
+        validateParam(param, paramName);
         validateNonBlankStringParamAllowNull(param, paramName);
     }
 
@@ -1258,8 +1220,7 @@ public final class EwsUtilities
      * @param requestVersion the request version
      * @throws ServiceVersionException the service version exception
      */
-    public static void validateEnumVersionValue(
-            Enum<?> enumValue, ExchangeVersion requestVersion)
+    public static void validateEnumVersionValue(Enum<?> enumValue, ExchangeVersion requestVersion)
             throws ServiceVersionException
     {
         final Map<Class<?>, Map<String, ExchangeVersion>> member = ENUM_VERSION_DICTIONARIES.getMember();
@@ -1306,13 +1267,26 @@ public final class EwsUtilities
     /**
      * Validates property version against the request version.
      *
+     * @param service    The Exchange service.
+     * @param definition The property definition
+     * @throws ServiceVersionException The service version exception
+     */
+    public static void validatePropertyVersion(ExchangeService service, PropertyDefinition definition)
+            throws ServiceVersionException
+    {
+        validatePropertyVersion(service, definition.getVersion(), definition.getName());
+    }
+
+    /**
+     * Validates property version against the request version.
+     *
      * @param service              The Exchange service.
      * @param minimumServerVersion The minimum server version
      * @param propertyName         The property name
      * @throws ServiceVersionException The service version exception
      */
     public static void validatePropertyVersion(
-            ExchangeService service, ExchangeVersion minimumServerVersion, String propertyName)
+            ExchangeServiceBase service, ExchangeVersion minimumServerVersion, String propertyName)
             throws ServiceVersionException
     {
         if (service.getRequestedServerVersion().compareTo(minimumServerVersion) < 0) {
@@ -1330,14 +1304,15 @@ public final class EwsUtilities
      * @param methodName           the method name
      * @throws ServiceVersionException the service version exception
      */
-    public static void validateMethodVersion(ExchangeService service,
-                                             ExchangeVersion minimumServerVersion, String methodName)
+    public static void validateMethodVersion(
+            ExchangeService service, ExchangeVersion minimumServerVersion, String methodName)
             throws ServiceVersionException
     {
         if (service.getRequestedServerVersion().compareTo(minimumServerVersion) < 0) {
-            throw new ServiceVersionException(String.format(
-                    "Method %s is only valid for Exchange Server version %s or later.", methodName,
-                    minimumServerVersion));
+            throw new ServiceVersionException(
+                    String.format(
+                            "Method %s is only valid for Exchange Server version %s or later.",
+                            methodName, minimumServerVersion));
         }
     }
 
@@ -1350,9 +1325,8 @@ public final class EwsUtilities
      * @throws ServiceVersionException
      */
     public static void validateClassVersion(
-            ExchangeService service,
-            ExchangeVersion minimumServerVersion,
-            String className) throws ServiceVersionException
+            ExchangeService service, ExchangeVersion minimumServerVersion, String className)
+            throws ServiceVersionException
     {
         if (service.getRequestedServerVersion().compareTo(minimumServerVersion) < 0) {
             throw new ServiceVersionException(String.format(
@@ -1368,14 +1342,14 @@ public final class EwsUtilities
      * @param paramName  Parameter name.
      * @throws ArgumentException
      */
-    public static void validateDomainNameAllowNull(String domainName, String paramName) throws
-            ArgumentException
+    public static void validateDomainNameAllowNull(String domainName, String paramName)
+            throws ServiceLocalException
     {
         if (domainName != null) {
             Pattern domainNamePattern = Pattern.compile(DomainRegex);
             Matcher domainNameMatcher = domainNamePattern.matcher(domainName);
             if (!domainNameMatcher.find()) {
-                throw new ArgumentException(String.format("'%s' is not a valid domain name.", domainName), paramName);
+                throw new ServiceLocalException(String.format("'%s' is not a valid name for param '%s'.", domainName, paramName));
             }
         }
     }
@@ -1470,9 +1444,8 @@ public final class EwsUtilities
      * @return Count of characters that match condition expressed by predicate.
      * @throws ServiceLocalException
      */
-    public static int countMatchingChars(
-            String str, IPredicate<Character> charPredicate
-    ) throws ServiceLocalException
+    public static int countMatchingChars(String str, IPredicate<Character> charPredicate)
+            throws ServiceLocalException
     {
         int count = 0;
         for (int i = 0; i < str.length(); i++) {
@@ -1494,8 +1467,8 @@ public final class EwsUtilities
      * the conditions defined by the specified predicate; otherwise, false.
      * @throws ServiceLocalException
      */
-    public static <T> boolean trueForAll(Iterable<T> collection,
-                                         IPredicate<T> predicate) throws ServiceLocalException
+    public static <T> boolean trueForAll(Iterable<T> collection, IPredicate<T> predicate)
+            throws ServiceLocalException
     {
         for (T entry : collection) {
             if (!predicate.predicate(entry)) {
@@ -1560,4 +1533,10 @@ public final class EwsUtilities
     {
         return version.compareTo(minimumVersion) > 0;
     }
+
+    public static boolean isSupportedProtocol(String scheme)
+    {
+        return scheme.equalsIgnoreCase(EWSConstants.HTTP_SCHEME) || scheme.equalsIgnoreCase(EWSConstants.HTTPS_SCHEME);
+    }
+
 }

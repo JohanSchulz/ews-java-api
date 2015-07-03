@@ -29,6 +29,7 @@ import microsoft.exchange.webservices.data.core.XmlElementNames;
 import microsoft.exchange.webservices.data.core.enumeration.search.ItemTraversal;
 import microsoft.exchange.webservices.data.core.enumeration.service.ServiceObjectType;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceVersionException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlSerializationException;
@@ -234,7 +235,6 @@ public final class CalendarView extends ViewBase
      */
     public Integer getMaxItemsReturned()
     {
-
         return this.maxItemsReturned;
     }
 
@@ -242,14 +242,14 @@ public final class CalendarView extends ViewBase
      * Sets the max item returned.
      *
      * @param maxItemsReturned the new max item returned
-     * @throws ArgumentException the argument exception
+     * @throws ServiceLocalException the argument exception
      */
     public void setMaxItemsReturned(Integer maxItemsReturned)
-            throws ArgumentException
+            throws ServiceLocalException
     {
         if (maxItemsReturned != null) {
             if (maxItemsReturned.intValue() <= 0) {
-                throw new ArgumentException("The value must be greater than 0.");
+                throw new ServiceLocalException("The value must be greater than 0.");
             }
         }
 
@@ -265,7 +265,6 @@ public final class CalendarView extends ViewBase
     public ItemTraversal getTraversal()
     {
         return this.traversal;
-
     }
 
     /**

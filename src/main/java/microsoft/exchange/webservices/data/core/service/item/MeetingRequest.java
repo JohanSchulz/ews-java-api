@@ -91,8 +91,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return A MeetingResponse instance representing the meeting request
      * corresponding to the specified Id.
      */
-    public static MeetingRequest bind(ExchangeService service, ItemId id,
-                                      PropertySet propertySet)
+    public static MeetingRequest bind(ExchangeService service, ItemId id, PropertySet propertySet)
     {
         try {
             return service.bindToItem(MeetingRequest.class, id, propertySet);
@@ -113,8 +112,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public static MeetingRequest bind(ExchangeService service, ItemId id)
     {
-        return MeetingRequest.bind(service, id, PropertySet
-                .getFirstClassProperties());
+        return MeetingRequest.bind(service, id, PropertySet.getFirstClassProperties());
     }
 
     /**
@@ -148,8 +146,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return An AcceptMeetingInvitationMessage representing the meeting
      * acceptance message.
      */
-    public AcceptMeetingInvitationMessage createAcceptMessage(boolean
-                                                                      tentative)
+    public AcceptMeetingInvitationMessage createAcceptMessage(boolean tentative)
     {
         try {
             return new AcceptMeetingInvitationMessage(this, tentative);
@@ -184,7 +181,8 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * were created or modified as a results of this operation.
      * @throws Exception throws Exception
      */
-    public CalendarActionResults accept(boolean sendResponse) throws Exception
+    public CalendarActionResults accept(boolean sendResponse)
+            throws Exception
     {
         return this.internalAccept(false, sendResponse);
     }
@@ -213,11 +211,10 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * were created or modified as a results of this operation.
      * @throws Exception throws Exception
      */
-    protected CalendarActionResults internalAccept(boolean tentative,
-                                                   boolean sendResponse) throws Exception
+    protected CalendarActionResults internalAccept(boolean tentative, boolean sendResponse)
+            throws Exception
     {
-        AcceptMeetingInvitationMessage accept = this
-                .createAcceptMessage(tentative);
+        AcceptMeetingInvitationMessage accept = this.createAcceptMessage(tentative);
 
         if (sendResponse) {
             return accept.calendarSendAndSaveCopy();
@@ -259,8 +256,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
     public MeetingRequestType getMeetingRequestType()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingRequestSchema.MeetingRequestType);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingRequestSchema.MeetingRequestType);
     }
 
     /**
@@ -273,8 +269,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
     public LegacyFreeBusyStatus getIntendedFreeBusyStatus()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingRequestSchema.IntendedFreeBusyStatus);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingRequestSchema.IntendedFreeBusyStatus);
     }
 
     /**
@@ -285,8 +280,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public Date getStart() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.Start);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.Start);
     }
 
     /**
@@ -297,8 +291,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public Date getEnd() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.End);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.End);
     }
 
     /**
@@ -309,8 +302,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public Date getOriginalStart() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.OriginalStart);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.OriginalStart);
     }
 
     /**
@@ -319,10 +311,11 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the checks if is all day event
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getIsAllDayEvent() throws ServiceLocalException
+    public Boolean getIsAllDayEvent() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.IsAllDayEvent) != null;
+        // BAD bug if Boolean.FALSE is set this would return true
+//        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsAllDayEvent) != null;
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsAllDayEvent);
     }
 
     /**
@@ -332,11 +325,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the legacy free busy status
      * @throws ServiceLocalException the service local exception
      */
-    public LegacyFreeBusyStatus legacyFreeBusyStatus()
-            throws ServiceLocalException
+    public LegacyFreeBusyStatus legacyFreeBusyStatus() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.LegacyFreeBusyStatus);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.LegacyFreeBusyStatus);
     }
 
     /**
@@ -347,8 +338,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public String getLocation() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.Location);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.Location);
     }
 
     /**
@@ -362,8 +352,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public String getWhen() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.When);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.When);
     }
 
     /**
@@ -372,10 +361,11 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the checks if is meeting
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getIsMeeting() throws ServiceLocalException
+    public Boolean getIsMeeting() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.IsMeeting) != null;
+        // BAD bug if Boolean.FALSE is set this would return true
+//        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsMeeting) != null;
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsMeeting);
     }
 
     /**
@@ -384,10 +374,11 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the checks if is cancelled
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getIsCancelled() throws ServiceLocalException
+    public Boolean getIsCancelled() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.IsCancelled) != null;
+        // BAD bug if Boolean.FALSE is set this would return true
+//        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsCancelled) != null;
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsCancelled);
     }
 
     /**
@@ -396,10 +387,11 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the checks if is recurring
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getIsRecurring() throws ServiceLocalException
+    public Boolean getIsRecurring() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.IsRecurring) != null;
+        // BAD bug if Boolean.FALSE is set this would return true
+//        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsRecurring) != null;
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsRecurring);
     }
 
     /**
@@ -409,10 +401,11 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the meeting request was sent
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getMeetingRequestWasSent() throws ServiceLocalException
+    public Boolean getMeetingRequestWasSent() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.MeetingRequestWasSent) != null;
+        // BAD bug if Boolean.FALSE is set this would return true
+//        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.MeetingRequestWasSent) != null;
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.MeetingRequestWasSent);
     }
 
     /**
@@ -423,8 +416,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public AppointmentType getAppointmentType() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.AppointmentType);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AppointmentType);
     }
 
     /**
@@ -434,11 +426,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the my response type
      * @throws ServiceLocalException the service local exception
      */
-    public MeetingResponseType getMyResponseType()
-            throws ServiceLocalException
+    public MeetingResponseType getMyResponseType() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.MyResponseType);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.MyResponseType);
     }
 
     /**
@@ -449,8 +439,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public EmailAddress getOrganizer() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.Organizer);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.Organizer);
     }
 
     /**
@@ -459,11 +448,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the required attendees
      * @throws ServiceLocalException the service local exception
      */
-    public AttendeeCollection getRequiredAttendees()
-            throws ServiceLocalException
+    public AttendeeCollection getRequiredAttendees() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.RequiredAttendees);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.RequiredAttendees);
     }
 
     /**
@@ -472,11 +459,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the optional attendees
      * @throws ServiceLocalException the service local exception
      */
-    public AttendeeCollection getOptionalAttendees()
-            throws ServiceLocalException
+    public AttendeeCollection getOptionalAttendees() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.OptionalAttendees);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.OptionalAttendees);
     }
 
     /**
@@ -487,8 +472,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public AttendeeCollection getResources() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.Resources);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.Resources);
     }
 
     /**
@@ -499,12 +483,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @throws NumberFormatException the number format exception
      * @throws ServiceLocalException the service local exception
      */
-    public int getConflictingMeetingCount() throws NumberFormatException,
-            ServiceLocalException
+    public Integer getConflictingMeetingCount() throws ServiceLocalException
     {
-        return (Integer.parseInt(this.getPropertyBag()
-                .getObjectFromPropertyDefinition(
-                        AppointmentSchema.ConflictingMeetingCount).toString()));
+        return this.getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.ConflictingMeetingCount);
     }
 
     /**
@@ -515,12 +496,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @throws NumberFormatException the number format exception
      * @throws ServiceLocalException the service local exception
      */
-    public int getAdjacentMeetingCount() throws NumberFormatException,
-            ServiceLocalException
+    public Integer getAdjacentMeetingCount() throws ServiceLocalException
     {
-        return (Integer.parseInt(this.getPropertyBag()
-                .getObjectFromPropertyDefinition(
-                        AppointmentSchema.AdjacentMeetingCount).toString()));
+        return this.getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AdjacentMeetingCount);
     }
 
     /**
@@ -530,11 +508,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the conflicting meetings
      * @throws ServiceLocalException the service local exception
      */
-    public ItemCollection<Appointment> getConflictingMeetings()
-            throws ServiceLocalException
+    public ItemCollection<Appointment> getConflictingMeetings() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.ConflictingMeetings);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.ConflictingMeetings);
     }
 
     /**
@@ -544,11 +520,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the adjacent meetings
      * @throws ServiceLocalException the service local exception
      */
-    public ItemCollection<Appointment> getAdjacentMeetings()
-            throws ServiceLocalException
+    public ItemCollection<Appointment> getAdjacentMeetings() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.AdjacentMeetings);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AdjacentMeetings);
     }
 
     /**
@@ -559,8 +533,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public TimeSpan getDuration() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.Duration);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.Duration);
     }
 
     /**
@@ -571,8 +544,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public String getTimeZone() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.TimeZone);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.TimeZone);
     }
 
     /**
@@ -583,40 +555,29 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public Date getAppointmentReplyTime() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.AppointmentReplyTime);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AppointmentReplyTime);
     }
 
     /**
      * Gets the sequence number of this appointment.
      *
      * @return the appointment sequence number
-     * @throws NumberFormatException the number format exception
      * @throws ServiceLocalException the service local exception
      */
-    public int getAppointmentSequenceNumber() throws NumberFormatException,
-            ServiceLocalException
+    public Integer getAppointmentSequenceNumber() throws ServiceLocalException
     {
-        return (Integer
-                .parseInt(this.getPropertyBag()
-                        .getObjectFromPropertyDefinition(
-                                AppointmentSchema.AppointmentSequenceNumber)
-                        .toString()));
+        return this.getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AppointmentSequenceNumber);
     }
 
     /**
      * Gets the state of this appointment.
      *
      * @return the appointment state
-     * @throws NumberFormatException the number format exception
      * @throws ServiceLocalException the service local exception
      */
-    public int getAppointmentState() throws NumberFormatException,
-            ServiceLocalException
+    public Integer getAppointmentState() throws ServiceLocalException
     {
-        return (Integer.parseInt(this.getPropertyBag()
-                .getObjectFromPropertyDefinition(
-                        AppointmentSchema.AppointmentState).toString()));
+        return this.getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AppointmentState);
     }
 
     /**
@@ -627,8 +588,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public Recurrence getRecurrence() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.Recurrence);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.Recurrence);
     }
 
     /**
@@ -639,8 +599,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public OccurrenceInfo getFirstOccurrence() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.FirstOccurrence);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.FirstOccurrence);
     }
 
     /**
@@ -651,8 +610,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public OccurrenceInfo getLastOccurrence() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.FirstOccurrence);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.FirstOccurrence);
     }
 
     /**
@@ -661,11 +619,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the modified occurrences
      * @throws ServiceLocalException the service local exception
      */
-    public OccurrenceInfoCollection getModifiedOccurrences()
-            throws ServiceLocalException
+    public OccurrenceInfoCollection getModifiedOccurrences() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.ModifiedOccurrences);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.ModifiedOccurrences);
     }
 
     /**
@@ -674,11 +630,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the deleted occurrences
      * @throws ServiceLocalException the service local exception
      */
-    public DeletedOccurrenceInfoCollection getDeletedOccurrences()
-            throws ServiceLocalException
+    public DeletedOccurrenceInfoCollection getDeletedOccurrences() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.DeletedOccurrences);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.DeletedOccurrences);
     }
 
     /**
@@ -689,8 +643,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public TimeZoneDefinition getStartTimeZone() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.StartTimeZone);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.StartTimeZone);
     }
 
     /**
@@ -701,23 +654,18 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public TimeZoneDefinition getEndTimeZone() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.EndTimeZone);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.EndTimeZone);
     }
 
     /**
      * Gets the type of conferencing that will be used during the meeting.
      *
      * @return the conference type
-     * @throws NumberFormatException the number format exception
      * @throws ServiceLocalException the service local exception
      */
-    public int getConferenceType() throws NumberFormatException,
-            ServiceLocalException
+    public Integer getConferenceType() throws ServiceLocalException
     {
-        return (Integer.parseInt(this.getPropertyBag()
-                .getObjectFromPropertyDefinition(
-                        AppointmentSchema.ConferenceType).toString()));
+        return this.getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.ConferenceType);
     }
 
     /**
@@ -727,10 +675,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the allow new time proposal
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getAllowNewTimeProposal() throws ServiceLocalException
+    public Boolean getAllowNewTimeProposal() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                AppointmentSchema.AllowNewTimeProposal);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.AllowNewTimeProposal);
     }
 
     /**
@@ -739,10 +686,9 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      * @return the checks if is online meeting
      * @throws ServiceLocalException the service local exception
      */
-    public boolean getIsOnlineMeeting() throws ServiceLocalException
+    public Boolean getIsOnlineMeeting() throws ServiceLocalException
     {
-        return getPropertyBag().<Boolean>getObjectFromPropertyDefinition(
-                AppointmentSchema.IsOnlineMeeting);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.IsOnlineMeeting);
     }
 
     /**
@@ -755,8 +701,7 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public String getMeetingWorkspaceUrl() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.MeetingWorkspaceUrl);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.MeetingWorkspaceUrl);
     }
 
     /**
@@ -767,7 +712,6 @@ public class MeetingRequest extends MeetingMessage implements ICalendarActionPro
      */
     public String getNetShowUrl() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                AppointmentSchema.NetShowUrl);
+        return getPropertyBag().getObjectFromPropertyDefinition(AppointmentSchema.NetShowUrl);
     }
 }

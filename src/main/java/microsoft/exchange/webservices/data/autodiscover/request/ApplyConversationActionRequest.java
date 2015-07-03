@@ -43,8 +43,7 @@ import java.util.List;
 public final class ApplyConversationActionRequest extends MultiResponseServiceRequest<ServiceResponse>
 {
 
-    private List<ConversationAction> conversationActions =
-            new ArrayList<ConversationAction>();
+    private List<ConversationAction> conversationActions = new ArrayList<ConversationAction>();
 
     public List<ConversationAction> getConversationActions()
     {
@@ -71,8 +70,7 @@ public final class ApplyConversationActionRequest extends MultiResponseServiceRe
      * @return Service response.
      */
     @Override
-    protected ServiceResponse createServiceResponse(ExchangeService service,
-                                                    int responseIndex)
+    protected ServiceResponse createServiceResponse(ExchangeService service, int responseIndex)
     {
         return new ServiceResponse();
     }
@@ -97,13 +95,14 @@ public final class ApplyConversationActionRequest extends MultiResponseServiceRe
     protected void validate() throws Exception
     {
         super.validate();
-        EwsUtilities.validateParamCollection(
-                conversationActions.iterator(), "conversationActions"
-        );
+        EwsUtilities.validateParamCollection(conversationActions.iterator(), "conversationActions");
 
-        for (int iAction = 0; iAction < this.getConversationActions().size(); iAction++) {
-            this.getConversationActions().get(iAction).validate();
+        for (ConversationAction action : conversationActions) {
+            action.validate();
         }
+//        for (int iAction = 0; iAction < this.getConversationActions().size(); iAction++) {
+//            this.getConversationActions().get(iAction).validate();
+//        }
     }
 
 
@@ -116,13 +115,13 @@ public final class ApplyConversationActionRequest extends MultiResponseServiceRe
     @Override
     protected void writeElementsToXml(EwsServiceXmlWriter writer) throws Exception
     {
-        writer.writeStartElement(
-                XmlNamespace.Messages,
-                XmlElementNames.ConversationActions);
-        for (int iAction = 0; iAction < this.getConversationActions().size(); iAction++) {
-            this.getConversationActions().get(iAction).
-                    writeElementsToXml(writer);
+        writer.writeStartElement(XmlNamespace.Messages, XmlElementNames.ConversationActions);
+        for (ConversationAction action : conversationActions) {
+            action.writeElementsToXml(writer);
         }
+//        for (int iAction = 0; iAction < this.getConversationActions().size(); iAction++) {
+//            this.getConversationActions().get(iAction).writeElementsToXml(writer);
+//        }
         writer.writeEndElement();
     }
 

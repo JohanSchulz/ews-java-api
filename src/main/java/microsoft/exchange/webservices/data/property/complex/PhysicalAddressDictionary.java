@@ -84,8 +84,7 @@ public final class PhysicalAddressDictionary extends
      * @return true if the Dictionary contains a physical address associated
      * with the specified key; otherwise, false.
      */
-    public boolean tryGetValue(PhysicalAddressKey key,
-                               OutParam<PhysicalAddressEntry> outparam)
+    public boolean tryGetValue(PhysicalAddressKey key, OutParam<PhysicalAddressEntry> outparam)
     {
         if (this.getEntries().containsKey(key)) {
             outparam.setParam(this.getEntries().get(key));

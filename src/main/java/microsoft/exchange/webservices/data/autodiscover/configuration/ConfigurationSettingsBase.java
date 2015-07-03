@@ -83,10 +83,8 @@ public abstract class ConfigurationSettingsBase
      */
     public void loadFromXml(EwsXmlReader reader) throws Exception
     {
-        reader.readStartElement(XmlNamespace.NotSpecified,
-                XmlElementNames.Autodiscover);
-        reader.readStartElement(XmlNamespace.NotSpecified,
-                XmlElementNames.Response);
+        reader.readStartElement(XmlNamespace.NotSpecified, XmlElementNames.Autodiscover);
+        reader.readStartElement(XmlNamespace.NotSpecified, XmlElementNames.Response);
 
         do {
             reader.read();
@@ -96,11 +94,9 @@ public abstract class ConfigurationSettingsBase
                     reader.skipCurrentElement();
                 }
             }
-        } while (!reader.isEndElement(XmlNamespace.NotSpecified,
-                XmlElementNames.Response));
+        } while (!reader.isEndElement(XmlNamespace.NotSpecified, XmlElementNames.Response));
 
-        reader.readEndElement(XmlNamespace.NotSpecified,
-                XmlElementNames.Autodiscover);
+        reader.readEndElement(XmlNamespace.NotSpecified, XmlElementNames.Autodiscover);
     }
 
     /**
@@ -138,9 +134,7 @@ public abstract class ConfigurationSettingsBase
      * @param requestedSettings The requested settings.
      * @return GetUserSettingsResponse.
      */
-    public abstract GetUserSettingsResponse convertSettings(
-            String smtpAddress,
-            List<UserSettingName> requestedSettings);
+    public abstract GetUserSettingsResponse convertSettings(String smtpAddress, List<UserSettingName> requestedSettings);
 
 
     /**

@@ -298,14 +298,12 @@ final class OutlookProtocol
      */
     private static LazyMember<Map<UserSettingName, IFunc<OutlookProtocol, Object>>>
             externalProtocolSettings =
-            new LazyMember<Map<UserSettingName, IFunc<OutlookProtocol, Object>>>(
+            new LazyMember<>(
                     new ILazyMember<Map<UserSettingName, IFunc<OutlookProtocol, Object>>>()
                     {
                         public Map<UserSettingName, IFunc<OutlookProtocol, Object>> createInstance()
                         {
-
-                            Map<UserSettingName, IFunc<OutlookProtocol, Object>> results =
-                                    new HashMap<UserSettingName, IFunc<OutlookProtocol, Object>>();
+                            Map<UserSettingName, IFunc<OutlookProtocol, Object>> results = new HashMap<>();
 
                             results.put(UserSettingName.ExternalEcpDeliveryReportUrl,
                                     new IFunc<OutlookProtocol, Object>()
@@ -464,20 +462,17 @@ final class OutlookProtocol
      */
     private static LazyMember<Map<UserSettingName, IFunc<OutlookProtocol, Object>>>
             externalProtocolConverterDictionary =
-            new LazyMember<Map<UserSettingName, IFunc<OutlookProtocol, Object>>>(
+            new LazyMember<>(
                     new ILazyMember<Map<UserSettingName, IFunc<OutlookProtocol, Object>>>()
                     {
                         public Map<UserSettingName, IFunc<OutlookProtocol, Object>> createInstance()
                         {
 
-                            Map<UserSettingName, IFunc<OutlookProtocol, Object>> results =
-                                    new HashMap<UserSettingName, IFunc<OutlookProtocol, Object>>();
-                            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> kv : commonProtocolSettings
-                                    .getMember().entrySet()) {
+                            Map<UserSettingName, IFunc<OutlookProtocol, Object>> results = new HashMap<>();
+                            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> kv : commonProtocolSettings.getMember().entrySet()) {
                                 results.put(kv.getKey(), kv.getValue());
                             }
-                            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> kv : externalProtocolSettings
-                                    .getMember().entrySet()) {
+                            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> kv : externalProtocolSettings.getMember().entrySet()) {
                                 results.put(kv.getKey(), kv.getValue());
                             }
                             return results;
@@ -532,18 +527,11 @@ final class OutlookProtocol
                     {
                         public List<UserSettingName> createInstance()
                         {
-
-                            List<UserSettingName> results =
-                                    new ArrayList<UserSettingName>();
-
-                            results.addAll(commonProtocolSettings.
-                                    getMember().keySet());
-                            results.addAll(internalProtocolSettings.
-                                    getMember().keySet());
-                            results.addAll(externalProtocolSettings.
-                                    getMember().keySet());
-                            results.addAll(webProtocolConverterDictionary.
-                                    getMember().keySet());
+                            List<UserSettingName> results = new ArrayList<>();
+                            results.addAll(commonProtocolSettings.getMember().keySet());
+                            results.addAll(internalProtocolSettings.getMember().keySet());
+                            results.addAll(externalProtocolSettings.getMember().keySet());
+                            results.addAll(webProtocolConverterDictionary.getMember().keySet());
                             return results;
                         }
                     });
@@ -688,109 +676,93 @@ final class OutlookProtocol
         do {
             reader.read();
             if (reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) {
-                if (reader.getLocalName().equals(XmlElementNames.Type)) {
-                    this.setProtocolType(OutlookProtocol.
-                            protocolNameToType(reader.readElementValue()));
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.AuthPackage)) {
-                    this.authPackage = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.Server)) {
-                    this.server = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.ServerDN)) {
-                    this.serverDN = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.ServerVersion)) {
-                    reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.AD)) {
-                    this.activeDirectoryServer = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.MdbDN)) {
-                    this.mailboxDN = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.EWSUrl)) {
-                    this.exchangeWebServicesUrl = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.ASUrl)) {
-                    this.availabilityServiceUrl = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.OOFUrl)) {
-                    reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.UMUrl)) {
-                    this.unifiedMessagingUrl = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(XmlElementNames.OABUrl)) {
-                    this.offlineAddressBookUrl = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.PublicFolderServer)) {
-                    this.publicFolderServer = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.Internal)) {
-                    OutlookProtocol.loadWebClientUrlsFromXml(reader,
-                            this.internalOutlookWebAccessUrls, reader.getLocalName());
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.External)) {
-                    OutlookProtocol.loadWebClientUrlsFromXml(reader,
-                            this.externalOutlookWebAccessUrls, reader.getLocalName());
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.Ssl)) {
-                    String sslStr = reader.readElementValue();
-                    this.sslEnabled = sslStr.equalsIgnoreCase("On");
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.SharingUrl)) {
-                    this.sharingEnabled = reader.
-                            readElementValue().length() > 0;
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl)) {
-                    this.ecpUrl = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl_um)) {
-                    this.ecpUrlUm = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl_aggr)) {
-                    this.ecpUrlAggr = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl_sms)) {
-                    this.ecpUrlSms = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl_mt)) {
-                    this.ecpUrlMt = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl_ret)) {
-                    this.ecpUrlRet = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.EcpUrl_publish)) {
-                    this.ecpUrlPublish = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.ExchangeRpcUrl)) {
-                    this.exchangeRpcUrl = reader.readElementValue();
-                }
-                else if (reader.getLocalName().equals(
-                        XmlElementNames.GroupingInformation)) {
-                    this.groupingInformation = reader.readElementValue();
-                }
-                else {
-                    reader.skipCurrentElement();
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.Type:
+                        this.setProtocolType(OutlookProtocol.protocolNameToType(reader.readElementValue()));
+                        break;
+                    case XmlElementNames.AuthPackage:
+                        this.authPackage = reader.readElementValue();
+                        break;
+                    case XmlElementNames.Server:
+                        this.server = reader.readElementValue();
+                        break;
+                    case XmlElementNames.ServerDN:
+                        this.serverDN = reader.readElementValue();
+                        break;
+                    case XmlElementNames.ServerVersion:
+                        reader.readElementValue();
+                        break;
+                    case XmlElementNames.AD:
+                        this.activeDirectoryServer = reader.readElementValue();
+                        break;
+                    case XmlElementNames.MdbDN:
+                        this.mailboxDN = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EWSUrl:
+                        this.exchangeWebServicesUrl = reader.readElementValue();
+                        break;
+                    case XmlElementNames.ASUrl:
+                        this.availabilityServiceUrl = reader.readElementValue();
+                        break;
+                    case XmlElementNames.OOFUrl:
+                        reader.readElementValue();
+                        break;
+                    case XmlElementNames.UMUrl:
+                        this.unifiedMessagingUrl = reader.readElementValue();
+                        break;
+                    case XmlElementNames.OABUrl:
+                        this.offlineAddressBookUrl = reader.readElementValue();
+                        break;
+                    case XmlElementNames.PublicFolderServer:
+                        this.publicFolderServer = reader.readElementValue();
+                        break;
+                    case XmlElementNames.Internal:
+                        OutlookProtocol.loadWebClientUrlsFromXml(reader, this.internalOutlookWebAccessUrls, localName);
+                        break;
+                    case XmlElementNames.External:
+                        OutlookProtocol.loadWebClientUrlsFromXml(reader, this.externalOutlookWebAccessUrls, localName);
+                        break;
+                    case XmlElementNames.Ssl:
+                        String sslStr = reader.readElementValue();
+                        this.sslEnabled = sslStr.equalsIgnoreCase("On");
+                        break;
+                    case XmlElementNames.SharingUrl:
+                        this.sharingEnabled = reader.readElementValue().length() > 0;
+                        break;
+                    case XmlElementNames.EcpUrl:
+                        this.ecpUrl = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EcpUrl_um:
+                        this.ecpUrlUm = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EcpUrl_aggr:
+                        this.ecpUrlAggr = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EcpUrl_sms:
+                        this.ecpUrlSms = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EcpUrl_mt:
+                        this.ecpUrlMt = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EcpUrl_ret:
+                        this.ecpUrlRet = reader.readElementValue();
+                        break;
+                    case XmlElementNames.EcpUrl_publish:
+                        this.ecpUrlPublish = reader.readElementValue();
+                        break;
+                    case XmlElementNames.ExchangeRpcUrl:
+                        this.exchangeRpcUrl = reader.readElementValue();
+                        break;
+                    case XmlElementNames.GroupingInformation:
+                        this.groupingInformation = reader.readElementValue();
+                        break;
+                    default:
+                        reader.skipCurrentElement();
+                        break;
                 }
             }
-        } while (!reader.isEndElement(XmlNamespace.NotSpecified,
-                XmlElementNames.Protocol));
+        } while (!reader.isEndElement(XmlNamespace.NotSpecified, XmlElementNames.Protocol));
     }
 
     /**
@@ -799,10 +771,9 @@ final class OutlookProtocol
      * @param protocolName Name of the protocol.
      * @return OutlookProtocolType
      */
-    private static OutlookProtocolType protocolNameToType(String
-                                                                  protocolName)
+    private static OutlookProtocolType protocolNameToType(String protocolName)
     {
-        OutlookProtocolType protocolType = null;
+        OutlookProtocolType protocolType;
         if (!(protocolNameToTypeMap.getMember().containsKey(protocolName))) {
             protocolType = OutlookProtocolType.Unknown;
         }
@@ -829,11 +800,10 @@ final class OutlookProtocol
 
             if (reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) {
                 if (reader.getLocalName().equals(XmlElementNames.OWAUrl)) {
-                    String authMethod = reader.readAttributeValue(
-                            XmlAttributeNames.AuthenticationMethod);
+                    String authMethod = reader.readAttributeValue(XmlAttributeNames.AuthenticationMethod);
                     String owaUrl = reader.readElementValue();
-                    WebClientUrl webClientUrl =
-                            new WebClientUrl(authMethod, owaUrl);
+
+                    WebClientUrl webClientUrl = new WebClientUrl(authMethod, owaUrl);
                     webClientUrls.getUrls().add(webClientUrl);
                 }
                 else {
@@ -854,7 +824,9 @@ final class OutlookProtocol
     private String convertEcpFragmentToUrl(String fragment)
     {
         return ((this.ecpUrl == null || this.ecpUrl.isEmpty()) ||
-                (fragment == null || fragment.isEmpty())) ? null : (this.ecpUrl + fragment);
+                (fragment == null || fragment.isEmpty()))
+                ? null
+                : (this.ecpUrl + fragment);
     }
 
     /**
@@ -869,20 +841,13 @@ final class OutlookProtocol
     {
         if (this.getConverterDictionary() != null) {
             // In English: collect converters that are contained in the requested settings.
-            Map<UserSettingName, IFunc<OutlookProtocol, Object>> converterQuery =
-                    new HashMap<UserSettingName, IFunc<OutlookProtocol, Object>>();
-            Map<UserSettingName, IFunc<OutlookProtocol, Object>> t =
-                    this.getConverterDictionary();
-            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> map : t.entrySet()) {
-                if (requestedSettings.contains(map.getKey())) {
-                    converterQuery.put(map.getKey(), map.getValue());
-                }
-            }
-
-            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> kv : converterQuery.entrySet()) {
-                Object value = kv.getValue().func(this);
-                if (value != null) {
-                    response.getSettings().put(kv.getKey(), value);
+            for (Entry<UserSettingName, IFunc<OutlookProtocol, Object>> map : this.getConverterDictionary().entrySet()) {
+                UserSettingName uname = map.getKey();
+                if (requestedSettings.contains(uname)) {
+                    Object value = map.getValue().func(this);
+                    if (value != null) {
+                        response.getSettings().put(uname, value);
+                    }
                 }
             }
         }
@@ -913,8 +878,7 @@ final class OutlookProtocol
      *
      * @return The converter dictionary.
      */
-    private Map<UserSettingName, IFunc<OutlookProtocol, Object>>
-    getConverterDictionary()
+    private Map<UserSettingName, IFunc<OutlookProtocol, Object>> getConverterDictionary()
     {
         switch (this.getProtocolType()) {
             case Rpc:

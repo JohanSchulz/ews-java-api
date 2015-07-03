@@ -77,27 +77,25 @@ public final class AlternateMailbox
             reader.read();
 
             if (reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) {
-                if (reader.getLocalName()
-                        .equalsIgnoreCase(XmlElementNames.Type)) {
-                    altMailbox.setType(reader.readElementValue(String.class));
-                }
-                else if (reader.getLocalName().equalsIgnoreCase(
-                        XmlElementNames.DisplayName)) {
-                    altMailbox.setDisplayName(reader
-                            .readElementValue(String.class));
-                }
-                else if (reader.getLocalName().equalsIgnoreCase(
-                        XmlElementNames.LegacyDN)) {
-                    altMailbox.setLegacyDN(reader
-                            .readElementValue(String.class));
-                }
-                else if (reader.getLocalName().equalsIgnoreCase(
-                        XmlElementNames.Server)) {
-                    altMailbox.setServer(reader.readElementValue(String.class));
+                String localName = reader.getLocalName();
+                switch (localName) {
+                    case XmlElementNames.Type:
+                        altMailbox.setType(reader.readElementValue(String.class));
+                        break;
+                    case XmlElementNames.DisplayName:
+                        altMailbox.setDisplayName(reader.readElementValue(String.class));
+                        break;
+                    case XmlElementNames.LegacyDN:
+                        altMailbox.setLegacyDN(reader.readElementValue(String.class));
+                        break;
+                    case XmlElementNames.Server:
+                        altMailbox.setServer(reader.readElementValue(String.class));
+                        break;
+                    default:
+                        break;
                 }
             }
-        } while (!reader.isEndElement(XmlNamespace.Autodiscover,
-                XmlElementNames.AlternateMailbox));
+        } while (!reader.isEndElement(XmlNamespace.Autodiscover, XmlElementNames.AlternateMailbox));
 
         return altMailbox;
     }

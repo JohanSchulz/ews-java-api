@@ -60,14 +60,14 @@ public final class Time
      * Initializes a new instance of Time.
      *
      * @param minutes The number of minutes since 12:00AM.
-     * @throws ArgumentException the argument exception
+     * @throws IllegalArgumentException the argument exception
      */
 
-    protected Time(int minutes) throws ArgumentException
+    protected Time(int minutes) throws IllegalArgumentException
     {
         this();
         if (minutes < 0 || minutes >= 1440) {
-            throw new ArgumentException(String.format("%s,%s", "minutes must be between 0 and 1439, inclusive.", "minutes"));
+            throw new IllegalArgumentException(String.format("%s,%s", "minutes must be between 0 and 1439, inclusive.", "minutes"));
         }
 
         this.hours = minutes / 60;
@@ -79,9 +79,9 @@ public final class Time
      * Initializes a new instance of Time.
      *
      * @param dateTime the date time
-     * @throws ArgumentException the argument exception
+     * @throws IllegalArgumentException the argument exception
      */
-    public Time(Date dateTime) throws ArgumentException
+    public Time(Date dateTime) throws IllegalArgumentException
     {
         if (dateTime != null) {
             Calendar cal = Calendar.getInstance();
@@ -148,13 +148,13 @@ public final class Time
      * @throws ArgumentException the argument exception
      */
 
-    protected void setHours(int value) throws ArgumentException
+    protected void setHours(int value) throws IllegalArgumentException
     {
         if (value >= 0 && value < 24) {
             this.hours = value;
         }
         else {
-            throw new ArgumentException("Hour must be between 0 and 23.");
+            throw new IllegalArgumentException("Hour must be between 0 and 23.");
         }
     }
 
@@ -172,15 +172,15 @@ public final class Time
      * Sets the minutes.
      *
      * @param value the new minutes
-     * @throws ArgumentException the argument exception
+     * @throws IllegalArgumentException the argument exception
      */
-    protected void setMinutes(int value) throws ArgumentException
+    protected void setMinutes(int value) throws IllegalArgumentException
     {
         if (value >= 0 && value < 60) {
             this.minutes = value;
         }
         else {
-            throw new ArgumentException("Minute must be between 0 and 59.");
+            throw new IllegalArgumentException("Minute must be between 0 and 59.");
         }
     }
 
@@ -198,15 +198,15 @@ public final class Time
      * Sets the seconds.
      *
      * @param value the new seconds
-     * @throws ArgumentException the argument exception
+     * @throws IllegalArgumentException the argument exception
      */
-    protected void setSeconds(int value) throws ArgumentException
+    protected void setSeconds(int value) throws IllegalArgumentException
     {
         if (value >= 0 && value < 60) {
             this.seconds = value;
         }
         else {
-            throw new ArgumentException("Second must be between 0 and 59.");
+            throw new IllegalArgumentException("Second must be between 0 and 59.");
         }
     }
 }

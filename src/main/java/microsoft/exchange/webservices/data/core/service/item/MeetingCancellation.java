@@ -80,12 +80,10 @@ public class MeetingCancellation extends MeetingMessage
      * @return A MeetingCancellation instance representing the meeting
      * cancellation message corresponding to the specified Id.
      */
-    public static MeetingCancellation bind(ExchangeService service, ItemId id,
-                                           PropertySet propertySet)
+    public static MeetingCancellation bind(ExchangeService service, ItemId id, PropertySet propertySet)
     {
         try {
-            return service.bindToItem(MeetingCancellation.class, id,
-                    propertySet);
+            return service.bindToItem(MeetingCancellation.class, id, propertySet);
         } catch (Exception e) {
             LOG.error(e);
             return null;

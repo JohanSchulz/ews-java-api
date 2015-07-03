@@ -39,14 +39,13 @@ public final class WebClientUrlCollection
     /**
      * The urls.
      */
-    private ArrayList<WebClientUrl> urls;
+    private ArrayList<WebClientUrl> urls = new ArrayList<>();
 
     /**
      * Initializes a new instance of the {@link WebClientUrlCollection} class.
      */
     public WebClientUrlCollection()
     {
-        this.urls = new ArrayList<WebClientUrl>();
     }
 
     /**
@@ -65,12 +64,10 @@ public final class WebClientUrlCollection
             reader.read();
 
             if ((reader.getNodeType().getNodeType() == XmlNodeType.START_ELEMENT) &&
-                    (reader.getLocalName()
-                            .equals(XmlElementNames.WebClientUrl))) {
+                    (reader.getLocalName().equals(XmlElementNames.WebClientUrl))) {
                 instance.getUrls().add(WebClientUrl.loadFromXml(reader));
             }
-        } while (!reader.isEndElement(XmlNamespace.Autodiscover,
-                XmlElementNames.WebClientUrls));
+        } while (!reader.isEndElement(XmlNamespace.Autodiscover, XmlElementNames.WebClientUrls));
 
         return instance;
     }

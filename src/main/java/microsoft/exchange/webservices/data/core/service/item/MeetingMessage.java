@@ -82,8 +82,8 @@ public class MeetingMessage extends EmailMessage
      * corresponding to the specified Id.
      * @throws Exception the exception
      */
-    public static MeetingMessage bind(ExchangeService service, ItemId id,
-                                      PropertySet propertySet) throws Exception
+    public static MeetingMessage bind(ExchangeService service, ItemId id, PropertySet propertySet)
+            throws Exception
     {
         return (MeetingMessage) service.bindToItem(id, propertySet);
     }
@@ -101,8 +101,7 @@ public class MeetingMessage extends EmailMessage
     public static MeetingMessage bind(ExchangeService service, ItemId id)
             throws Exception
     {
-        return MeetingMessage.bind(service, id, PropertySet
-                .getFirstClassProperties());
+        return MeetingMessage.bind(service, id, PropertySet.getFirstClassProperties());
     }
 
     /**
@@ -137,8 +136,7 @@ public class MeetingMessage extends EmailMessage
     public ItemId getAssociatedAppointmentId()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.AssociatedAppointmentId);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.AssociatedAppointmentId);
     }
 
     /**
@@ -150,8 +148,7 @@ public class MeetingMessage extends EmailMessage
     public Boolean getHasBeenProcessed()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.HasBeenProcessed);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.HasBeenProcessed);
     }
 
     /**
@@ -163,8 +160,7 @@ public class MeetingMessage extends EmailMessage
     public MeetingResponseType getResponseType()
             throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.ResponseType);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.ResponseType);
     }
 
     /**
@@ -175,8 +171,7 @@ public class MeetingMessage extends EmailMessage
      */
     public String getICalUid() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.ICalUid);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.ICalUid);
     }
 
     /**
@@ -187,8 +182,7 @@ public class MeetingMessage extends EmailMessage
      */
     public Date getICalRecurrenceId() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.ICalRecurrenceId);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.ICalRecurrenceId);
     }
 
     /**
@@ -199,8 +193,7 @@ public class MeetingMessage extends EmailMessage
      */
     public Date getICalDateTimeStamp() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.ICalDateTimeStamp);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.ICalDateTimeStamp);
     }
 
     /**
@@ -211,8 +204,7 @@ public class MeetingMessage extends EmailMessage
      */
     public Boolean getIsDelegated() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.IsDelegated);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.IsDelegated);
     }
 
     /**
@@ -223,8 +215,7 @@ public class MeetingMessage extends EmailMessage
      */
     public Boolean getIsOutOfDate() throws ServiceLocalException
     {
-        return getPropertyBag().getObjectFromPropertyDefinition(
-                MeetingMessageSchema.IsOutOfDate);
+        return getPropertyBag().getObjectFromPropertyDefinition(MeetingMessageSchema.IsOutOfDate);
     }
 
 }

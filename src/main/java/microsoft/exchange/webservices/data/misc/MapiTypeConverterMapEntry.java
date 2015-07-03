@@ -27,8 +27,8 @@ import microsoft.exchange.webservices.data.core.EwsUtilities;
 import microsoft.exchange.webservices.data.core.ILazyMember;
 import microsoft.exchange.webservices.data.core.LazyMember;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
-import microsoft.exchange.webservices.data.core.exception.misc.ArgumentNullException;
 import microsoft.exchange.webservices.data.core.exception.misc.FormatException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlDeserializationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -215,24 +215,23 @@ public class MapiTypeConverterMapEntry
      * Validates array value.
      *
      * @param value the value
-     * @throws ArgumentException     the argument exception
-     * @throws ArgumentNullException the argument exception
+     * @throws Exception the validation exception
      */
-    private void validateValueAsArray(Object value) throws ArgumentException, ArgumentNullException
+    private void validateValueAsArray(Object value) throws Exception
     {
-        if (value == null) {
-            throw new ArgumentNullException("value");
-        }
+        EwsUtilities.validateParam(value, "value");
 
         if (value instanceof ArrayList) {
             ArrayList<?> arrayList = (ArrayList<?>) value;
             if (arrayList.isEmpty()) {
-                throw new ArgumentException("The Array value must have at least one element.");
+                throw new ServiceLocalException("The Array value must have at least one element.");
             }
 
             if (arrayList.get(0).getClass() != this.getType()) {
-                throw new ArgumentException(String.format("Type %s can't be used as an array of type %s.", value.getClass(),
-                        this.getType()));
+                throw new ServiceLocalException(
+                        String.format(
+                                "Type %s can't be used as an array of type %s.",
+                                value.getClass(), this.getType()));
             }
         }
     }

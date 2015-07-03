@@ -29,6 +29,7 @@ import microsoft.exchange.webservices.data.autodiscover.AutodiscoverService;
 import microsoft.exchange.webservices.data.core.EwsServiceXmlWriter;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlSerializationException;
 import org.hamcrest.core.IsNot;
@@ -79,16 +80,11 @@ public class GetUserSettingsRequestTest extends BaseTest
      * @throws ArgumentException
      */
     @Parameterized.Parameters
-    public static List<Object[]> getAutodiscoverServices() throws ArgumentException
+    public static List<Object[]> getAutodiscoverServices() throws ServiceLocalException
     {
         return new ArrayList<Object[]>()
         {
-
-            /**
-             * Constant serialized ID used for compatibility.
-             */
             private static final long serialVersionUID = 1L;
-
             {
                 for (ExchangeVersion exchangeVersion : ExchangeVersion.values()) {
                     add(new Object[]{exchangeVersion, new AutodiscoverService(exchangeVersion)});
@@ -103,8 +99,7 @@ public class GetUserSettingsRequestTest extends BaseTest
      * @param exchangeVersion
      * @param autodiscoverService
      */
-    public GetUserSettingsRequestTest(final ExchangeVersion exchangeVersion,
-                                      final AutodiscoverService autodiscoverService)
+    public GetUserSettingsRequestTest(final ExchangeVersion exchangeVersion, final AutodiscoverService autodiscoverService)
     {
         this.exchangeVersion = exchangeVersion;
         this.autodiscoverService = autodiscoverService;

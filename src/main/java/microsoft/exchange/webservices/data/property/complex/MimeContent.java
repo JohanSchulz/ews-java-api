@@ -182,8 +182,7 @@ public final class MimeContent extends ComplexProperty
                 // charset. If this fails,
                 // return the Base64 representation of the content.
                 // Note: Encoding.GetString can throw DecoderFallbackException
-                // which is a subclass
-                // of ArgumentException.
+                // which is a subclass of ArgumentException.
                 String charSet = (this.getCharacterSet() == null ||
                         this.getCharacterSet().isEmpty()) ?
                         "UTF-8" : this.getCharacterSet();
