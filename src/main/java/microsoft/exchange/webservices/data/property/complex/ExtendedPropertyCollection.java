@@ -43,8 +43,7 @@ import java.util.List;
  * Represents a collection of extended property.
  */
 @EditorBrowsable(state = EditorBrowsableState.Never)
-public final class ExtendedPropertyCollection extends ComplexPropertyCollection<ExtendedProperty> implements
-                                                                                                  ICustomXmlUpdateSerializer
+public final class ExtendedPropertyCollection extends ComplexPropertyCollection<ExtendedProperty> implements ICustomXmlUpdateSerializer
 {
 
     /**
@@ -67,8 +66,7 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
      * @return XML element name.
      */
     @Override
-    protected String getCollectionItemXmlElementName(
-            ExtendedProperty complexProperty)
+    protected String getCollectionItemXmlElementName(ExtendedProperty complexProperty)
     {
         // This method is unused in this class, so just return null.
         return null;
@@ -82,7 +80,8 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
      * @throws Exception the exception
      */
     @Override
-    public void loadFromXml(EwsServiceXmlReader reader, String localElementName) throws Exception
+    public void loadFromXml(EwsServiceXmlReader reader, String localElementName)
+            throws Exception
     {
         ExtendedProperty extendedProperty = new ExtendedProperty();
         extendedProperty.loadFromXml(reader, reader.getLocalName());
@@ -101,8 +100,7 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
             throws Exception
     {
         for (ExtendedProperty extendedProperty : this) {
-            extendedProperty.writeToXml(writer,
-                    XmlElementNames.ExtendedProperty);
+            extendedProperty.writeToXml(writer, XmlElementNames.ExtendedProperty);
         }
     }
 
@@ -113,12 +111,11 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
      * @return ExtendedProperty.
      * @throws Exception the exception
      */
-    private ExtendedProperty getOrAddExtendedProperty(
-            ExtendedPropertyDefinition propertyDefinition) throws Exception
+    private ExtendedProperty getOrAddExtendedProperty(ExtendedPropertyDefinition propertyDefinition)
+            throws Exception
     {
-        ExtendedProperty extendedProperty = null;
-        OutParam<ExtendedProperty> extendedPropertyOut =
-                new OutParam<ExtendedProperty>();
+        ExtendedProperty extendedProperty;
+        OutParam<ExtendedProperty> extendedPropertyOut = new OutParam<ExtendedProperty>();
         if (!this.tryGetProperty(propertyDefinition, extendedPropertyOut)) {
             extendedProperty = new ExtendedProperty(propertyDefinition);
             this.internalAdd(extendedProperty);
@@ -139,8 +136,7 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
     public void setExtendedProperty(ExtendedPropertyDefinition propertyDefinition, Object value)
             throws Exception
     {
-        ExtendedProperty extendedProperty = this
-                .getOrAddExtendedProperty(propertyDefinition);
+        ExtendedProperty extendedProperty = this.getOrAddExtendedProperty(propertyDefinition);
         extendedProperty.setValue(value);
     }
 
@@ -156,11 +152,9 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
     {
         EwsUtilities.validateParam(propertyDefinition, "propertyDefinition");
 
-        ExtendedProperty extendedProperty = null;
-        OutParam<ExtendedProperty> extendedPropertyOut =
-                new OutParam<ExtendedProperty>();
+        OutParam<ExtendedProperty> extendedPropertyOut = new OutParam<ExtendedProperty>();
         if (this.tryGetProperty(propertyDefinition, extendedPropertyOut)) {
-            extendedProperty = extendedPropertyOut.getParam();
+            ExtendedProperty extendedProperty = extendedPropertyOut.getParam();
             return this.internalRemove(extendedProperty);
         }
         else {
