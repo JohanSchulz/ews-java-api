@@ -27,6 +27,7 @@ import microsoft.exchange.webservices.data.attribute.EditorBrowsable;
 import microsoft.exchange.webservices.data.core.*;
 import microsoft.exchange.webservices.data.core.enumeration.attribute.EditorBrowsableState;
 import microsoft.exchange.webservices.data.core.enumeration.misc.XmlNamespace;
+import microsoft.exchange.webservices.data.core.exception.misc.ArgumentException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceXmlSerializationException;
 import microsoft.exchange.webservices.data.core.service.ServiceObject;
@@ -196,10 +197,10 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
      * @param propertyDefinition The property definition.
      * @param propertyValueOut   The property value.
      * @return True if property exists in collection.
-     * @throws ServiceLocalException
+     * @throws ArgumentException
      */
     public <T> boolean tryGetValue(Class<T> cls, ExtendedPropertyDefinition propertyDefinition, OutParam<T> propertyValueOut)
-            throws ServiceLocalException
+            throws ArgumentException
     {
         ExtendedProperty extendedProperty;
         OutParam<ExtendedProperty> extendedPropertyOut = new OutParam<ExtendedProperty>();
@@ -209,7 +210,7 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
                 String errorMessage = String.format(
                         "Property definition type '%s' and type parameter '%s' aren't compatible.",
                         propertyDefinition.getType().getSimpleName(), cls.getSimpleName());
-                throw new ServiceLocalException(errorMessage, "propertyDefinition");
+                throw new ArgumentException(errorMessage, "propertyDefinition");
             }
             propertyValueOut.setParam((T) extendedProperty.getValue());
             return true;
@@ -241,6 +242,7 @@ public final class ExtendedPropertyCollection extends ComplexPropertyCollection<
 
         for (ExtendedProperty extendedProperty : propertiesToSet) {
             writer.writeStartElement(XmlNamespace.Types, ewsObject.getSetFieldXmlElementName());
+
             extendedProperty.getPropertyDefinition().writeToXml(writer);
 
             writer.writeStartElement(XmlNamespace.Types, ewsObject.getXmlElementName());

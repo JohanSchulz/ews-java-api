@@ -257,7 +257,7 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
      * @throws ArgumentException on validation error
      */
     public <T> boolean tryGetPropertyType(Class<T> cls, PropertyDefinition propertyDefinition, OutParam<T> propertyValue)
-            throws ServiceLocalException
+            throws ArgumentException
     {
         // Verify that the type parameter and
         // property definition's type are compatible.
@@ -265,7 +265,7 @@ public class PropertyBag implements IComplexPropertyChanged, IComplexPropertyCha
             String errorMessage = String.format(
                     "Property definition type '%s' and type parameter '%s' aren't compatible.",
                     propertyDefinition.getType().getSimpleName(), cls.getSimpleName());
-            throw new ServiceLocalException(errorMessage);
+            throw new ArgumentException(errorMessage);
         }
 
         OutParam<Object> value = new OutParam<Object>();
